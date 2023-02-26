@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public enum movementState
+    {
+        Idle,
+        ForwardWalk,
+        ForwardRun,
+        BackwardWalk
+    }
+
     public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
@@ -26,15 +34,26 @@ public class PlayerController : MonoBehaviour {
     private Transform ground;
     private Vector3 lastGroundPosition;
 
+    public bool canMove; // used to prevent the character from moving during an animation
+    private bool isAttacking;
+
+    private movementState direction;
+
     void Start() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         turnSpeed = 90f;
+        canMove = true;
+        isAttacking = false;
+        direction = movementState.Idle;
     }
 
     void FixedUpdate() {
-        if(Input.GetKey(KeyCode.Mouse0) && Time.time > attackCooldown) {
+        if(Input.GetKey(KeyCode.Mouse0) && Time.time > attackCooldown && isAttacking == false) {
             StartCoroutine(Attack());
+        }
+        if (isAttacking == false) {
+            canMove = true;
         }
     }
 
@@ -60,18 +79,21 @@ public class PlayerController : MonoBehaviour {
         // Walking backwards
         if (moveZ < 0.0) {
             transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
+            direction = movementState.BackwardWalk;
+            anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
         }
         // Walking forward
         else {
             transform.Rotate( 0 , Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime , 0 );
+            direction = movementState.ForwardWalk;
         }
 
-        if(isGrounded) {
+        if(isGrounded && canMove) {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
                 anim.SetBool("walkforward", true);
                 Walk();
             }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift)) {
+            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
                 Run();
             }
             else if(moveDirection == Vector3.zero) {
@@ -94,7 +116,9 @@ public class PlayerController : MonoBehaviour {
             lastGroundPosition = groundPosition;
         }
 
-        controller.Move(moveDirection * Time.deltaTime);
+        if (canMove) {
+            controller.Move(moveDirection * Time.deltaTime);
+        }
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
@@ -130,15 +154,16 @@ public class PlayerController : MonoBehaviour {
 
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
-        anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 1);
         anim.SetTrigger("attack");
         weapon.setIsAttacking(true);
+        canMove = false;
+        isAttacking = true;
 
-        yield return new WaitForSeconds(0.9f);
-        anim.ResetTrigger("attack");
-        anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 0);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+
         weapon.setIsAttacking(false);
-        attackCooldown = Time.time + 0.9f;
+        attackCooldown = Time.time + 0.1f;
+        isAttacking = false;
     }
 
     private void OnTriggerEnter(Collider hit)
