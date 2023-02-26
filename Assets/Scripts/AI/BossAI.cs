@@ -8,12 +8,15 @@ namespace AI
         static readonly float ChaseDistance = 10;
         static readonly float AttackDistance = 2;
         static readonly float AttackTimer = 1;
+        static readonly float WarmupTimer = 2;
         
         public GameObject player;
         BossState _currentState;
         NavMeshAgent _agent;
+        Animator _animator;
         float _lastAttackTime;
         float _health;
+        float _startTime;
     
         public enum BossState
         {
@@ -28,14 +31,21 @@ namespace AI
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
-            _currentState = BossState.Idle;
+            _animator = GetComponent<Animator>();
+            SetState(BossState.Idle);
             _lastAttackTime = Time.time;
             _health = 10;
+            _startTime = Time.time;
         }
     
         // Update is called once per frame
         void Update()
         {
+            if (Time.time - _startTime < WarmupTimer)
+            {
+                return;
+            }
+            
             if (_agent.pathPending)
             {
                 return;
@@ -147,6 +157,30 @@ namespace AI
         {
             Debug.Log("Set state to " + state);
             _currentState = state;
+            ResetTriggers();
+            switch (state)
+            {
+                case BossState.Idle:
+                    _animator.SetTrigger("OnIdle");
+                    break;
+                case BossState.Chase:
+                    _animator.SetTrigger("OnChase");
+                    break;
+                case BossState.Attack:
+                    _animator.SetTrigger("OnAttack");
+                    break;
+                case BossState.Die:
+                    _animator.SetTrigger("OnDie");
+                    break;
+            }
+        }
+        
+        void ResetTriggers()
+        {
+            _animator.ResetTrigger("OnIdle");
+            _animator.ResetTrigger("OnChase");
+            _animator.ResetTrigger("OnAttack");
+            _animator.ResetTrigger("OnDie");
         }
     }
 }
