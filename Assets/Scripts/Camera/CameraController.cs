@@ -11,8 +11,6 @@ public class CameraController : MonoBehaviour
     public Transform target;
 	
     protected Vector3 currentPositionCorrectionVelocity;
-    //protected Vector3 currentFacingCorrectionVelocity;
-    //protected float currentFacingAngleCorrVel;
     protected Quaternion quaternionDeriv;
 
     protected float angle;
@@ -25,8 +23,7 @@ public class CameraController : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, desiredPose.position, ref currentPositionCorrectionVelocity, positionSmoothTime, positionMaxSpeed, Time.deltaTime);
 
             var targForward = desiredPose.forward;
-            //var targForward = (target.position - this.transform.position).normalized;
-
+            
             transform.rotation = QuaternionUtil.SmoothDamp(transform.rotation,
                 Quaternion.LookRotation(targForward, Vector3.up), ref quaternionDeriv, rotationSmoothTime);
 

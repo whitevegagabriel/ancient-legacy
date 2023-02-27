@@ -73,7 +73,6 @@ public class PlayerController : MonoBehaviour {
         
         moveDirection = new Vector3(0, 0, moveZ);
         moveDirection = transform.TransformDirection(moveDirection);
-        //Debug.Log("Move direction: " + moveDirection);
 
         transform.position += moveDirection * moveZ * Time.deltaTime;
         // Walking backwards
