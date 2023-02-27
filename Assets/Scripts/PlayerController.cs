@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour {
 
     public bool canMove; // used to prevent the character from moving during an animation
     private bool isAttacking;
+    private bool isJumping;
 
     private movementState direction;
 
@@ -49,9 +50,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if(Input.GetKey(KeyCode.Mouse0) && Time.time > attackCooldown && isAttacking == false) {
-            StartCoroutine(Attack());
-        }
         if (isAttacking == false) {
             canMove = true;
         }
@@ -67,6 +65,7 @@ public class PlayerController : MonoBehaviour {
 
         if(isGrounded && velocity.y < 0) {
             velocity.y = -2f;
+            isJumping = false;
         }
 
         float moveZ = Input.GetAxis("Vertical");
@@ -99,10 +98,6 @@ public class PlayerController : MonoBehaviour {
                 anim.SetBool("walkforward", false);
                 Idle();
             }
-
-            if (Input.GetKeyDown(KeyCode.Space)) {
-                Jump();
-            }
         }
 
         moveDirection *= moveSpeed;
@@ -121,6 +116,10 @@ public class PlayerController : MonoBehaviour {
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        if (isJumping) {
+            anim.SetTrigger("jump");
+        }
     }
 
     private void Idle() {
@@ -137,18 +136,26 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat("speed", 1f, 0.1f, Time.deltaTime);
     }
 
-    private void Jump() {
-        Debug.Log(canJump);
-        /*
-        if (canJump)
-        {
+    public void Jump() {
+        if(isGrounded && canMove) {
+            /*
+            if (canJump)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+                anim.SetTrigger("jump");
+                canJump = false;
+            }
+            */
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-            anim.SetTrigger("jump");
-            canJump = false;
+            isJumping = true;
         }
-        */
-        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-        anim.SetTrigger("jump");
+    }
+
+    public void canAttack() {
+        Debug.Log("Checkin");
+        if(Time.time > attackCooldown && isAttacking == false) {
+            StartCoroutine(Attack());
+        }
     }
 
     private IEnumerator Attack() {
