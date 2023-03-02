@@ -65,7 +65,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
     private void Move() {
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
+        isGrounded = controller.isGrounded;
+
+        if (!isGrounded && !isJumping) {
+            anim.SetBool("fall", true);
+        }
 
         if(isGrounded && velocity.y < 0) {
             velocity.y = -2f;
@@ -73,6 +77,11 @@ public class PlayerController : MonoBehaviour {
                 isJumping = false;
                 anim.SetBool("jump", isJumping);
                 jumpCooldown = Time.time + .6f;
+            }
+
+            // stop falling
+            if (anim.GetBool("fall")) {
+                anim.SetBool("fall", false);
             }
         }
 
@@ -100,7 +109,7 @@ public class PlayerController : MonoBehaviour {
                 Walk();
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walkForward")) {
+                if (!anim.GetBool("walkforward")) {
                     anim.SetBool("walkforward", true);
                 }
                 Run();
