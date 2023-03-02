@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour {
 
@@ -41,6 +42,8 @@ public class PlayerController : MonoBehaviour {
 
     private movementState direction;
 
+    [SerializeField] InputAction input;
+
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
@@ -53,6 +56,7 @@ public class PlayerController : MonoBehaviour {
         isJumping = false;
         isGrounded = false;
         direction = movementState.Idle;
+        input = new InputAction();
     }
 
     void FixedUpdate() {
@@ -114,14 +118,6 @@ public class PlayerController : MonoBehaviour {
         }
 
         moveDirection *= moveSpeed;
-        
-        // account for ground movement
-        if (ground != null) {
-            var groundPosition = ground.position;
-            Vector3 groundMovement = groundPosition - lastGroundPosition;
-            controller.Move(groundMovement);
-            lastGroundPosition = groundPosition;
-        }
 
         if (canMove) {
             controller.Move(moveDirection * Time.deltaTime);
@@ -171,6 +167,12 @@ public class PlayerController : MonoBehaviour {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
         }
+    }
+
+    public void Block() {
+        anim.SetBool("block", true);
+
+        input.canceled += ctx => anim.SetBool("block", false);
     }
 
     public void canAttack() {
