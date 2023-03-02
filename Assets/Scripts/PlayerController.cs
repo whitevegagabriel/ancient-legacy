@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour {
         turnSpeed = 90f;
         canMove = true;
         isAttacking = false;
+        isJumping = false;
+        isGrounded = false;
         direction = movementState.Idle;
     }
 
@@ -66,10 +68,6 @@ public class PlayerController : MonoBehaviour {
 
     private void Move() {
         isGrounded = controller.isGrounded;
-
-        if (!isGrounded && !isJumping) {
-            anim.SetBool("fall", true);
-        }
 
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
@@ -134,6 +132,10 @@ public class PlayerController : MonoBehaviour {
 
         if (isJumping) {
             anim.SetBool("jump", isJumping);
+        }
+
+        if (!isGrounded && !isJumping) {
+            anim.SetBool("fall", true);
         }
     }
 
