@@ -72,17 +72,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if(isGrounded && velocity.y < 0) {
-            velocity.y = -2f;
-            if (isJumping) {
-                isJumping = false;
-                anim.SetBool("jump", isJumping);
-                jumpCooldown = Time.time + .6f;
-            }
-
-            // stop falling
-            if (anim.GetBool("fall")) {
-                anim.SetBool("fall", false);
-            }
+            ResetJumpAndFall();
         }
 
         float moveZ = Input.GetAxis("Vertical");
@@ -95,7 +85,6 @@ public class PlayerController : MonoBehaviour {
         if (moveZ < 0.0) {
             transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
             direction = movementState.BackwardWalk;
-            anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
         }
         // Walking forward
         else {
@@ -105,8 +94,14 @@ public class PlayerController : MonoBehaviour {
 
         if(isGrounded && canMove) {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-                anim.SetBool("walkforward", true);
-                Walk();
+                if (direction == movementState.ForwardWalk) {
+                    anim.SetBool("walkforward", true);
+                    WalkForward();
+                }
+                else if (direction == movementState.BackwardWalk) {
+                    anim.SetBool("walkforward", true);
+                    WalkBackward();
+                }
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
                 if (!anim.GetBool("walkforward")) {
@@ -146,9 +141,14 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
     }
 
-    private void Walk() {
+    private void WalkForward() {
         moveSpeed = walkSpeed;
         anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+    }
+
+    private void WalkBackward() {
+        moveSpeed = walkSpeed;
+        anim.SetFloat("speed", -0.5f, 0.1f, Time.deltaTime);
     }
 
     private void Run() {
@@ -210,6 +210,21 @@ public class PlayerController : MonoBehaviour {
         {
             ground = hit.transform;
             lastGroundPosition = ground.position;
+        }
+    }
+
+    private void ResetJumpAndFall() {
+    
+        velocity.y = -2f;
+        if (isJumping) {
+            isJumping = false;
+            anim.SetBool("jump", isJumping);
+            jumpCooldown = Time.time + .6f;
+        }
+
+        // stop falling
+        if (anim.GetBool("fall")) {
+            anim.SetBool("fall", false);
         }
     }
 }
