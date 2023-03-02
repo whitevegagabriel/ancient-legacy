@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float gravity;
     [SerializeField] private float jumpHeight;
     private float attackCooldown;
+    private float jumpCooldown;
     private WeaponController weapon;
     
     private Animator anim;
@@ -40,9 +41,12 @@ public class PlayerController : MonoBehaviour {
 
     private movementState direction;
 
-    void Start() {
+    void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
+    }
+
+    void Start() {
         turnSpeed = 90f;
         canMove = true;
         isAttacking = false;
@@ -50,13 +54,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (isAttacking == false) {
-            canMove = true;
-        }
+        
     }
 
 	void Update () {   
-        anim.ResetTrigger("jump"); 
+        if (isAttacking == false) {
+            canMove = true;
+        }
         Move();
 	}
 
@@ -65,7 +69,11 @@ public class PlayerController : MonoBehaviour {
 
         if(isGrounded && velocity.y < 0) {
             velocity.y = -2f;
-            isJumping = false;
+            if (isJumping) {
+                isJumping = false;
+                anim.SetBool("jump", isJumping);
+                jumpCooldown = Time.time + .6f;
+            }
         }
 
         float moveZ = Input.GetAxis("Vertical");
@@ -92,6 +100,9 @@ public class PlayerController : MonoBehaviour {
                 Walk();
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
+                if (!anim.GetBool("walkForward")) {
+                    anim.SetBool("walkforward", true);
+                }
                 Run();
             }
             else if(moveDirection == Vector3.zero) {
@@ -118,7 +129,7 @@ public class PlayerController : MonoBehaviour {
         controller.Move(velocity * Time.deltaTime);
 
         if (isJumping) {
-            anim.SetTrigger("jump");
+            anim.SetBool("jump", isJumping);
         }
     }
 
@@ -137,7 +148,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Jump() {
-        if(isGrounded && canMove) {
+        if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
             if (canJump)
             {
@@ -160,16 +171,18 @@ public class PlayerController : MonoBehaviour {
 
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
-        anim.SetTrigger("attack");
         weapon.setIsAttacking(true);
         canMove = false;
         isAttacking = true;
-
+        anim.SetBool("attack", isAttacking);
+        anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+        
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         weapon.setIsAttacking(false);
         attackCooldown = Time.time + 0.1f;
         isAttacking = false;
+        anim.SetBool("attack", isAttacking);
     }
 
     private void OnTriggerEnter(Collider hit)

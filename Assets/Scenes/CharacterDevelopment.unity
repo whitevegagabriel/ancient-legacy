@@ -2686,6 +2686,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 608914834149175701, guid: cefcefe9c0bf1f046a530cad9204f4a1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 608914834149175702, guid: cefcefe9c0bf1f046a530cad9204f4a1, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2728,6 +2732,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608914834149175702, guid: cefcefe9c0bf1f046a530cad9204f4a1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 608914834149175703, guid: cefcefe9c0bf1f046a530cad9204f4a1, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 608914834149175703, guid: cefcefe9c0bf1f046a530cad9204f4a1, type: 3}
