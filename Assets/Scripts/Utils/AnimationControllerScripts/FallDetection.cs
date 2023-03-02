@@ -19,7 +19,6 @@ public class FallDetection : StateMachineBehaviour
         if (stateInfo.normalizedTime > 1) {
             animator.SetBool("fall", true);
         }
-        Debug.Log("I got called");
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

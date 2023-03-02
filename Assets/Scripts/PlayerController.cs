@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour {
         // Walking backwards
         if (moveZ < 0.0) {
             transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
-            direction = movementState.BackwardWalk;
+            direction = movementState.BackwardWalk; 
         }
         // Walking forward
         else {
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void canAttack() {
-        Debug.Log("Checkin");
+        
         if(Time.time > attackCooldown && isAttacking == false) {
             StartCoroutine(Attack());
         }
