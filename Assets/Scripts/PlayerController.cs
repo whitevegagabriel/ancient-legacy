@@ -37,9 +37,9 @@ public class PlayerController : MonoBehaviour {
     private Vector3 lastGroundPosition;
 
     public bool canMove; // used to prevent the character from moving during an animation
-    private bool isAttacking;
-    private bool isJumping;
-
+    public bool isAttacking;
+    public bool isJumping;
+    public bool isBlocking;
     private movementState direction;
 
     [SerializeField] InputAction input;
@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour {
         isAttacking = false;
         isJumping = false;
         isGrounded = false;
+        isBlocking = false;
         direction = movementState.Idle;
         input = new InputAction();
     }
@@ -67,15 +68,25 @@ public class PlayerController : MonoBehaviour {
         if (isAttacking == false) {
             canMove = true;
         }
-        Move();
-	}
 
-    private void Move() {
         isGrounded = controller.isGrounded;
 
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
         }
+
+        Move();
+
+        if (isJumping) {
+            anim.SetBool("jump", isJumping);
+        }
+
+        //if (!isGrounded && !isJumping) {
+        //    anim.SetBool("fall", true);
+        //}
+	}
+
+    private void Move() {
 
         float moveZ = Input.GetAxis("Vertical");
         
@@ -125,14 +136,6 @@ public class PlayerController : MonoBehaviour {
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-
-        if (isJumping) {
-            anim.SetBool("jump", isJumping);
-        }
-
-        if (!isGrounded && !isJumping) {
-            anim.SetBool("fall", true);
-        }
     }
 
     private void Idle() {
@@ -169,21 +172,27 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void Block() {
-        anim.SetBool("block", true);
-
-        input.canceled += ctx => anim.SetBool("block", false);
+    public void Block(InputAction.CallbackContext context) {
+        if(!isAttacking && context.started) {
+            isBlocking = true;
+            anim.SetBool("block", true);
+        }
+        else if(context.canceled) {
+            isBlocking = false;
+            anim.SetBool("block", false);
+        }
     }
 
     public void canAttack() {
         
-        if(Time.time > attackCooldown && isAttacking == false) {
+        if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
         }
     }
 
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
+        Debug.Log(weapon);
         weapon.setIsAttacking(true);
         canMove = false;
         isAttacking = true;

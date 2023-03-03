@@ -25,12 +25,12 @@
                 },
                 {
                     "name": "Block",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "976ee38e-5c64-4d0a-8d6f-78378eaac09b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Hold",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [

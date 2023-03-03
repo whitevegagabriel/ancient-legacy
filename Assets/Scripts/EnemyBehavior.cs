@@ -19,7 +19,6 @@ public class EnemyBehavior : MonoBehaviour
     void OnTriggerEnter(Collider c) {
         WeaponController weapon = c.gameObject.GetComponent<WeaponController>();
         if(weapon != null){
-            Debug.Log(weapon.isAttacking);
             if(c.gameObject.tag == "Weapon" && weapon.isAttacking == true) {
                 Destroy(this.gameObject);
             }
