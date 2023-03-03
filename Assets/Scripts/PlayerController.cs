@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float gravity;
     [SerializeField] private float jumpHeight;
     private float attackCooldown;
+    private float jumpCooldown;
     private WeaponController weapon;
     
     private Animator anim;
@@ -35,38 +37,56 @@ public class PlayerController : MonoBehaviour {
     private Vector3 lastGroundPosition;
 
     public bool canMove; // used to prevent the character from moving during an animation
-    private bool isAttacking;
-    private bool isJumping;
-
+    public bool isAttacking;
+    public bool isJumping;
+    public bool isBlocking;
     private movementState direction;
 
-    void Start() {
+    [SerializeField] InputAction input;
+
+    void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
+    }
+
+    void Start() {
         turnSpeed = 90f;
         canMove = true;
         isAttacking = false;
+        isJumping = false;
+        isGrounded = false;
+        isBlocking = false;
         direction = movementState.Idle;
+        input = new InputAction();
     }
 
     void FixedUpdate() {
-        if (isAttacking == false) {
-            canMove = true;
-        }
+        
     }
 
 	void Update () {   
-        anim.ResetTrigger("jump"); 
+        if (isAttacking == false) {
+            canMove = true;
+        }
+
+        isGrounded = controller.isGrounded;
+
+        if(isGrounded && velocity.y < 0) {
+            ResetJumpAndFall();
+        }
+
         Move();
+
+        if (isJumping) {
+            anim.SetBool("jump", isJumping);
+        }
+
+        //if (!isGrounded && !isJumping) {
+        //    anim.SetBool("fall", true);
+        //}
 	}
 
     private void Move() {
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
-
-        if(isGrounded && velocity.y < 0) {
-            velocity.y = -2f;
-            isJumping = false;
-        }
 
         float moveZ = Input.GetAxis("Vertical");
         
@@ -77,8 +97,7 @@ public class PlayerController : MonoBehaviour {
         // Walking backwards
         if (moveZ < 0.0) {
             transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
-            direction = movementState.BackwardWalk;
-            anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+            direction = movementState.BackwardWalk; 
         }
         // Walking forward
         else {
@@ -88,10 +107,19 @@ public class PlayerController : MonoBehaviour {
 
         if(isGrounded && canMove) {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-                anim.SetBool("walkforward", true);
-                Walk();
+                if (direction == movementState.ForwardWalk) {
+                    anim.SetBool("walkforward", true);
+                    WalkForward();
+                }
+                else if (direction == movementState.BackwardWalk) {
+                    anim.SetBool("walkforward", true);
+                    WalkBackward();
+                }
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
+                if (!anim.GetBool("walkforward")) {
+                    anim.SetBool("walkforward", true);
+                }
                 Run();
             }
             else if(moveDirection == Vector3.zero) {
@@ -100,9 +128,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        moveDirection *= moveSpeed;
-        
-        // account for ground movement
         if (ground != null) {
             var groundPosition = ground.position;
             Vector3 groundMovement = groundPosition - lastGroundPosition;
@@ -110,25 +135,28 @@ public class PlayerController : MonoBehaviour {
             lastGroundPosition = groundPosition;
         }
 
+        moveDirection *= moveSpeed;
+
         if (canMove) {
             controller.Move(moveDirection * Time.deltaTime);
         }
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-
-        if (isJumping) {
-            anim.SetTrigger("jump");
-        }
     }
 
     private void Idle() {
         anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
     }
 
-    private void Walk() {
+    private void WalkForward() {
         moveSpeed = walkSpeed;
         anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+    }
+
+    private void WalkBackward() {
+        moveSpeed = walkSpeed;
+        anim.SetFloat("speed", -0.5f, 0.1f, Time.deltaTime);
     }
 
     private void Run() {
@@ -137,7 +165,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Jump() {
-        if(isGrounded && canMove) {
+        if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
             if (canJump)
             {
@@ -151,25 +179,39 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void canAttack() {
-        Debug.Log("Checkin");
-        if(Time.time > attackCooldown && isAttacking == false) {
+    public void Block(InputAction.CallbackContext context) {
+        if(!isAttacking && context.started) {
+            isBlocking = true;
+            anim.SetBool("block", true);
+        }
+        else if(context.canceled) {
+            isBlocking = false;
+            anim.SetBool("block", false);
+        }
+    }
+
+    public void OnAttack() {
+        
+        if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
         }
     }
 
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
-        anim.SetTrigger("attack");
+        Debug.Log(weapon);
         weapon.setIsAttacking(true);
         canMove = false;
         isAttacking = true;
-
+        anim.SetBool("attack", isAttacking);
+        anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+        
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         weapon.setIsAttacking(false);
         attackCooldown = Time.time + 0.1f;
         isAttacking = false;
+        anim.SetBool("attack", isAttacking);
     }
 
     private void OnTriggerEnter(Collider hit)
@@ -188,6 +230,21 @@ public class PlayerController : MonoBehaviour {
         {
             ground = hit.transform;
             lastGroundPosition = ground.position;
+        }
+    }
+
+    private void ResetJumpAndFall() {
+    
+        velocity.y = -2f;
+        if (isJumping) {
+            isJumping = false;
+            anim.SetBool("jump", isJumping);
+            jumpCooldown = Time.time + .6f;
+        }
+
+        // stop falling
+        if (anim.GetBool("fall")) {
+            anim.SetBool("fall", false);
         }
     }
 }
