@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void onAttack() {
+    public void OnAttack() {
         
         if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
