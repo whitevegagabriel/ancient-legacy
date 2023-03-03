@@ -6,31 +6,28 @@ public class HealthUI : MonoBehaviour
 {
     PlayerHealth playerHealth;
     public Text hearts;
-    string[] Hearts;    
 
     void Start()
     {
-        Hearts = new string[11];
-        Hearts[0] = "X X X X X X X X X X";
-        Hearts[1] = "❤️ X X X X X X X X X";
-        Hearts[2] = "❤️❤️ X X X X X X X X";
-        Hearts[3] = "❤️❤️❤️X X X X X X X";
-        Hearts[4] = "❤️❤️❤️❤️X X X X X X";
-        Hearts[5] = "❤️❤️❤️❤️❤️X X X X X";
-        Hearts[6] = "❤️❤️❤️❤️❤️❤️ X X X X";
-        Hearts[7] = "❤️❤️❤️❤️❤️❤️❤️ X X X";
-        Hearts[8] = "❤️❤️❤️❤️❤️❤️❤️❤️ X X";
-        Hearts[9] = "❤️❤️❤️❤️❤️❤️❤️❤️❤️ X";
-        Hearts[10] = "❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️";
-
         playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         if (playerHealth == null) {
             Debug.Log("Player not found");
         }
-        hearts.text = Hearts[playerHealth.GetHealth()];
+        SetHearts();
     }
 
-    public void SetHearts(int health) {
-        hearts.text = Hearts[playerHealth.GetHealth()];
+    public void SetHearts() {
+        hearts.text = GenerateHearts();
+    }
+
+    string GenerateHearts() {
+        string heartBar = "";
+        for (int i = 0; i < playerHealth.GetCurrentHealth(); i++) {
+            heartBar += "❤️";
+        }
+        for (int i = 0; i < playerHealth.GetMaxHealth() - playerHealth.GetCurrentHealth(); i++) {
+            heartBar += "X";
+        }
+        return heartBar;
     }
 }

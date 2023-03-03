@@ -17,7 +17,9 @@ namespace AI
         float _lastAttackTime;
         float _health;
         float _startTime;
-    
+
+        PlayerHealth playerHealth;
+
         public enum BossState
         {
             Idle,
@@ -27,7 +29,6 @@ namespace AI
             None,
         }
     
-        // Start is called before the first frame update
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
@@ -36,9 +37,11 @@ namespace AI
             _lastAttackTime = Time.time;
             _health = 10;
             _startTime = Time.time;
+
+            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+
         }
     
-        // Update is called once per frame
         void Update()
         {
             if (Time.time - _startTime < WarmupTimer)
@@ -129,11 +132,15 @@ namespace AI
             
             if (Time.time - _lastAttackTime > AttackTimer)
             {
+
                 _lastAttackTime = Time.time;
                 Debug.Log("Attack");
                 
-                TakeDamage(Random.value * 4);
-                Debug.Log("Took random damage");
+                playerHealth.DecreaseHealth(1);
+                Debug.Log("Player took damage");
+                
+                // TakeDamage(Random.value * 4);
+                // Debug.Log("Took random damage");
             }
         }
         

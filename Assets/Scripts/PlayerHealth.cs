@@ -15,15 +15,25 @@ public class PlayerHealth : MonoBehaviour
 
     public void IncreaseHealth(int amount) {
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
-        healthDisplay.SetHearts(currentHealth);
+        healthDisplay.SetHearts();
     }
 
     public void DecreaseHealth(int amount) {
         currentHealth = Mathf.Max(0, currentHealth - amount);
-        healthDisplay.SetHearts(currentHealth);
+        healthDisplay.SetHearts();
     }
 
-    public int GetHealth() {
+    public int GetCurrentHealth() {
         return currentHealth;
+    }
+
+    public int GetMaxHealth() {
+        return maxHealth;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown("i")) {
+            IncreaseHealth(1);
+        }
     }
 }
