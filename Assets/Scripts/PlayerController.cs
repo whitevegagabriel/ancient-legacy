@@ -128,6 +128,13 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        if (ground != null) {
+            var groundPosition = ground.position;
+            Vector3 groundMovement = groundPosition - lastGroundPosition;
+            controller.Move(groundMovement);
+            lastGroundPosition = groundPosition;
+        }
+
         moveDirection *= moveSpeed;
 
         if (canMove) {
@@ -183,7 +190,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void canAttack() {
+    public void onAttack() {
         
         if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
