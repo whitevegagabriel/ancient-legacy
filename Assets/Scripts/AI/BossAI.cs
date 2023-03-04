@@ -31,6 +31,7 @@ namespace AI
         }
     
         public float GetHealth() {
+            Debug.Log("Got health");
             return _health;
         }
 
@@ -45,7 +46,8 @@ namespace AI
             _health = 10;
             _startTime = Time.time;
             _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
-            _healthDisplay.SetHearts();
+            if (_healthDisplay == null) Debug.Log("not found");
+            _healthDisplay.SetHearts((int) _health);
         }
     
         void Update()

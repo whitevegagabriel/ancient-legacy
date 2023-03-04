@@ -4,28 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PlayerHealthUI : MonoBehaviour
 {
-    PlayerHealth playerHealth;
     public Text hearts;
-
-    void Start()
-    {
-        playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth == null) {
-            Debug.Log("Player not found");
-        }
-        SetHearts();
+    public void SetHearts(int currentHealth, int maxHealth) {
+        hearts.text = GenerateHearts(currentHealth, maxHealth);
     }
-
-    public void SetHearts() {
-        hearts.text = GenerateHearts();
-    }
-
-    string GenerateHearts() {
+    string GenerateHearts(int currentHealth, int maxHealth) {
         string heartBar = "";
-        for (int i = 0; i < playerHealth.GetCurrentHealth(); i++) {
+        for (int i = 0; i < currentHealth; i++) {
             heartBar += "❤️";
         }
-        for (int i = 0; i < playerHealth.GetMaxHealth() - playerHealth.GetCurrentHealth(); i++) {
+        for (int i = 0; i < maxHealth - currentHealth; i++) {
             heartBar += "X";
         }
         return heartBar;

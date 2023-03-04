@@ -6,24 +6,13 @@ using UnityEngine.UI;
 public class BossHealthUI : MonoBehaviour
 {
     public Text hearts;
-    AI.BossAI bossAI;
-
-    void Start()
-    {
-        bossAI = GameObject.FindGameObjectWithTag("Boss").GetComponent<AI.BossAI>();
-        if (bossAI == null) {
-            Debug.Log("BossAI not found");
-        }
-        SetHearts();
+    public void SetHearts(int currentHealth) {
+        hearts.text = GenerateHearts(currentHealth);
     }
 
-    public void SetHearts() {
-        hearts.text = GenerateHearts();
-    }
-
-    string GenerateHearts() {
+    string GenerateHearts(int currentHealth) {
         string heartBar = "";
-        for (int i = 0; i < bossAI.GetHealth(); i++) {
+        for (int i = 0; i < currentHealth; i++) {
             heartBar += "❤️";
         }
         return heartBar;
