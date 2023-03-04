@@ -6,11 +6,11 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth;
     int currentHealth;
-    HealthUI healthDisplay;
+    PlayerHealthUI healthDisplay;
     void Start()
     {
         currentHealth = maxHealth;  
-        healthDisplay = GameObject.FindGameObjectWithTag("Health Display").GetComponent<HealthUI>();
+        healthDisplay = GameObject.FindGameObjectWithTag("Health Display").GetComponent<PlayerHealthUI>();
     }
 
     public void IncreaseHealth(int amount) {
@@ -21,6 +21,9 @@ public class PlayerHealth : MonoBehaviour
     public void DecreaseHealth(int amount) {
         currentHealth = Mathf.Max(0, currentHealth - amount);
         healthDisplay.SetHearts();
+        if (currentHealth == 0) {
+            Died();
+        }
     }
 
     public int GetCurrentHealth() {
@@ -31,9 +34,8 @@ public class PlayerHealth : MonoBehaviour
         return maxHealth;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown("i")) {
-            IncreaseHealth(1);
-        }
+    private void Died() {
+        Time.timeScale = 0f;
+        Debug.Log("You died");
     }
 }

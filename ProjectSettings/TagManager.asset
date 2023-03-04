@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Health Display
   - Weapon
+  - Boss
+  - Boss Health Display
   layers:
   - Default
   - TransparentFX
