@@ -606,7 +606,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4033335714203610915}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: canAttack
+        m_MethodName: OnAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
