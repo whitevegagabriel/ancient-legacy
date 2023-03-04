@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 namespace AI
 {
@@ -10,15 +11,14 @@ namespace AI
         static readonly float AttackTimer = 1;
         static readonly float WarmupTimer = 2;
         
-        public GameObject player;
+        GameObject _player;
+        PlayerHealth _playerHealth;
         BossState _currentState;
         NavMeshAgent _agent;
         Animator _animator;
         float _lastAttackTime;
         float _health;
         float _startTime;
-
-        PlayerHealth playerHealth;
 
         public enum BossState
         {
@@ -31,15 +31,14 @@ namespace AI
     
         void Start()
         {
+            _player = GameObject.FindGameObjectWithTag("Player");
+            _playerHealth = _player.GetComponent<PlayerHealth>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             SetState(BossState.Idle);
             _lastAttackTime = Time.time;
             _health = 10;
             _startTime = Time.time;
-
-            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-
         }
     
         void Update()
@@ -84,7 +83,7 @@ namespace AI
                 _agent.ResetPath();
             }
             
-            if (Vector3.Distance(transform.position, player.transform.position) < ChaseDistance)
+            if (Vector3.Distance(transform.position, _player.transform.position) < ChaseDistance)
             {
                 SetState(BossState.Chase);
             }
@@ -98,14 +97,14 @@ namespace AI
                 return;
             }
             
-            if (Vector3.Distance(transform.position, player.transform.position) > ChaseDistance)
+            if (Vector3.Distance(transform.position, _player.transform.position) > ChaseDistance)
             {
                 SetState(BossState.Idle);
                 return;
             }
             
-            _agent.SetDestination(player.transform.position);
-            if (Vector3.Distance(transform.position, player.transform.position) < AttackDistance)
+            _agent.SetDestination(_player.transform.position);
+            if (Vector3.Distance(transform.position, _player.transform.position) < AttackDistance)
             {
                 SetState(BossState.Attack);
             }
@@ -124,7 +123,7 @@ namespace AI
                 _agent.ResetPath();
             }
 
-            if (Vector3.Distance(transform.position, player.transform.position) > AttackDistance)
+            if (Vector3.Distance(transform.position, _player.transform.position) > AttackDistance)
             {
                 SetState(BossState.Chase);
                 return;
@@ -136,11 +135,8 @@ namespace AI
                 _lastAttackTime = Time.time;
                 Debug.Log("Attack");
                 
-                playerHealth.DecreaseHealth(1);
+                _playerHealth.DecreaseHealth(1);
                 Debug.Log("Player took damage");
-                
-                // TakeDamage(Random.value * 4);
-                // Debug.Log("Took random damage");
             }
         }
         
@@ -154,12 +150,7 @@ namespace AI
             Debug.Log("Boss died");
             SetState(BossState.None);
         }
-        
-        public void TakeDamage(float damage)
-        {
-            _health -= damage;
-        }
-        
+
         public void SetState(BossState state)
         {
             Debug.Log("Set state to " + state);
