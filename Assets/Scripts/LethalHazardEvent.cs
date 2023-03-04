@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class LethalHazardEvent : MonoBehaviour
 {
+    public int dmg = 0;
     void OnTriggerEnter(Collider c)
     {
         CharacterController character = c.gameObject.GetComponent<CharacterController>();
         if (character != null)
         {
-            SceneManager.LoadScene("Main");
+            PlayerHealth charHealth = character.gameObject.GetComponent<PlayerHealth>();
+            charHealth.DecreaseHealth(dmg);
         }
     }
 }
