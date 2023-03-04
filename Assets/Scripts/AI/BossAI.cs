@@ -16,6 +16,7 @@ namespace AI
         BossState _currentState;
         NavMeshAgent _agent;
         Animator _animator;
+        BossHealthUI _healthDisplay;
         float _lastAttackTime;
         float _health;
         float _startTime;
@@ -29,6 +30,11 @@ namespace AI
             None,
         }
     
+        public float GetHealth() {
+            Debug.Log("Got health");
+            return _health;
+        }
+
         void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
@@ -39,6 +45,11 @@ namespace AI
             _lastAttackTime = Time.time;
             _health = 10;
             _startTime = Time.time;
+            _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
+            if (_healthDisplay == null) Debug.Log("not found");
+            else {
+                _healthDisplay.SetHearts((int) _health);
+            }
         }
     
         void Update()
