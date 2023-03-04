@@ -11,7 +11,12 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;  
         healthDisplay = GameObject.FindGameObjectWithTag("Health Display").GetComponent<PlayerHealthUI>();
-        healthDisplay.SetHearts(currentHealth, maxHealth);
+        if (healthDisplay == null) {
+            Debug.Log("Health display not found");
+        } 
+        else {
+            healthDisplay.SetHearts(currentHealth, maxHealth);
+        }
     }
 
     public void IncreaseHealth(int amount) {
