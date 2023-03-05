@@ -13,7 +13,7 @@ namespace AI
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private const float AttackDistance = 2;
         private const float ShortRangeAttackTimer = 1;
-        private const float LongRangeAttackTimer = 10;
+        private const float LongRangeAttackTimer = 5;
         private const float WarmupTimer = 2;
 
         private GameObject _player;
@@ -27,6 +27,8 @@ namespace AI
         private float _longRangeAttackAnimationLength;
         private float _health;
         private float _startTime;
+        
+        public GameObject radialDamagePrefab;
 
         private enum BossState
         {
@@ -48,7 +50,7 @@ namespace AI
             _lastShortRangeAttackTime = Time.time;
             _lastLongRangeAttackTime = Time.time;
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
-            _longRangeAttackAnimationLength = GetClipLength("Mutant Jump");
+            _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _health = 10;
             _startTime = Time.time;
             _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
@@ -153,6 +155,7 @@ namespace AI
             if (Time.time - _lastLongRangeAttackTime < LongRangeAttackTimer + _longRangeAttackAnimationLength) return;
             
             _lastLongRangeAttackTime = Time.time;
+            Instantiate(radialDamagePrefab, transform.position, Quaternion.identity);
             Debug.Log("Long range attack");
 
             SetState(Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance
