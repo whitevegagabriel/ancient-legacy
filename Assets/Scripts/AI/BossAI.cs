@@ -1,48 +1,54 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace AI
 {
     public class BossAI : MonoBehaviour
     {
-        static readonly float ChaseDistance = 10;
-        static readonly float AttackDistance = 2;
-        static readonly float AttackTimer = 1;
-        static readonly float WarmupTimer = 2;
-        
-        GameObject _player;
-        PlayerHealth _playerHealth;
-        BossState _currentState;
-        NavMeshAgent _agent;
-        Animator _animator;
-        BossHealthUI _healthDisplay;
-        float _lastAttackTime;
-        float _health;
-        float _startTime;
+        private static readonly int OnIdle = Animator.StringToHash("OnIdle");
+        private static readonly int OnChase = Animator.StringToHash("OnChase");
+        private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
+        private static readonly int OnLongRangeAttack = Animator.StringToHash("OnLongRangeAttack");
+        private static readonly int OnDie = Animator.StringToHash("OnDie");
+        private const float AttackDistance = 2;
+        private const float ShortRangeAttackTimer = 1;
+        private const float LongRangeAttackTimer = 10;
+        private const float WarmupTimer = 2;
 
-        public enum BossState
+        private GameObject _player;
+        private PlayerHealth _playerHealth;
+        private BossHealthUI _healthDisplay;
+        private BossState _currentState;
+        private NavMeshAgent _agent;
+        private Animator _animator;
+        private float _lastShortRangeAttackTime;
+        private float _lastLongRangeAttackTime;
+        private float _longRangeAttackAnimationLength;
+        private float _health;
+        private float _startTime;
+
+        private enum BossState
         {
             Idle,
             Chase,
-            Attack,
+            ShortRangeAttack,
+            LongRangeAttack,
             Die,
-            None,
-        }
-    
-        public float GetHealth() {
-            Debug.Log("Got health");
-            return _health;
+            None
         }
 
-        void Start()
+        private void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
             _playerHealth = _player.GetComponent<PlayerHealth>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             SetState(BossState.Idle);
-            _lastAttackTime = Time.time;
+            _lastShortRangeAttackTime = Time.time;
+            _lastLongRangeAttackTime = Time.time;
+            // TODO: This is a hack, use an event-based system instead to know when the animation is done
+            _longRangeAttackAnimationLength = GetClipLength("Mutant Jump");
             _health = 10;
             _startTime = Time.time;
             _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
@@ -51,19 +57,11 @@ namespace AI
                 _healthDisplay.SetHearts((int) _health);
             }
         }
-    
-        void Update()
+
+        private void Update()
         {
-            if (Time.time - _startTime < WarmupTimer)
-            {
-                return;
-            }
-            
-            if (_agent.pathPending)
-            {
-                return;
-            }
-            
+            if (_agent.pathPending) return;
+
             switch (_currentState)
             {
                 case BossState.Idle:
@@ -72,16 +70,29 @@ namespace AI
                 case BossState.Chase:
                     HandleChase();
                     break;
-                case BossState.Attack:
-                    HandleAttack();
+                case BossState.ShortRangeAttack:
+                    HandleShortRangeAttack();
+                    break;
+                case BossState.LongRangeAttack:
+                    HandleLongRangeAttack();
                     break;
                 case BossState.Die:
                     HandleDie();
                     break;
+                case BossState.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
-    
-        void HandleIdle()
+
+        private void HandleIdle()
+        {
+            // Boss is only idle at the start of the scene
+            if (Time.time - _startTime > WarmupTimer) SetState(BossState.Chase);
+        }
+
+        private void HandleChase()
         {
             if (_health <= 0)
             {
@@ -89,39 +100,19 @@ namespace AI
                 return;
             }
 
-            if (_agent.hasPath)
+            if (Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
             {
-                _agent.ResetPath();
-            }
-            
-            if (Vector3.Distance(transform.position, _player.transform.position) < ChaseDistance)
-            {
-                SetState(BossState.Chase);
-            }
-        }
-        
-        void HandleChase()
-        {
-            if (_health <= 0)
-            {
-                SetState(BossState.Die);
+                SetState(BossState.LongRangeAttack);
                 return;
             }
-            
-            if (Vector3.Distance(transform.position, _player.transform.position) > ChaseDistance)
-            {
-                SetState(BossState.Idle);
-                return;
-            }
-            
+
             _agent.SetDestination(_player.transform.position);
-            if (Vector3.Distance(transform.position, _player.transform.position) < AttackDistance)
-            {
-                SetState(BossState.Attack);
-            }
+
+            if (Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance)
+                SetState(BossState.ShortRangeAttack);
         }
-        
-        void HandleAttack()
+
+        private void HandleShortRangeAttack()
         {
             if (_health <= 0)
             {
@@ -129,9 +120,10 @@ namespace AI
                 return;
             }
             
-            if (_agent.hasPath)
+            if (Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
             {
-                _agent.ResetPath();
+                SetState(BossState.LongRangeAttack);
+                return;
             }
 
             if (Vector3.Distance(transform.position, _player.transform.position) > AttackDistance)
@@ -139,57 +131,100 @@ namespace AI
                 SetState(BossState.Chase);
                 return;
             }
-            
-            if (Time.time - _lastAttackTime > AttackTimer)
-            {
 
-                _lastAttackTime = Time.time;
-                Debug.Log("Attack");
-                
-                _playerHealth.DecreaseHealth(1);
-                Debug.Log("Player took damage");
-            }
+            if (!(Time.time - _lastShortRangeAttackTime > ShortRangeAttackTimer)) return;
+
+            _agent.SetDestination(_player.transform.position);
+            _lastShortRangeAttackTime = Time.time;
+            Debug.Log("Attack");
+
+            _playerHealth.DecreaseHealth(1);
         }
-        
-        void HandleDie()
+
+        private void HandleLongRangeAttack()
         {
-            if (_agent.hasPath)
+            if (_health <= 0)
             {
-                _agent.ResetPath();
+                SetState(BossState.Die);
+                return;
             }
             
+            // wait for LongRangeAttack animation to finish, then attack
+            if (Time.time - _lastLongRangeAttackTime < LongRangeAttackTimer + _longRangeAttackAnimationLength) return;
+            
+            _lastLongRangeAttackTime = Time.time;
+            Debug.Log("Long range attack");
+
+            SetState(Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance
+            ? BossState.ShortRangeAttack
+            : BossState.Chase);
+        }
+
+        private void HandleDie()
+        {
             Debug.Log("Boss died");
             SetState(BossState.None);
         }
 
-        public void SetState(BossState state)
+        private void SetState(BossState state)
         {
             Debug.Log("Set state to " + state);
+            if (_agent.hasPath)
+            {
+                _agent.isStopped = true;
+                _agent.ResetPath();
+            }
             _currentState = state;
             ResetTriggers();
             switch (state)
             {
                 case BossState.Idle:
-                    _animator.SetTrigger("OnIdle");
+                    _animator.SetTrigger(OnIdle);
                     break;
                 case BossState.Chase:
-                    _animator.SetTrigger("OnChase");
+                    _animator.SetTrigger(OnChase);
                     break;
-                case BossState.Attack:
-                    _animator.SetTrigger("OnAttack");
+                case BossState.ShortRangeAttack:
+                    _animator.SetTrigger(OnShortRangeAttack);
+                    break;
+                case BossState.LongRangeAttack:
+                    _animator.SetTrigger(OnLongRangeAttack);
                     break;
                 case BossState.Die:
-                    _animator.SetTrigger("OnDie");
+                    _animator.SetTrigger(OnDie);
                     break;
+                case BossState.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
-        
-        void ResetTriggers()
+
+        private void ResetTriggers()
         {
-            _animator.ResetTrigger("OnIdle");
-            _animator.ResetTrigger("OnChase");
-            _animator.ResetTrigger("OnAttack");
-            _animator.ResetTrigger("OnDie");
+            _animator.ResetTrigger(OnIdle);
+            _animator.ResetTrigger(OnChase);
+            _animator.ResetTrigger(OnShortRangeAttack);
+            _animator.ResetTrigger(OnLongRangeAttack);
+            _animator.ResetTrigger(OnDie);
+        }
+        
+        public float GetHealth() {
+            Debug.Log("Got health");
+            return _health;
+        }
+
+        private float GetClipLength(string clipName)
+        {
+            foreach (AnimationClip clip in _animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip.name == clipName)
+                {
+                    return clip.length;
+                }
+            }
+
+            return 0;
         }
     }
 }
