@@ -108,22 +108,28 @@ public class PlayerController : MonoBehaviour {
         if(isGrounded && canMove) {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
                 if (direction == movementState.ForwardWalk) {
-                    anim.SetBool("walkforward", true);
+                    anim.SetBool("walking", true);
                     WalkForward();
                 }
                 else if (direction == movementState.BackwardWalk) {
-                    anim.SetBool("walkforward", true);
+                    anim.SetBool("walking", true);
                     WalkBackward();
                 }
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walkforward")) {
-                    anim.SetBool("walkforward", true);
+                if (!anim.GetBool("walking")) {
+                    anim.SetBool("walking", true);
                 }
                 Run();
             }
+            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction == movementState.BackwardWalk) {
+                if (!anim.GetBool("walking")) {
+                    anim.SetBool("walking", true);
+                }
+                WalkBackward();
+            }
             else if(moveDirection == Vector3.zero) {
-                anim.SetBool("walkforward", false);
+                anim.SetBool("walking", false);
                 Idle();
             }
         }

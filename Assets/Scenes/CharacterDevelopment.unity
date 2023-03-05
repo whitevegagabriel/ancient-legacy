@@ -3224,6 +3224,10 @@ PrefabInstance:
       propertyPath: m_XAxis.m_MaxSpeed
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 9201116346926207322, guid: d835839daf8435a4aa23579dc5939241, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7772671869519577246, guid: d835839daf8435a4aa23579dc5939241, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d835839daf8435a4aa23579dc5939241, type: 3}
