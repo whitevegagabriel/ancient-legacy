@@ -10,7 +10,6 @@ public class FloorController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //can add a check first 
-        //if (other.gameObject.name == "player")
         isFalling = true;
     }
 
