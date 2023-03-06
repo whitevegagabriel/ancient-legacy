@@ -7,15 +7,28 @@ public class LethalHazardEvent : MonoBehaviour
 {
     public int dmg = 0;
     private int time = 0;
+    private PlayerHealth charHealth;
+    private GameObject character;
+
+    void Start()
+    {
+        
+    }
 
     void OnTriggerEnter(Collider c)
     {
-        if (time == 0)
+        if (c.attachedRigidbody != null)
         {
-            GameObject character = GameObject.FindGameObjectWithTag("Player");
-            PlayerHealth charHealth = character.GetComponent<PlayerHealth>();
-            charHealth.DecreaseHealth(dmg);
-            time = 200;
+            WeaponController pc = c.attachedRigidbody.gameObject.GetComponent<WeaponController>();
+            if (pc != null) {
+                if (time == 0)
+                {
+                    GameObject character = GameObject.FindGameObjectWithTag("Player");
+                    PlayerHealth charHealth = character.GetComponent<PlayerHealth>();
+                    charHealth.DecreaseHealth(dmg);
+                    time = 200;
+                }
+            }
         }
     }
 
