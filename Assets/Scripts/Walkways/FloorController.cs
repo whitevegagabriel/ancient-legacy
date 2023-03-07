@@ -9,8 +9,11 @@ public class FloorController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //can add a check first 
-        isFalling = true;
+        //can add a check first
+        if (collision.gameObject.tag == "Player")
+        {
+            isFalling = true;
+        }
     }
 
     void Update()
