@@ -229,5 +229,10 @@ namespace AI
 
             return 0;
         }
+
+        public void DecreaseHealth(int amount) {
+            _health -= amount;
+            _healthDisplay.SetHearts((int)_health);
+        }
     }
 }
