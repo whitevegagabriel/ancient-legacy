@@ -782,7 +782,7 @@ GameObject:
   - component: {fileID: 8019614803959212434}
   m_Layer: 0
   m_Name: Paladin_J_Nordstrom_Sword
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -983,7 +983,7 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0
   m_SkinWidth: 0.0001
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &4033335714203610915
 MonoBehaviour:
@@ -997,8 +997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05dc70d61b8e2df40b255dabe3177c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 0
-  moveSpeed: 0
+  turnSpeed: 180
+  moveSpeed: 1
   walkSpeed: 5
   jumpDistance: 0
   runSpeed: 7

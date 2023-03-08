@@ -7,13 +7,7 @@ public class LethalHazardEvent : MonoBehaviour
 {
     public int dmg = 0;
     private int time = 0;
-    private PlayerHealth charHealth;
-    private GameObject character;
 
-    void Start()
-    {
-        
-    }
 
     void OnTriggerEnter(Collider c)
     {
