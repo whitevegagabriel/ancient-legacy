@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void ResetJumpAndFall() {
-    
+        
         velocity.y = -2f;
         if (isJumping) {
             isJumping = false;
