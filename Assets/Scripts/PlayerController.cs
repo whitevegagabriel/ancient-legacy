@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour {
         if (isJumping) {
             isJumping = false;
             anim.SetBool("jump", isJumping);
-            jumpCooldown = Time.time + .3f;
+            jumpCooldown = Time.time + .2f;
         }
 
         // stop falling
