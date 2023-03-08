@@ -96,12 +96,12 @@ public class PlayerController : MonoBehaviour {
         transform.position += moveDirection * moveZ * Time.deltaTime;
         // Walking backwards
         if (moveZ < 0.0) {
-            transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
+            //transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
             direction = movementState.BackwardWalk; 
         }
         // Walking forward
         else {
-            transform.Rotate( 0 , Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime , 0 );
+            //transform.Rotate( 0 , Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime , 0 );
             direction = movementState.ForwardWalk;
         }
 
