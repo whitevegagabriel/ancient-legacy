@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6579194725279861789}
   - component: {fileID: 4901730241130489688}
   - component: {fileID: 5296740830209074118}
+  - component: {fileID: 95689398170938428}
   m_Layer: 0
   m_Name: LevelOneBoss
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e84fa8305590d847a17c14393cf4683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radialDamagePrefab: {fileID: 0}
 --- !u!195 &5148869355171242543
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -120,6 +122,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 48
   m_CollisionDetection: 0
+--- !u!114 &95689398170938428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827859582729516318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c126c098b2b8e4f8b0d72d094565a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &268236229494785242
 PrefabInstance:
   m_ObjectHideFlags: 0
