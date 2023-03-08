@@ -96,34 +96,38 @@ public class PlayerController : MonoBehaviour {
         transform.position += moveDirection * moveZ * Time.deltaTime;
         // Walking backwards
         if (moveZ < 0.0) {
-            transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
             direction = movementState.BackwardWalk; 
         }
         // Walking forward
         else {
-            transform.Rotate( 0 , Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime , 0 );
             direction = movementState.ForwardWalk;
         }
 
         if(isGrounded && canMove) {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
                 if (direction == movementState.ForwardWalk) {
-                    anim.SetBool("walkforward", true);
+                    anim.SetBool("walking", true);
                     WalkForward();
                 }
                 else if (direction == movementState.BackwardWalk) {
-                    anim.SetBool("walkforward", true);
+                    anim.SetBool("walking", true);
                     WalkBackward();
                 }
             }
             else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walkforward")) {
-                    anim.SetBool("walkforward", true);
+                if (!anim.GetBool("walking")) {
+                    anim.SetBool("walking", true);
                 }
                 Run();
             }
+            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction == movementState.BackwardWalk) {
+                if (!anim.GetBool("walking")) {
+                    anim.SetBool("walking", true);
+                }
+                WalkBackward();
+            }
             else if(moveDirection == Vector3.zero) {
-                anim.SetBool("walkforward", false);
+                anim.SetBool("walking", false);
                 Idle();
             }
         }
@@ -239,7 +243,7 @@ public class PlayerController : MonoBehaviour {
         if (isJumping) {
             isJumping = false;
             anim.SetBool("jump", isJumping);
-            jumpCooldown = Time.time + .6f;
+            jumpCooldown = Time.time + .2f;
         }
 
         // stop falling
