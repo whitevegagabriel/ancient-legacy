@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7962281551425019675}
   - component: {fileID: 7962281551425019674}
   - component: {fileID: 7962281551425019673}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FloatingPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7962281552064090240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FloatingParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -6,13 +6,37 @@ using UnityEngine.SceneManagement;
 public class LethalHazardEvent : MonoBehaviour
 {
     public int dmg = 0;
+    private int time = 0;
+    private PlayerHealth charHealth;
+    private GameObject character;
+
+    void Start()
+    {
+        
+    }
+
     void OnTriggerEnter(Collider c)
     {
-        CharacterController character = c.gameObject.GetComponent<CharacterController>();
-        if (character != null)
+        if (c.attachedRigidbody != null)
         {
-            PlayerHealth charHealth = character.gameObject.GetComponent<PlayerHealth>();
-            charHealth.DecreaseHealth(dmg);
+            WeaponController pc = c.attachedRigidbody.gameObject.GetComponent<WeaponController>();
+            if (pc != null) {
+                if (time == 0)
+                {
+                    GameObject character = GameObject.FindGameObjectWithTag("Player");
+                    PlayerHealth charHealth = character.GetComponent<PlayerHealth>();
+                    charHealth.DecreaseHealth(dmg);
+                    time = 200;
+                }
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (time > 0)
+        {
+            time = time - 1;
         }
     }
 }

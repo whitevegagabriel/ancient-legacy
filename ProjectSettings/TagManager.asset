@@ -8,6 +8,7 @@ TagManager:
   - Weapon
   - Boss
   - Boss Health Display
+  - JumpRelics
   layers:
   - Default
   - TransparentFX

@@ -123,6 +123,23 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 7b3dafe6ee05e4842bab330becd4746b, type: 2}
+--- !u!1 &179463756 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 827859582729516318, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+  m_PrefabInstance: {fileID: 461612239}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &179463757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179463756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9d3abbd24d70df47894e7af4b0cc9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &461612239
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,9 +200,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4391500545566560902, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
-      propertyPath: player
+      propertyPath: radialDamagePrefab
       value: 
-      objectReference: {fileID: 1971965477}
+      objectReference: {fileID: 522289110924900590, guid: 405ddf94113003d46923098027167a68, type: 3}
+    - target: {fileID: 4901730241130489688, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
 --- !u!1 &802708274
@@ -842,11 +863,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1971965477 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4033335714203610924, guid: d835839daf8435a4aa23579dc5939241, type: 3}
-  m_PrefabInstance: {fileID: 1983835250}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1983835250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -854,6 +870,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3638879975549878097, guid: d835839daf8435a4aa23579dc5939241, type: 3}
+      propertyPath: m_TagString
+      value: Weapon
+      objectReference: {fileID: 0}
     - target: {fileID: 4033335714203610913, guid: d835839daf8435a4aa23579dc5939241, type: 3}
       propertyPath: m_RootOrder
       value: 4
