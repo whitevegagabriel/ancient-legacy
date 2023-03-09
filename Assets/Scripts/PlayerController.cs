@@ -141,6 +141,8 @@ public class PlayerController : MonoBehaviour {
                     Idle();
                     break;
             }
+            anim.SetFloat("velx", moveX);
+            anim.SetFloat("vely", moveY);
         }
 
         if (ground != null) {
@@ -161,27 +163,22 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Idle() {
-        anim.SetFloat("velx", moveInput.x);
-        anim.SetFloat("vely", moveInput.y);
+        
     }
 
     private void WalkForward() {
         moveSpeed = walkSpeed;
-        anim.SetFloat("velx", moveInput.x);
-        anim.SetFloat("vely", 0.5f);
+        
     }
 
     private void WalkBackward() {
         moveSpeed = walkSpeed;
-        Debug.Log(moveDirection);
-        anim.SetFloat("velx", moveInput.x);
-        anim.SetFloat("vely", moveInput.y);
+
     }
 
     private void Run() {
         moveSpeed = runSpeed;
-        anim.SetFloat("velx", moveInput.x);
-        anim.SetFloat("vely", moveInput.y);
+
     }
 
     public void OnJump(InputAction.CallbackContext context) {
