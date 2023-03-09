@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour {
     public bool isBlocking;
     private movementState direction;
 
+    public InputAction playerControls;
+    private Vector2 moveInput;
     [SerializeField] InputAction input;
 
     void Awake() {
@@ -81,21 +83,26 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        //if (!isGrounded && !isJumping) {
-        //    anim.SetBool("fall", true);
-        //}
+        if (!isGrounded && !isJumping) {
+            anim.SetBool("fall", true);
+        }
 	}
+
+    public void OnMove(InputAction.CallbackContext context) {
+        moveInput = context.ReadValue<Vector2>();
+    }
 
     private void Move() {
 
-        float moveZ = Input.GetAxis("Vertical");
+        float moveY = moveInput.y;
+        float moveX = moveInput.x;
         
-        moveDirection = new Vector3(0, 0, moveZ);
+        moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        transform.position += moveDirection * moveZ * Time.deltaTime;
+        transform.position += moveDirection * moveY * Time.deltaTime;
         // Walking backwards
-        if (moveZ < 0.0) {
+        if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
         }
         // Walking forward
@@ -150,25 +157,30 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Idle() {
-        anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+        anim.SetFloat("velx", moveInput.x);
+        anim.SetFloat("vely", moveInput.y);
     }
 
     private void WalkForward() {
         moveSpeed = walkSpeed;
-        anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+        anim.SetFloat("velx", moveInput.x);
+        anim.SetFloat("vely", 0.5f);
     }
 
     private void WalkBackward() {
         moveSpeed = walkSpeed;
-        anim.SetFloat("speed", -0.5f, 0.1f, Time.deltaTime);
+        Debug.Log(moveDirection);
+        anim.SetFloat("velx", moveInput.x);
+        anim.SetFloat("vely", moveInput.y);
     }
 
     private void Run() {
         moveSpeed = runSpeed;
-        anim.SetFloat("speed", 1f, 0.1f, Time.deltaTime);
+        anim.SetFloat("velx", moveInput.x);
+        anim.SetFloat("vely", moveInput.y);
     }
 
-    public void Jump() {
+    public void OnJump(InputAction.CallbackContext context) {
         if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
             if (canJump)
@@ -183,7 +195,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void Block(InputAction.CallbackContext context) {
+    public void OnBlock(InputAction.CallbackContext context) {
         if(!isAttacking && context.started) {
             isBlocking = true;
             anim.SetBool("block", true);
@@ -194,7 +206,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void OnAttack() {
+    public void OnAttack(InputAction.CallbackContext context) {
         
         if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());

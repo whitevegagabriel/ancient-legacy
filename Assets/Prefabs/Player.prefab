@@ -176,8 +176,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1057963630350461459}
-  m_LocalRotation: {x: -0.020520791, y: 0.6902913, z: -0.15329003, w: -0.70680904}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.029196996, y: -0.00000008867063, z: 0.000000012041633, w: 0.9995737}
+  m_LocalPosition: {x: 0.000000029802322, y: -0.0000007079502, z: -0.0000037484292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5962309475099339131}
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.96271855, z: -3.809306}
+  m_FollowOffset: {x: 0, y: 0.9537169, z: -3.813397}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.96271855, z: -3.809306}
+  m_FollowOffset: {x: 0, y: 0.9537169, z: -3.813397}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -629,8 +629,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2746610817118509716}
-  m_LocalRotation: {x: -0.007660888, y: 0.6929653, z: -0.14070863, w: -0.70706534}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.01101043, y: -0.000000029672607, z: 0.000000002777519, w: 0.9999394}
+  m_LocalPosition: {x: 0.000000029802322, y: -0.0000007079502, z: -0.0000037484292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 201488536865918692}
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.96271855, z: -3.809306}
+  m_FollowOffset: {x: 0, y: 0.9537169, z: -3.813397}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1078,6 +1078,15 @@ MonoBehaviour:
   isAttacking: 0
   isJumping: 0
   isBlocking: 0
+  playerControls:
+    m_Name: Player Controls
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ac70f285-2364-41b7-ae3a-648858b86bf1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   input:
     m_Name: Input
     m_Type: 0
@@ -1166,7 +1175,7 @@ MonoBehaviour:
       - m_Target: {fileID: 4033335714203610915}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnAttack
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1181,8 +1190,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4033335714203610915}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Jump
-        m_Mode: 1
+        m_MethodName: OnJump
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1197,7 +1206,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4033335714203610915}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Block
+        m_MethodName: OnBlock
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1209,6 +1218,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 976ee38e-5c64-4d0a-8d6f-78378eaac09b
     m_ActionName: Player/Block[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4033335714203610915}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: be195eb2-369c-4ecd-9f40-945609f142ab
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1672,8 +1697,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6060885118535201262}
-  m_LocalRotation: {x: -0.06638225, y: 0.70398396, z: -0.06638225, w: -0.70398396}
-  m_LocalPosition: {x: 3.8093057, y: 2.3827186, z: 0}
+  m_LocalRotation: {x: 0.09256373, y: -0.000000059604645, z: -0, w: 0.99570686}
+  m_LocalPosition: {x: 0.0000007003546, y: 2.3737168, z: -3.813398}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4033335714203610913}
@@ -1851,7 +1876,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6587134762326663843}
-  m_LocalRotation: {x: 0.005167559, y: 0.695404, z: -0.12811406, w: -0.70708793}
+  m_LocalRotation: {x: -0.0071317395, y: -0.000000058303645, z: 0.000000016682266, w: 0.9999746}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1925,8 +1950,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6938103332897940382}
-  m_LocalRotation: {x: 0.09460577, y: -0.000000119209275, z: 0.00000001117587, w: 0.9955148}
-  m_LocalPosition: {x: 3.8093057, y: 2.3827186, z: 0}
+  m_LocalRotation: {x: 0.09319808, y: -0, z: -0, w: 0.9956476}
+  m_LocalPosition: {x: 0.0000007003546, y: 2.3737168, z: -3.813398}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2626478242615602476}
@@ -1971,7 +1996,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 0.18128057
+    Value: 0.17899123
     m_SpeedMode: 0
     m_MaxSpeed: 7
     m_AccelTime: 0.2
