@@ -94,48 +94,52 @@ public class PlayerController : MonoBehaviour {
 
     private void Move() {
 
-        float moveY = moveInput.y;
-        float moveX = moveInput.x;
+        float moveY;
+        float moveX;
+        if (!Input.GetKey(KeyCode.LeftShift)) {
+            moveY = Mathf.Clamp(moveInput.y, -1, 0.5f);
+            direction = movementState.ForwardWalk;
+        }
+        else {
+            moveY = moveInput.y;
+            direction = movementState.ForwardRun;
+        }
+        moveX = moveInput.x;
         
         moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
         transform.position += moveDirection * moveY * Time.deltaTime;
+        
         // Walking backwards
         if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
         }
-        // Walking forward
-        else {
-            direction = movementState.ForwardWalk;
+
+        if (moveY == 0f && moveX == 0f) {
+            direction = movementState.Idle;
         }
 
         if(isGrounded && canMove) {
-            if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-                if (direction == movementState.ForwardWalk) {
+            switch(direction){
+                case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
-                }
-                else if (direction == movementState.BackwardWalk) {
+                    break;
+                case movementState.BackwardWalk:
                     anim.SetBool("walking", true);
                     WalkBackward();
-                }
-            }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walking")) {
-                    anim.SetBool("walking", true);
-                }
-                Run();
-            }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction == movementState.BackwardWalk) {
-                if (!anim.GetBool("walking")) {
-                    anim.SetBool("walking", true);
-                }
-                WalkBackward();
-            }
-            else if(moveDirection == Vector3.zero) {
-                anim.SetBool("walking", false);
-                Idle();
+                    break;
+                case movementState.ForwardRun:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Run();
+                    break;
+                case movementState.Idle:
+                    anim.SetBool("walking", false);
+                    Idle();
+                    break;
             }
         }
 
