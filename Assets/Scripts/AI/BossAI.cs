@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,8 +13,9 @@ namespace AI
         private static readonly int OnLongRangeAttack = Animator.StringToHash("OnLongRangeAttack");
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private const float AttackDistance = 2;
-        private const float ShortRangeAttackTimer = 1;
-        private const float LongRangeAttackTimer = 5;
+        private const float AttackAngle = 30;
+        private const float ShortRangeAttackTimer = 2;
+        private const float LongRangeAttackTimer = 10;
         private const float WarmupTimer = 2;
 
         private GameObject _player;
@@ -25,6 +27,7 @@ namespace AI
         private float _lastShortRangeAttackTime;
         private float _lastLongRangeAttackTime;
         private float _longRangeAttackAnimationLength;
+        private float _shortRangeAttackAnimationLength;
         private float _health;
         private float _startTime;
         
@@ -51,6 +54,7 @@ namespace AI
             _lastLongRangeAttackTime = Time.time;
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
+            _shortRangeAttackAnimationLength = GetClipLength("Mutant Punch");
             _health = 10;
             _startTime = Time.time;
             _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
@@ -128,7 +132,7 @@ namespace AI
                 return;
             }
 
-            if (Vector3.Distance(transform.position, _player.transform.position) > AttackDistance)
+            if (!PlayerCloseAndInFrontForAttack())
             {
                 SetState(BossState.Chase);
                 return;
@@ -136,11 +140,7 @@ namespace AI
 
             if (!(Time.time - _lastShortRangeAttackTime > ShortRangeAttackTimer)) return;
 
-            _agent.SetDestination(_player.transform.position);
-            _lastShortRangeAttackTime = Time.time;
-            Debug.Log("Attack");
-
-            _playerHealth.DecreaseHealth(1);
+            StartCoroutine(Attack());
         }
 
         private void HandleLongRangeAttack()
@@ -166,6 +166,8 @@ namespace AI
         private void HandleDie()
         {
             Debug.Log("Boss died");
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            GetComponent<Collider>().enabled = false;
             SetState(BossState.None);
         }
 
@@ -233,6 +235,21 @@ namespace AI
         public void DecreaseHealth(int amount) {
             _health -= amount;
             _healthDisplay.SetHearts((int)_health);
+        }
+
+        private IEnumerator Attack() {
+            _lastShortRangeAttackTime = Time.time;
+            yield return new WaitForSeconds(_shortRangeAttackAnimationLength);
+            if (PlayerCloseAndInFrontForAttack()) {
+                _playerHealth.DecreaseHealth(1);
+            }
+        }
+
+        private bool PlayerCloseAndInFrontForAttack()
+        {
+            var angle = Vector3.Angle(_player.transform.position - _agent.transform.position, _agent.transform.forward);
+            var distance = Vector3.Distance(_player.transform.position, _agent.transform.position);
+            return distance <= AttackDistance && angle <= AttackAngle;
         }
     }
 }
