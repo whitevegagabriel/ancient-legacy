@@ -2015,7 +2015,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: speed
     m_Mirror: 0
-  m_BlendParameter: speed
+  m_BlendParameter: velx
   m_BlendParameterY: vely
   m_MinThreshold: -0.5
   m_MaxThreshold: 2
