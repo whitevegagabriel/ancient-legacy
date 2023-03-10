@@ -10,14 +10,17 @@ public class PlayerController : MonoBehaviour {
         Idle,
         ForwardWalk,
         ForwardRun,
-        BackwardWalk
+        BackwardWalk,
+        LeftStrafe,
+        RightStrafe
     }
 
     public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
-    [SerializeField] private float jumpDistance;
+    [SerializeField] private float strafeSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float jumpDistance;
     private Vector3 moveDirection;
     private Vector3 velocity;
     [SerializeField] private bool isGrounded;
@@ -120,26 +123,52 @@ public class PlayerController : MonoBehaviour {
             direction = movementState.Idle;
         }
 
+        if ((moveX > 0)) {
+            direction = movementState.LeftStrafe;
+        }
+        else if ((moveX < 0)) {
+            direction = movementState.RightStrafe;
+        }
+
         if(isGrounded && canMove) {
             switch(direction){
+
                 case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
                     break;
+
                 case movementState.BackwardWalk:
                     anim.SetBool("walking", true);
                     WalkBackward();
                     break;
+                    
                 case movementState.ForwardRun:
                     if (!anim.GetBool("walking")) {
                         anim.SetBool("walking", true);
                     }
                     Run();
                     break;
+
+                case movementState.LeftStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
+                case movementState.RightStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
                 case movementState.Idle:
                     anim.SetBool("walking", false);
                     Idle();
                     break;
+
             }
             anim.SetFloat("velx", moveX);
             anim.SetFloat("vely", moveY);
@@ -172,7 +201,12 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void WalkBackward() {
-        moveSpeed = walkSpeed;
+        moveSpeed = strafeSpeed;
+
+    }
+
+    private void Strafe() {
+        moveSpeed = strafeSpeed;
 
     }
 
