@@ -32,6 +32,7 @@ namespace AI
         private float _startTime;
         
         public GameObject radialDamagePrefab;
+        public GameObject relicPrefab;
 
         private enum BossState
         {
@@ -168,6 +169,8 @@ namespace AI
             Debug.Log("Boss died");
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             GetComponent<Collider>().enabled = false;
+            GameObject go = Instantiate(relicPrefab, transform.position, Quaternion.identity);
+            go.transform.localPosition = new Vector3(0, 0.5f, 0);
             SetState(BossState.None);
         }
 

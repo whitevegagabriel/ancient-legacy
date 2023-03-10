@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radialDamagePrefab: {fileID: 522289110924900590, guid: 405ddf94113003d46923098027167a68, type: 3}
+  relicPrefab: {fileID: 100000, guid: 87b70b92195974d9dacc05039e07b8cf, type: 3}
 --- !u!195 &5148869355171242543
 NavMeshAgent:
   m_ObjectHideFlags: 0
