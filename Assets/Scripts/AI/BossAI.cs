@@ -29,6 +29,7 @@ namespace AI
         private float _longRangeAttackAnimationLength;
         private float _shortRangeAttackAnimationLength;
         private float _health;
+        private float _maxHealth;
         private float _startTime;
         
         public GameObject radialDamagePrefab;
@@ -57,11 +58,12 @@ namespace AI
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _shortRangeAttackAnimationLength = GetClipLength("Mutant Punch");
             _health = 10;
+            _maxHealth = _health;
             _startTime = Time.time;
             _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
             if (_healthDisplay == null) Debug.Log("not found");
             else {
-                _healthDisplay.SetHearts((int) _health);
+                _healthDisplay.SetHearts((int) _health, (int) _maxHealth);
             }
         }
 
@@ -237,7 +239,7 @@ namespace AI
 
         public void DecreaseHealth(int amount) {
             _health -= amount;
-            _healthDisplay.SetHearts((int)_health);
+            _healthDisplay.SetHearts((int)_health, (int) _maxHealth);
         }
 
         private IEnumerator Attack() {
