@@ -10,14 +10,17 @@ public class PlayerController : MonoBehaviour {
         Idle,
         ForwardWalk,
         ForwardRun,
-        BackwardWalk
+        BackwardWalk,
+        LeftStrafe,
+        RightStrafe
     }
 
     public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
-    [SerializeField] private float jumpDistance;
+    [SerializeField] private float strafeSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float jumpDistance;
     private Vector3 moveDirection;
     private Vector3 velocity;
     [SerializeField] private bool isGrounded;
@@ -42,6 +45,8 @@ public class PlayerController : MonoBehaviour {
     public bool isBlocking;
     private movementState direction;
 
+    public InputAction playerControls;
+    private Vector2 moveInput;
     [SerializeField] InputAction input;
 
     void Awake() {
@@ -81,55 +86,92 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        //if (!isGrounded && !isJumping) {
-        //    anim.SetBool("fall", true);
-        //}
+        if (!isGrounded && !isJumping) {
+            anim.SetBool("fall", true);
+        }
 	}
+
+    public void OnMove(InputAction.CallbackContext context) {
+        moveInput = context.ReadValue<Vector2>();
+    }
 
     private void Move() {
 
-        float moveZ = Input.GetAxis("Vertical");
+        float moveY;
+        float moveX;
+        if (!Input.GetKey(KeyCode.LeftShift)) {
+            moveY = Mathf.Clamp(moveInput.y, -1, 0.5f);
+            direction = movementState.ForwardWalk;
+        }
+        else {
+            moveY = moveInput.y;
+            direction = movementState.ForwardRun;
+        }
+        moveX = moveInput.x;
         
-        moveDirection = new Vector3(0, 0, moveZ);
+        moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        transform.position += moveDirection * moveZ * Time.deltaTime;
+        transform.position += moveDirection * moveY * Time.deltaTime;
+        
         // Walking backwards
-        if (moveZ < 0.0) {
+        if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
         }
-        // Walking forward
-        else {
-            direction = movementState.ForwardWalk;
+
+        if (moveY == 0f && moveX == 0f) {
+            direction = movementState.Idle;
+        }
+
+        if ((moveX > 0)) {
+            direction = movementState.LeftStrafe;
+        }
+        else if ((moveX < 0)) {
+            direction = movementState.RightStrafe;
         }
 
         if(isGrounded && canMove) {
-            if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-                if (direction == movementState.ForwardWalk) {
+            switch(direction){
+
+                case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
-                }
-                else if (direction == movementState.BackwardWalk) {
+                    break;
+
+                case movementState.BackwardWalk:
                     anim.SetBool("walking", true);
                     WalkBackward();
-                }
+                    break;
+                    
+                case movementState.ForwardRun:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Run();
+                    break;
+
+                case movementState.LeftStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
+                case movementState.RightStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
+                case movementState.Idle:
+                    anim.SetBool("walking", false);
+                    Idle();
+                    break;
+
             }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walking")) {
-                    anim.SetBool("walking", true);
-                }
-                Run();
-            }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction == movementState.BackwardWalk) {
-                if (!anim.GetBool("walking")) {
-                    anim.SetBool("walking", true);
-                }
-                WalkBackward();
-            }
-            else if(moveDirection == Vector3.zero) {
-                anim.SetBool("walking", false);
-                Idle();
-            }
+            anim.SetFloat("velx", moveX);
+            anim.SetFloat("vely", moveY);
         }
 
         if (ground != null) {
@@ -150,25 +192,30 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Idle() {
-        anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+        
     }
 
     private void WalkForward() {
         moveSpeed = walkSpeed;
-        anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+        
     }
 
     private void WalkBackward() {
-        moveSpeed = walkSpeed;
-        anim.SetFloat("speed", -0.5f, 0.1f, Time.deltaTime);
+        moveSpeed = strafeSpeed;
+
+    }
+
+    private void Strafe() {
+        moveSpeed = strafeSpeed;
+
     }
 
     private void Run() {
         moveSpeed = runSpeed;
-        anim.SetFloat("speed", 1f, 0.1f, Time.deltaTime);
+
     }
 
-    public void Jump() {
+    public void OnJump(InputAction.CallbackContext context) {
         if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
             if (canJump)
@@ -183,7 +230,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void Block(InputAction.CallbackContext context) {
+    public void OnBlock(InputAction.CallbackContext context) {
         if(!isAttacking && context.started) {
             isBlocking = true;
             anim.SetBool("block", true);
@@ -194,7 +241,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void OnAttack() {
+    public void OnAttack(InputAction.CallbackContext context) {
         
         if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
