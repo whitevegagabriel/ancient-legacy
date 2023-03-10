@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour {
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
         Debug.Log(weapon);
-        weapon.setIsAttacking(true);
+        weapon.StartAttack();
         canMove = false;
         isAttacking = true;
         anim.SetBool("attack", isAttacking);
@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour {
         
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        weapon.setIsAttacking(false);
+        weapon.StopAttack();
         attackCooldown = Time.time + 0.1f;
         isAttacking = false;
         anim.SetBool("attack", isAttacking);
