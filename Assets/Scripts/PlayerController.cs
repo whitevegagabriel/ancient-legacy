@@ -176,7 +176,9 @@ public class PlayerController : MonoBehaviour {
 
         if (ground != null) {
             var groundPosition = ground.position;
-            Vector3 groundMovement = groundPosition - lastGroundPosition;
+            var groundMovement = groundPosition - lastGroundPosition;
+            Debug.Log(groundMovement);
+            Debug.Log(groundPosition == lastGroundPosition);
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
         }
@@ -277,7 +279,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.tag == "Ground")
+        if (hit.collider.tag == "Ground" && ground != hit.transform)
         {
             ground = hit.transform;
             lastGroundPosition = ground.position;

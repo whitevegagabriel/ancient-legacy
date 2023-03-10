@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7962281551425019673}
   m_Layer: 6
   m_Name: FloatingPlatform
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
