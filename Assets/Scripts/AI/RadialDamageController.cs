@@ -27,7 +27,6 @@ namespace AI
 
             if (CollidingWithPlayer(_currentRadius) && !_alreadyCollided)
             {
-                Time.timeScale = 0;
                 _alreadyCollided = true;
                 var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
                 playerHealth.DecreaseHealth(2);
