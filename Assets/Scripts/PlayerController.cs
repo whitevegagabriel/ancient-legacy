@@ -43,11 +43,14 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
+    public bool isRunning;
     private movementState direction;
 
     public InputAction playerControls;
     private Vector2 moveInput;
     [SerializeField] InputAction input;
+
+    float lastGroundedTime;
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
@@ -61,8 +64,10 @@ public class PlayerController : MonoBehaviour {
         isJumping = false;
         isGrounded = false;
         isBlocking = false;
+        isRunning = false;
         direction = movementState.Idle;
         input = new InputAction();
+        lastGroundedTime = Time.time;
     }
 
     void FixedUpdate() {
@@ -76,6 +81,8 @@ public class PlayerController : MonoBehaviour {
 
         isGrounded = controller.isGrounded;
 
+        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
         }
@@ -86,7 +93,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        if (!isGrounded && !isJumping) {
+        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
             anim.SetBool("fall", true);
         }
 	}
@@ -99,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 
         float moveY;
         float moveX;
-        if (!Input.GetKey(KeyCode.LeftShift)) {
+        if (!isRunning) {
             moveY = Mathf.Clamp(moveInput.y, -1, 0.5f);
             direction = movementState.ForwardWalk;
         }
@@ -123,11 +130,13 @@ public class PlayerController : MonoBehaviour {
             direction = movementState.Idle;
         }
 
-        if ((moveX > 0)) {
-            direction = movementState.LeftStrafe;
-        }
-        else if ((moveX < 0)) {
-            direction = movementState.RightStrafe;
+        if (direction != movementState.BackwardWalk) {
+            if ((moveX > 0)) {
+                direction = movementState.LeftStrafe;
+            }
+            else if ((moveX < 0)) {
+                direction = movementState.RightStrafe;
+            }
         }
 
         if(isGrounded && canMove) {
@@ -217,6 +226,14 @@ public class PlayerController : MonoBehaviour {
 
     }
 
+    public void OnRun(InputAction.CallbackContext context) {
+        if(context.started) {
+            isRunning = true;
+        }
+        else if(context.canceled) {
+            isRunning = false;
+        }
+    }
     public void OnJump(InputAction.CallbackContext context) {
         if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
