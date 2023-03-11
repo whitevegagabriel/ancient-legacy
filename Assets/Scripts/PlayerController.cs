@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private CharacterController controller;
 
-    private bool canJump = true;
+    public bool canJump = false; //set public for testing purpose
     private Transform ground;
     private Vector3 lastGroundPosition;
 
@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
+    public bool relicsEnabled;
     private movementState direction;
 
     [SerializeField] InputAction input;
@@ -52,10 +53,13 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         turnSpeed = 90f;
         canMove = true;
+        canJump = false;
         isAttacking = false;
         isJumping = false;
         isGrounded = false;
         isBlocking = false;
+        //update this field to false for full player ability at the start. 
+        relicsEnabled = false;
         direction = movementState.Idle;
         input = new InputAction();
     }
@@ -165,15 +169,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Jump() {
-        if(isGrounded && canMove && Time.time > jumpCooldown) {
-            /*
-            if (canJump)
-            {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-                anim.SetTrigger("jump");
-                canJump = false;
-            }
-            */
+
+        if(isGrounded && canMove && Time.time > jumpCooldown && canJump) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
         }
