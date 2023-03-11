@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour {
         LeftStrafe,
         RightStrafe
     }
-
-    public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float strafeSpeed;
@@ -43,11 +41,15 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
+
+    public bool isRunning;
     private movementState direction;
 
     public InputAction playerControls;
     private Vector2 moveInput;
     [SerializeField] InputAction input;
+
+    float lastGroundedTime;
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
@@ -55,14 +57,15 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        turnSpeed = 90f;
         canMove = true;
         isAttacking = false;
         isJumping = false;
         isGrounded = false;
         isBlocking = false;
+        isRunning = false;
         direction = movementState.Idle;
         input = new InputAction();
+        lastGroundedTime = Time.time;
     }
 
     void FixedUpdate() {
@@ -76,6 +79,8 @@ public class PlayerController : MonoBehaviour {
 
         isGrounded = controller.isGrounded;
 
+        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
         }
@@ -86,7 +91,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        if (!isGrounded && !isJumping) {
+        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
             anim.SetBool("fall", true);
         }
 	}
@@ -97,30 +102,29 @@ public class PlayerController : MonoBehaviour {
 
     private void Move() {
 
-        float moveY;
-        float moveX;
-        if (!Input.GetKey(KeyCode.LeftShift)) {
-            moveY = Mathf.Clamp(moveInput.y, -1, 0.5f);
-            direction = movementState.ForwardWalk;
-        }
-        else {
-            moveY = moveInput.y;
-            direction = movementState.ForwardRun;
-        }
-        moveX = moveInput.x;
+        float moveY = moveInput.y;
+        float moveX = moveInput.x;
         
         moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
         transform.position += moveDirection * moveY * Time.deltaTime;
+
+        if (!isRunning) {
+            moveY = Mathf.Clamp(moveY, -1, 0.5f);
+            direction = movementState.ForwardWalk;
+        }
+        else {
+            direction = movementState.ForwardRun;
+        }
         
+        if (moveY == 0f && moveX == 0f) {
+            direction = movementState.Idle;
+        }
+
         // Walking backwards
         if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
-        }
-
-        if (moveY == 0f && moveX == 0f) {
-            direction = movementState.Idle;
         }
 
         if ((moveX > 0)) {
@@ -136,6 +140,7 @@ public class PlayerController : MonoBehaviour {
                 case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
+                    moveY = 0.5f;
                     break;
 
                 case movementState.BackwardWalk:
@@ -217,6 +222,14 @@ public class PlayerController : MonoBehaviour {
 
     }
 
+    public void OnRun(InputAction.CallbackContext context) {
+        if(context.started) {
+            isRunning = true;
+        }
+        else if(context.canceled) {
+            isRunning = false;
+        }
+    }
     public void OnJump(InputAction.CallbackContext context) {
         if(isGrounded && canMove && Time.time > jumpCooldown) {
             /*
