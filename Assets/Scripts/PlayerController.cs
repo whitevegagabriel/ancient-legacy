@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour {
         LeftStrafe,
         RightStrafe
     }
-
-    public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float strafeSpeed;
@@ -43,6 +41,7 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
+
     public bool isRunning;
     private movementState direction;
 
@@ -58,7 +57,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        turnSpeed = 90f;
         canMove = true;
         isAttacking = false;
         isJumping = false;
@@ -104,39 +102,36 @@ public class PlayerController : MonoBehaviour {
 
     private void Move() {
 
-        float moveY;
-        float moveX;
-        if (!isRunning) {
-            moveY = Mathf.Clamp(moveInput.y, -1, 0.5f);
-            direction = movementState.ForwardWalk;
-        }
-        else {
-            moveY = moveInput.y;
-            direction = movementState.ForwardRun;
-        }
-        moveX = moveInput.x;
+        float moveY = moveInput.y;
+        float moveX = moveInput.x;
         
         moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
         transform.position += moveDirection * moveY * Time.deltaTime;
+
+        if (!isRunning) {
+            moveY = Mathf.Clamp(moveY, -1, 0.5f);
+            direction = movementState.ForwardWalk;
+        }
+        else {
+            direction = movementState.ForwardRun;
+        }
         
+        if (moveY == 0f && moveX == 0f) {
+            direction = movementState.Idle;
+        }
+
         // Walking backwards
         if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
         }
 
-        if (moveY == 0f && moveX == 0f) {
-            direction = movementState.Idle;
+        if ((moveX > 0)) {
+            direction = movementState.LeftStrafe;
         }
-
-        if (direction != movementState.BackwardWalk) {
-            if ((moveX > 0)) {
-                direction = movementState.LeftStrafe;
-            }
-            else if ((moveX < 0)) {
-                direction = movementState.RightStrafe;
-            }
+        else if ((moveX < 0)) {
+            direction = movementState.RightStrafe;
         }
 
         if(isGrounded && canMove) {
@@ -145,6 +140,7 @@ public class PlayerController : MonoBehaviour {
                 case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
+                    moveY = 0.5f;
                     break;
 
                 case movementState.BackwardWalk:
