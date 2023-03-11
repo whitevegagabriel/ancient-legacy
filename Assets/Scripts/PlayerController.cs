@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour {
     private CharacterController controller;
 
     public bool canJump = false; //set public for testing purpose
+    public bool canRun = false; //set public for testing purpose
     private Transform ground;
     private Vector3 lastGroundPosition;
 
@@ -222,7 +223,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started) {
+        if(context.started && canRun) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -277,6 +278,11 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Jump Relics!");
             canJump = true;
+        }
+        if (hit.gameObject.CompareTag("RunRelics"))
+        {
+            Debug.Log("Hit Run Relics!");
+            canRun = true;
         }
     }
 
