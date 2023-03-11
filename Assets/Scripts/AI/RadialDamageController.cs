@@ -1,63 +1,41 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using UnityEditor.ProBuilder;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 namespace AI
 {
     public class RadialDamageController : MonoBehaviour
     {
+        private const float StartRadius = 0.1f;
         private const float FinalRadius = 15;
-        private ProBuilderMesh _proBuilderMesh;
-        private Vector3 _center;
+        private const float RadiusIncrease = 0.1f;
+        private CharacterController _playerController;
+        private LineRenderer _lineRenderer;
+        private float _currentRadius;
         private bool _alreadyCollided;
-
-        // Start is called before the first frame update
+        
         private void Start()
         {
-            // TODO: switch to a particle-system-based solution instead of using ProBuilder
-            _proBuilderMesh = GetComponent<ProBuilderMesh>();
-            var vertices = _proBuilderMesh.GetVertices();
-            _center = vertices.Aggregate(Vector3.zero, (current, vertex) => current + vertex.position) /
-                      vertices.Length;
+            _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
+            // TODO: switch to a particle-system-based solution instead of using LineRenderer
+            _lineRenderer = GetComponent<LineRenderer>();
+            _currentRadius = StartRadius;
         }
 
         private void FixedUpdate()
         {
-            var vertices = _proBuilderMesh.GetVertices();
+            Draw(_currentRadius);
 
-            // increase radius for each vertex position
-            var maxRadius = 0f;
-            foreach (var vertex in vertices)
-            {
-                var planeCenter = new Vector3(_center.x, vertex.position.y, _center.z);
-                var radius = Vector3.Distance(planeCenter, vertex.position);
-                var newRadius = radius + 0.1f;
-                if (newRadius > maxRadius)
-                {
-                    maxRadius = newRadius;
-                }
-
-                vertex.position = Vector3.LerpUnclamped(planeCenter, vertex.position, newRadius / radius);
-            }
-
-            _proBuilderMesh.SetVertices(vertices);
-            _proBuilderMesh.ToMesh();
-            _proBuilderMesh.Refresh();
-            
-            if (CollidingWithPlayer(maxRadius) && !_alreadyCollided)
+            if (CollidingWithPlayer(_currentRadius) && !_alreadyCollided)
             {
                 _alreadyCollided = true;
                 var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
                 playerHealth.DecreaseHealth(2);
             }
 
+            _currentRadius += RadiusIncrease;
+
             // destroy if max radius is reached
-            if (maxRadius >= FinalRadius)
+            if (_currentRadius >= FinalRadius)
             {
                 Destroy(transform.parent.gameObject);
             }
@@ -65,15 +43,27 @@ namespace AI
 
         private bool CollidingWithPlayer(float radiusFromCenter)
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
             // check if player within error margin of collision
-            var distance = Vector3.Distance(player.transform.position, _center);
-            return distance - radiusFromCenter < .1;
+            var distance = Vector3.Distance(_playerController.transform.position,  transform.parent.position);
+            var jumpHeight =_playerController.transform.position.y - transform.parent.position.y;
+            return Mathf.Abs(distance - radiusFromCenter) < .1 && Mathf.Abs(jumpHeight) < .1;
         }
-
-        private void OnCollisionEnter(Collision collision)
+        
+        void Draw(float radius) // only need to draw when something changes
         {
-            Debug.Log(collision.gameObject.name);
+            List<Vector3> points = new List<Vector3>();
+            int numPoints = 100; // number of points on the circumference
+
+            for (int i = 0; i < numPoints; i++)
+            {
+                float angle = i * Mathf.PI * 2 / numPoints;
+                float x = Mathf.Cos(angle) * radius;
+                float z = Mathf.Sin(angle) * radius;
+                points.Add(new Vector3(x, 0, z));
+            }
+
+            _lineRenderer.positionCount = points.Count;
+            _lineRenderer.SetPositions(points.ToArray());
         }
     }
 }

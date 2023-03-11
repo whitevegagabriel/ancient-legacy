@@ -10,14 +10,15 @@ public class PlayerController : MonoBehaviour {
         Idle,
         ForwardWalk,
         ForwardRun,
-        BackwardWalk
+        BackwardWalk,
+        LeftStrafe,
+        RightStrafe
     }
-
-    public float turnSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
-    [SerializeField] private float jumpDistance;
+    [SerializeField] private float strafeSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float jumpDistance;
     private Vector3 moveDirection;
     private Vector3 velocity;
     [SerializeField] private bool isGrounded;
@@ -40,10 +41,14 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
-    public bool relicsEnabled;
+    public bool isRunning;
     private movementState direction;
 
+    public InputAction playerControls;
+    private Vector2 moveInput;
     [SerializeField] InputAction input;
+
+    float lastGroundedTime;
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
@@ -51,17 +56,16 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        turnSpeed = 90f;
         canMove = true;
         canJump = false;
         isAttacking = false;
         isJumping = false;
         isGrounded = false;
         isBlocking = false;
-        //update this field to false for full player ability at the start. 
-        relicsEnabled = false;
+        isRunning = false;
         direction = movementState.Idle;
         input = new InputAction();
+        lastGroundedTime = Time.time;
     }
 
     void FixedUpdate() {
@@ -75,6 +79,8 @@ public class PlayerController : MonoBehaviour {
 
         isGrounded = controller.isGrounded;
 
+        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
         }
@@ -85,56 +91,99 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        //if (!isGrounded && !isJumping) {
-        //    anim.SetBool("fall", true);
-        //}
+        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
+            anim.SetBool("fall", true);
+        }
 	}
+
+    public void OnMove(InputAction.CallbackContext context) {
+        moveInput = context.ReadValue<Vector2>();
+    }
 
     private void Move() {
 
-        float moveZ = Input.GetAxis("Vertical");
+        float moveY = moveInput.y;
+        float moveX = moveInput.x;
         
-        moveDirection = new Vector3(0, 0, moveZ);
+        moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        transform.position += moveDirection * moveZ * Time.deltaTime;
+        transform.position += moveDirection * moveY * Time.deltaTime;
+
+        if (!isRunning) {
+            moveY = Mathf.Clamp(moveY, -1, 0.5f);
+            direction = movementState.ForwardWalk;
+        }
+        else {
+            direction = movementState.ForwardRun;
+        }
+        
+        if (moveY == 0f && moveX == 0f) {
+            direction = movementState.Idle;
+        }
+
         // Walking backwards
-        if (moveZ < 0.0) {
-            transform.Rotate( 0 , -1*(Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime) , 0 );
+        if (moveY < 0.0) {
             direction = movementState.BackwardWalk; 
         }
-        // Walking forward
-        else {
-            transform.Rotate( 0 , Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime , 0 );
-            direction = movementState.ForwardWalk;
+
+        if ((moveX > 0)) {
+            direction = movementState.LeftStrafe;
+        }
+        else if ((moveX < 0)) {
+            direction = movementState.RightStrafe;
         }
 
         if(isGrounded && canMove) {
-            if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-                if (direction == movementState.ForwardWalk) {
-                    anim.SetBool("walkforward", true);
+            switch(direction){
+
+                case movementState.ForwardWalk:
+                    anim.SetBool("walking", true);
                     WalkForward();
-                }
-                else if (direction == movementState.BackwardWalk) {
-                    anim.SetBool("walkforward", true);
+                    moveY = 0.5f;
+                    break;
+
+                case movementState.BackwardWalk:
+                    anim.SetBool("walking", true);
                     WalkBackward();
-                }
+                    break;
+                    
+                case movementState.ForwardRun:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Run();
+                    break;
+
+                case movementState.LeftStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
+                case movementState.RightStrafe:
+                    if (!anim.GetBool("walking")) {
+                        anim.SetBool("walking", true);
+                    }
+                    Strafe();
+                    break;
+
+                case movementState.Idle:
+                    anim.SetBool("walking", false);
+                    Idle();
+                    break;
+
             }
-            else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift) && direction != movementState.BackwardWalk) {
-                if (!anim.GetBool("walkforward")) {
-                    anim.SetBool("walkforward", true);
-                }
-                Run();
-            }
-            else if(moveDirection == Vector3.zero) {
-                anim.SetBool("walkforward", false);
-                Idle();
-            }
+            anim.SetFloat("velx", moveX);
+            anim.SetFloat("vely", moveY);
         }
 
         if (ground != null) {
             var groundPosition = ground.position;
-            Vector3 groundMovement = groundPosition - lastGroundPosition;
+            var groundMovement = groundPosition - lastGroundPosition;
+            Debug.Log(groundMovement);
+            Debug.Log(groundPosition == lastGroundPosition);
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
         }
@@ -150,33 +199,45 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Idle() {
-        anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+        
     }
 
     private void WalkForward() {
         moveSpeed = walkSpeed;
-        anim.SetFloat("speed", 0.5f, 0.1f, Time.deltaTime);
+        
     }
 
     private void WalkBackward() {
-        moveSpeed = walkSpeed;
-        anim.SetFloat("speed", -0.5f, 0.1f, Time.deltaTime);
+        moveSpeed = strafeSpeed;
+
+    }
+
+    private void Strafe() {
+        moveSpeed = strafeSpeed;
+
     }
 
     private void Run() {
         moveSpeed = runSpeed;
-        anim.SetFloat("speed", 1f, 0.1f, Time.deltaTime);
+
     }
 
-    public void Jump() {
-
+    public void OnRun(InputAction.CallbackContext context) {
+        if(context.started) {
+            isRunning = true;
+        }
+        else if(context.canceled) {
+            isRunning = false;
+        }
+    }
+    public void OnJump(InputAction.CallbackContext context) {
         if(isGrounded && canMove && Time.time > jumpCooldown && canJump) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
         }
     }
 
-    public void Block(InputAction.CallbackContext context) {
+    public void OnBlock(InputAction.CallbackContext context) {
         if(!isAttacking && context.started) {
             isBlocking = true;
             anim.SetBool("block", true);
@@ -187,7 +248,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void OnAttack() {
+    public void OnAttack(InputAction.CallbackContext context) {
         
         if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
             StartCoroutine(Attack());
@@ -197,7 +258,7 @@ public class PlayerController : MonoBehaviour {
     private IEnumerator Attack() {
         WeaponController weapon = this.GetComponentInChildren<WeaponController>();
         Debug.Log(weapon);
-        weapon.setIsAttacking(true);
+        weapon.StartAttack();
         canMove = false;
         isAttacking = true;
         anim.SetBool("attack", isAttacking);
@@ -205,7 +266,7 @@ public class PlayerController : MonoBehaviour {
         
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        weapon.setIsAttacking(false);
+        weapon.StopAttack();
         attackCooldown = Time.time + 0.1f;
         isAttacking = false;
         anim.SetBool("attack", isAttacking);
@@ -223,7 +284,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.tag == "Ground")
+        if (hit.collider.tag == "Ground" && ground != hit.transform)
         {
             ground = hit.transform;
             lastGroundPosition = ground.position;
@@ -231,12 +292,12 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void ResetJumpAndFall() {
-    
+        
         velocity.y = -2f;
         if (isJumping) {
             isJumping = false;
             anim.SetBool("jump", isJumping);
-            jumpCooldown = Time.time + .6f;
+            jumpCooldown = Time.time + .2f;
         }
 
         // stop falling

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6448619256546886147}
   - component: {fileID: 4006234062056387428}
   - component: {fileID: 7092946691282537403}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2841562911035496171}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FloatingPlatformHeightFast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
