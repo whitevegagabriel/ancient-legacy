@@ -33,8 +33,6 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private CharacterController controller;
 
-    public bool canJump = false; //set public for testing purpose
-    public bool canRun = false; //set public for testing purpose
     private Transform ground;
     private Vector3 lastGroundPosition;
 
@@ -51,6 +49,11 @@ public class PlayerController : MonoBehaviour {
 
     float lastGroundedTime;
 
+    //Collectable relics parameters
+    public bool canJump = false; //set public for testing purpose
+    public bool canRun = false; //set public for testing purpose
+
+
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
@@ -66,6 +69,7 @@ public class PlayerController : MonoBehaviour {
         direction = movementState.Idle;
         input = new InputAction();
         lastGroundedTime = Time.time;
+
     }
 
     void FixedUpdate() {
