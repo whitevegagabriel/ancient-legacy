@@ -57,7 +57,6 @@ public class PlayerController : MonoBehaviour {
 
     void Start() {
         canMove = true;
-        canJump = false;
         isAttacking = false;
         isJumping = false;
         isGrounded = false;
@@ -277,7 +276,6 @@ public class PlayerController : MonoBehaviour {
         if (hit.gameObject.CompareTag("JumpRelics"))
         {
             Debug.Log("Hit Jump Relics!");
-            hit.gameObject.SetActive(false);
             canJump = true;
         }
     }
