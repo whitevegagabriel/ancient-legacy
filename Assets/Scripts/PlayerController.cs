@@ -182,8 +182,6 @@ public class PlayerController : MonoBehaviour {
         if (ground != null) {
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
-            Debug.Log(groundMovement);
-            Debug.Log(groundPosition == lastGroundPosition);
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
         }
