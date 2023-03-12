@@ -3,14 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Health Display
-  - Weapon
-  - Boss
-  - Boss Health Display
-  - JumpRelics
-  - Ground
-  - CheckPoint
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -21,7 +14,7 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
+  - PostProcessing
   - 
   - 
   - 

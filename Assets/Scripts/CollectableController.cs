@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class CollectableController : MonoBehaviour
 {
+    PlayerController playController;
 
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Destroy(gameObject);
+        }
     }
 
 }
