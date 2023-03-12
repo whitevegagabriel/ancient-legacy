@@ -86,31 +86,31 @@ public class PlayerController : MonoBehaviour {
 	void Update () {   
         isDefeated = targetable.GetHealth() <= 0 ? true : false;
 
-        if (!isDefeated) {
-            if (isAttacking == false) {
-                canMove = true;
-            }
-
-            isGrounded = controller.isGrounded;
-
-            lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
-
-            if(isGrounded && velocity.y < 0) {
-                ResetJumpAndFall();
-            }
-
-            Move();
-
-            if (isJumping) {
-                anim.SetBool("jump", isJumping);
-            }
-
-            if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
-                anim.SetBool("fall", true);
-            }
-        }
-        else {
+        if (isDefeated) {
             anim.SetTrigger("defeated");
+            return;
+        }
+
+        if (isAttacking == false) {
+            canMove = true;
+        }
+
+        isGrounded = controller.isGrounded;
+
+        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+
+        if(isGrounded && velocity.y < 0) {
+            ResetJumpAndFall();
+        }
+
+        Move();
+
+        if (isJumping) {
+            anim.SetBool("jump", isJumping);
+        }
+
+        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
+            anim.SetBool("fall", true);
         }
 	}
 
