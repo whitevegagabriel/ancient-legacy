@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviour {
         if(isGrounded && canMove && Time.time > jumpCooldown && jumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
+            EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
         }
     }
 
@@ -277,6 +278,7 @@ public class PlayerController : MonoBehaviour {
         
         Debug.Log(weapon);
         weapon.StartAttack();
+        EventManager.TriggerEvent<AttackEvent, Vector3>(GameObject.Find("Sword").transform.position);
         canMove = false;
         isAttacking = true;
         anim.SetBool("attack", isAttacking);
@@ -319,11 +321,13 @@ public class PlayerController : MonoBehaviour {
             isJumping = false;
             anim.SetBool("jump", isJumping);
             jumpCooldown = Time.time + .2f;
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 301f);
         }
 
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 501f);
         }
     }
 }

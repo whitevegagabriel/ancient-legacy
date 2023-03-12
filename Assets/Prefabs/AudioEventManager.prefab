@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1582111054294410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4172847740820724}
+  - component: {fileID: 1445307477429619357}
+  m_Layer: 0
+  m_Name: AudioEventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4172847740820724
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582111054294410}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1445307477429619357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582111054294410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b142a885125535b4ebb92b31c69ad49e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSound3DPrefab: {fileID: 114791402448356372, guid: 18dca10ed4286ab4dac1c6df920629cb, type: 3}
+  boxAudio: []
+  playerLandsAudio: {fileID: 8300000, guid: 029d281b4724051469d48aa5f19cee34, type: 3}
+  swordAttackAudio: {fileID: 8300000, guid: 1b6162e5126db2a478a7510bf80f113c, type: 3}
+  deathAudio: {fileID: 8300000, guid: fc8006f872a482a4d83de964e8e346c8, type: 3}
+  jumpAudio: {fileID: 8300000, guid: ae7f3c4a4b1b192489d4304289a1ac30, type: 3}
+  gruntAudio: {fileID: 8300000, guid: 067f8e5eae1ea7046a7ea35dd3689dbc, type: 3}
