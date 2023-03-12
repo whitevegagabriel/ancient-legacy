@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour {
     public bool isBlocking;
 
     public bool isRunning;
+
+    public bool isDefeated;
     private movementState direction;
 
     public InputAction playerControls;
@@ -67,6 +69,7 @@ public class PlayerController : MonoBehaviour {
         isGrounded = false;
         isBlocking = false;
         isRunning = false;
+        isDefeated = false;
         direction = movementState.Idle;
         input = new InputAction();
         lastGroundedTime = Time.time;
@@ -77,26 +80,33 @@ public class PlayerController : MonoBehaviour {
     }
 
 	void Update () {   
-        if (isAttacking == false) {
-            canMove = true;
+        isDefeated = targetable.GetHealth() <= 0 ? true : false;
+
+        if (!isDefeated) {
+            if (isAttacking == false) {
+                canMove = true;
+            }
+
+            isGrounded = controller.isGrounded;
+
+            lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+
+            if(isGrounded && velocity.y < 0) {
+                ResetJumpAndFall();
+            }
+
+            Move();
+
+            if (isJumping) {
+                anim.SetBool("jump", isJumping);
+            }
+
+            if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
+                anim.SetBool("fall", true);
+            }
         }
-
-        isGrounded = controller.isGrounded;
-
-        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
-
-        if(isGrounded && velocity.y < 0) {
-            ResetJumpAndFall();
-        }
-
-        Move();
-
-        if (isJumping) {
-            anim.SetBool("jump", isJumping);
-        }
-
-        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
-            anim.SetBool("fall", true);
+        else {
+            anim.SetTrigger("defeated");
         }
 	}
 

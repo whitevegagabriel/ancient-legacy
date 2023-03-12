@@ -8,12 +8,20 @@ public class TurnController : MonoBehaviour
  
     private Quaternion CharacterRotation;
 
+    private PlayerController playerController;
+
+    void Start () {
+        playerController = GetComponent<PlayerController>();
+    }
+
     void Update ()
-    {
-        CharacterRotation = GameCamera.transform.rotation;
-        CharacterRotation.x = 0;
-        CharacterRotation.z = 0;
-        transform.rotation = CharacterRotation;
+    {  
+        if (!playerController.isDefeated) {
+            CharacterRotation = GameCamera.transform.rotation;
+            CharacterRotation.x = 0;
+            CharacterRotation.z = 0;
+            transform.rotation = CharacterRotation;
+        }
     }
 
 }
