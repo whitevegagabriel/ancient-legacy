@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class FloorController : MonoBehaviour
 {
-    bool isFalling = false;
-    float downSpeed = 0;
+    private bool isFalling = false;
+    private float downSpeed = 0f;
+    private Vector3 originalPosition;
+    private ResetEvent resetEvent = ResetEvent.Instance;
+
+    void Start() {
+        originalPosition = transform.localPosition;
+        resetEvent.AddListener(ResetTile);
+    }
 
     void OnTriggerEnter(Collider collision)
     {
@@ -17,7 +24,7 @@ public class FloorController : MonoBehaviour
     }
 
     void Update()
-    {
+    {   
         if (isFalling)
         {
             downSpeed += Time.deltaTime/8;
@@ -26,5 +33,11 @@ public class FloorController : MonoBehaviour
                 transform.parent.position.z);
         }
 
+    }
+
+    public void ResetTile() {
+        this.isFalling = false;
+        this.downSpeed = 0f;
+        this.transform.localPosition = originalPosition;
     }
 }
