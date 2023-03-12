@@ -11,7 +11,9 @@ namespace Combat
         void Start()
         {
             _healthDisplay = GetComponent<HealthUI>();
-            _healthDisplay.SetHearts(health, _maxHealth);
+            if (_healthDisplay != null) {
+                _healthDisplay.SetHearts(health, _maxHealth);
+            }
         }
 
         public void OnHit(int damage)
