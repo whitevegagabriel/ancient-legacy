@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity;
     [SerializeField] private float jumpHeight;
-    private float attackCooldown;
     private float jumpCooldown;
     private WeaponController weapon;
     
@@ -261,7 +260,7 @@ public class PlayerController : MonoBehaviour {
 
     public void OnAttack(InputAction.CallbackContext context) {
         
-        if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
+        if(!isAttacking && !isBlocking) {
             StartCoroutine(Attack());
         }
     }
@@ -280,7 +279,6 @@ public class PlayerController : MonoBehaviour {
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         weapon.StopAttack();
-        attackCooldown = Time.time + 0.1f;
         isAttacking = false;
         anim.SetBool("attack", isAttacking);
     }
