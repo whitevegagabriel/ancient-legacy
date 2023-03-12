@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Combat;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -49,10 +51,13 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] InputAction input;
 
     float lastGroundedTime;
+    private Targetable targetable;
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
+        targetable = GetComponent<Targetable>();
+        targetable.InitHealth(10);
     }
 
     void Start() {
@@ -181,8 +186,6 @@ public class PlayerController : MonoBehaviour {
         if (ground != null) {
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
-            Debug.Log(groundMovement);
-            Debug.Log(groundPosition == lastGroundPosition);
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
         }
@@ -263,7 +266,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     private IEnumerator Attack() {
-        WeaponController weapon = this.GetComponentInChildren<WeaponController>();
+        WeaponController weapon = GetComponentInChildren<WeaponController>();
+        weapon.SetDamage(2);
+        
         Debug.Log(weapon);
         weapon.StartAttack();
         canMove = false;
