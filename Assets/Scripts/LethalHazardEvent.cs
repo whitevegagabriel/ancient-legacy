@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Combat;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,8 +19,8 @@ public class LethalHazardEvent : MonoBehaviour
                 if (time == 0)
                 {
                     GameObject character = GameObject.FindGameObjectWithTag("Player");
-                    PlayerHealth charHealth = character.GetComponent<PlayerHealth>();
-                    charHealth.DecreaseHealth(dmg);
+                    var playerTargetable = character.GetComponent<Targetable>();
+                    playerTargetable.OnHit(dmg);
                     time = 100;
                 }
             }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Combat;
 using UnityEngine;
 
 namespace AI
@@ -28,8 +29,8 @@ namespace AI
             if (CollidingWithPlayer(_currentRadius) && !_alreadyCollided)
             {
                 _alreadyCollided = true;
-                var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-                playerHealth.DecreaseHealth(2);
+                var playerTargetable = GameObject.FindGameObjectWithTag("Player").GetComponent<Targetable>();
+                playerTargetable.OnHit(2);
             }
 
             _currentRadius += RadiusIncrease;
