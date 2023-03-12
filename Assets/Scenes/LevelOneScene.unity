@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028305, g: 0.22571313, b: 0.3069213, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4300,8 +4300,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: bd223c1f9145b4a4eb85ff1ebe513361, type: 2}
-    m_RemovedComponents:
-    - {fileID: 5400000, guid: 87b70b92195974d9dacc05039e07b8cf, type: 3}
+    - target: {fileID: 5400000, guid: 87b70b92195974d9dacc05039e07b8cf, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87b70b92195974d9dacc05039e07b8cf, type: 3}
 --- !u!4 &567957710 stripped
 Transform:
@@ -8118,7 +8121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e492333dc539f084b9671d2b5fd66f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
 --- !u!1 &1115410948
 GameObject:
   m_ObjectHideFlags: 0
@@ -14796,7 +14798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81aff1c448f5b7f4986f57536c39abfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearts: {fileID: 339837834}
 --- !u!225 &1921984770
 CanvasGroup:
   m_ObjectHideFlags: 0
