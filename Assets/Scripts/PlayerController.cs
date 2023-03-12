@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour {
     public bool isJumping;
     public bool isBlocking;
     public bool isRunning;
+
+    public bool isDefeated;
     private movementState direction;
 
     public InputAction playerControls;
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour {
         isGrounded = false;
         isBlocking = false;
         isRunning = false;
+        isDefeated = false;
         direction = movementState.Idle;
         input = new InputAction();
         lastGroundedTime = Time.time;
@@ -81,6 +84,13 @@ public class PlayerController : MonoBehaviour {
     }
 
 	void Update () {   
+        isDefeated = targetable.GetHealth() <= 0 ? true : false;
+
+        if (isDefeated) {
+            anim.SetTrigger("defeated");
+            return;
+        }
+
         if (isAttacking == false) {
             canMove = true;
         }
