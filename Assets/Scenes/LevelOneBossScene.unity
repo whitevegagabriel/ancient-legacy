@@ -179,8 +179,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4901730241130489688, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_Height
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4901730241130489688, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
       propertyPath: m_Radius
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4901730241130489688, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_Center.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5296740830209074118, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_Mass
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5296740830209074118, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5296740830209074118, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5296740830209074118, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5606339336856614878, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
       propertyPath: hearts
