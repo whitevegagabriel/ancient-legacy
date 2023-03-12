@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private CharacterController controller;
 
-    private bool canJump = true;
     private Transform ground;
     private Vector3 lastGroundPosition;
 
@@ -42,7 +41,6 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
-
     public bool isRunning;
     private movementState direction;
 
@@ -52,6 +50,11 @@ public class PlayerController : MonoBehaviour {
 
     float lastGroundedTime;
     private Targetable targetable;
+
+    //Collectable relics parameters
+    public int jumpCount = 0; //set public for testing purpose
+    public int runCount = 0; //set public for testing purpose
+
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
@@ -70,6 +73,7 @@ public class PlayerController : MonoBehaviour {
         direction = movementState.Idle;
         input = new InputAction();
         lastGroundedTime = Time.time;
+
     }
 
     void FixedUpdate() {
@@ -225,7 +229,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started) {
+        if(context.started && runCount == 3) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -233,15 +237,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown) {
-            /*
-            if (canJump)
-            {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-                anim.SetTrigger("jump");
-                canJump = false;
-            }
-            */
+        if(isGrounded && canMove && Time.time > jumpCooldown && jumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
         }
@@ -288,8 +284,12 @@ public class PlayerController : MonoBehaviour {
         if (hit.gameObject.CompareTag("JumpRelics"))
         {
             Debug.Log("Hit Jump Relics!");
-            hit.gameObject.SetActive(false);
-            canJump = true;
+            jumpCount++;
+        }
+        if (hit.gameObject.CompareTag("RunRelics"))
+        {
+            Debug.Log("Hit Run Relics!");
+            runCount++;
         }
     }
 
