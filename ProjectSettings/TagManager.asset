@@ -10,7 +10,11 @@ TagManager:
   - Boss Health Display
   - JumpRelics
   - Ground
+<<<<<<< HEAD
   - RunRelics
+=======
+  - CheckPoint
+>>>>>>> main
   layers:
   - Default
   - TransparentFX

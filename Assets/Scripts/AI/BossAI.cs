@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Combat;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,25 +13,22 @@ namespace AI
         private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
         private static readonly int OnLongRangeAttack = Animator.StringToHash("OnLongRangeAttack");
         private static readonly int OnDie = Animator.StringToHash("OnDie");
-        private const float AttackDistance = 2;
+        private const float AttackDistance = 1.5f;
         private const float AttackAngle = 30;
         private const float ShortRangeAttackTimer = 2;
         private const float LongRangeAttackTimer = 10;
         private const float WarmupTimer = 2;
-
         private GameObject _player;
-        private PlayerHealth _playerHealth;
-        private BossHealthUI _healthDisplay;
         private BossState _currentState;
         private NavMeshAgent _agent;
         private Animator _animator;
+        private WeaponController _weaponController;
         private float _lastShortRangeAttackTime;
         private float _lastLongRangeAttackTime;
         private float _longRangeAttackAnimationLength;
         private float _shortRangeAttackAnimationLength;
-        private float _health;
-        private float _maxHealth;
         private float _startTime;
+        private Targetable _targetable;
         
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
@@ -45,26 +43,26 @@ namespace AI
             None
         }
 
+        private void Awake()
+        {
+            _targetable = GetComponent<Targetable>();
+            _targetable.InitHealth(20);
+        }
+
         private void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
-            _playerHealth = _player.GetComponent<PlayerHealth>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
+            _weaponController = GetComponentInChildren<WeaponController>();
+            _weaponController.SetDamage(1);
             SetState(BossState.Idle);
             _lastShortRangeAttackTime = Time.time;
             _lastLongRangeAttackTime = Time.time;
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _shortRangeAttackAnimationLength = GetClipLength("Mutant Punch");
-            _health = 10;
-            _maxHealth = _health;
             _startTime = Time.time;
-            _healthDisplay = GameObject.FindGameObjectWithTag("Boss Health Display").GetComponent<BossHealthUI>();
-            if (_healthDisplay == null) Debug.Log("not found");
-            else {
-                _healthDisplay.SetHearts((int) _health, (int) _maxHealth);
-            }
         }
 
         private void Update()
@@ -103,7 +101,9 @@ namespace AI
 
         private void HandleChase()
         {
-            if (_health <= 0)
+            if (_weaponController.isAttacking) return;
+            
+            if (_targetable.GetHealth() <= 0)
             {
                 SetState(BossState.Die);
                 return;
@@ -123,7 +123,7 @@ namespace AI
 
         private void HandleShortRangeAttack()
         {
-            if (_health <= 0)
+            if (_targetable.GetHealth() <= 0)
             {
                 SetState(BossState.Die);
                 return;
@@ -148,7 +148,7 @@ namespace AI
 
         private void HandleLongRangeAttack()
         {
-            if (_health <= 0)
+            if (_targetable.GetHealth() <= 0)
             {
                 SetState(BossState.Die);
                 return;
@@ -218,11 +218,6 @@ namespace AI
             _animator.ResetTrigger(OnLongRangeAttack);
             _animator.ResetTrigger(OnDie);
         }
-        
-        public float GetHealth() {
-            Debug.Log("Got health");
-            return _health;
-        }
 
         private float GetClipLength(string clipName)
         {
@@ -237,17 +232,11 @@ namespace AI
             return 0;
         }
 
-        public void DecreaseHealth(int amount) {
-            _health -= amount;
-            _healthDisplay.SetHearts((int)_health, (int) _maxHealth);
-        }
-
         private IEnumerator Attack() {
             _lastShortRangeAttackTime = Time.time;
+            _weaponController.StartAttack();
             yield return new WaitForSeconds(_shortRangeAttackAnimationLength);
-            if (PlayerCloseAndInFrontForAttack()) {
-                _playerHealth.DecreaseHealth(1);
-            }
+            _weaponController.StopAttack();
         }
 
         private bool PlayerCloseAndInFrontForAttack()

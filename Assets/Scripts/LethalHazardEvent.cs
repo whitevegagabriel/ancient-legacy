@@ -20,7 +20,7 @@ public class LethalHazardEvent : MonoBehaviour
                     GameObject character = GameObject.FindGameObjectWithTag("Player");
                     PlayerHealth charHealth = character.GetComponent<PlayerHealth>();
                     charHealth.DecreaseHealth(dmg);
-                    time = 200;
+                    time = 100;
                 }
             }
         }

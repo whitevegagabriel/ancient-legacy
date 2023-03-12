@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Combat;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,7 +28,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity;
     [SerializeField] private float jumpHeight;
-    private float attackCooldown;
     private float jumpCooldown;
     private WeaponController weapon;
     
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] InputAction input;
 
     float lastGroundedTime;
+    private Targetable targetable;
 
     //Collectable relics parameters
     public bool canJump = false; //set public for testing purpose
@@ -57,6 +59,8 @@ public class PlayerController : MonoBehaviour {
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
+        targetable = GetComponent<Targetable>();
+        targetable.InitHealth(10);
     }
 
     void Start() {
@@ -186,8 +190,6 @@ public class PlayerController : MonoBehaviour {
         if (ground != null) {
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
-            Debug.Log(groundMovement);
-            Debug.Log(groundPosition == lastGroundPosition);
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
         }
@@ -254,13 +256,15 @@ public class PlayerController : MonoBehaviour {
 
     public void OnAttack(InputAction.CallbackContext context) {
         
-        if(Time.time > attackCooldown && !isAttacking && !isBlocking) {
+        if(!isAttacking && !isBlocking) {
             StartCoroutine(Attack());
         }
     }
 
     private IEnumerator Attack() {
-        WeaponController weapon = this.GetComponentInChildren<WeaponController>();
+        WeaponController weapon = GetComponentInChildren<WeaponController>();
+        weapon.SetDamage(2);
+        
         Debug.Log(weapon);
         weapon.StartAttack();
         canMove = false;
@@ -271,7 +275,6 @@ public class PlayerController : MonoBehaviour {
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         weapon.StopAttack();
-        attackCooldown = Time.time + 0.1f;
         isAttacking = false;
         anim.SetBool("attack", isAttacking);
     }
