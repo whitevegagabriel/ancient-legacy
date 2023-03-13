@@ -33,7 +33,7 @@ namespace AI
             _weaponController = GetComponentInChildren<WeaponController>();
             _weaponController.SetDamage(1);
             _targetable = GetComponent<Targetable>();
-            _targetable.InitHealth(2);
+            _targetable.InitHealth(2, 2);
             SetState(State.Patrol);
         }
 

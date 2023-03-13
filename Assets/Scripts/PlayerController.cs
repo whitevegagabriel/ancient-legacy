@@ -52,13 +52,18 @@ public class PlayerController : MonoBehaviour {
 
     float lastGroundedTime;
     private Targetable targetable;
+    public static int health = 10;
 
+
+    //Collectable relics parameters
+    public static int jumpCount = 0; //set public for testing purpose
+    public static int runCount = 0; //set public for testing purpose
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         targetable = GetComponent<Targetable>();
-        targetable.InitHealth(10);
+        targetable.InitHealth(health, 10);
     }
 
     void Start() {
