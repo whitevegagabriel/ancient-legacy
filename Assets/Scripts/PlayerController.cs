@@ -80,18 +80,12 @@ public class PlayerController : MonoBehaviour {
         
     }
 
-    private IEnumerator WaitForDeathAnimation() {
-        yield return new WaitForSeconds(2);
-        GameObject.FindGameObjectWithTag("LoseMenu").GetComponent<LoseMenu>().DisplayOnDeath();
-    }
-
 
 	void Update () {   
         isDefeated = targetable.GetHealth() <= 0 ? true : false;
 
         if (isDefeated) {
             anim.SetTrigger("defeated");
-            StartCoroutine(WaitForDeathAnimation());
             return;
         }
 
@@ -127,13 +121,14 @@ public class PlayerController : MonoBehaviour {
         float moveY = moveInput.y;
         float moveX = moveInput.x;
         
+        float inputMagnitude = Mathf.Clamp01(moveDirection.magnitude);
         moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
-
-        transform.position += moveDirection * moveY * Time.deltaTime;
+        
+        velocity.y += gravity * Time.deltaTime;
 
         if (!isRunning) {
-            moveY = Mathf.Clamp(moveY, -1, 0.5f);
+            moveY = Mathf.Clamp(moveY, -1, 0.66f);
             direction = movementState.ForwardWalk;
         }
         else {
@@ -162,7 +157,7 @@ public class PlayerController : MonoBehaviour {
                 case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
-                    moveY = 0.5f;
+                    moveY = 0.66f;
                     break;
 
                 case movementState.BackwardWalk:
@@ -206,16 +201,23 @@ public class PlayerController : MonoBehaviour {
             var groundMovement = groundPosition - lastGroundPosition;
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
+        } 
+
+        if(!isGrounded) {
+            Vector3 localVelocity = moveDirection * inputMagnitude * 3f;
+            localVelocity.y = velocity.y;
+            controller.Move(localVelocity * Time.deltaTime);
         }
+    }
 
-        moveDirection *= moveSpeed;
-
-        if (canMove) {
-            controller.Move(moveDirection * Time.deltaTime);
+    void OnAnimatorMove() {
+        if (isGrounded && canMove) { 
+            Vector3 velocitySpeed = anim.deltaPosition;
+            velocitySpeed.y = velocity.y  * Time.deltaTime;
+            if (canMove) {        
+                controller.Move(velocitySpeed);
+            }   
         }
-
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
     }
 
     private void Idle() {
