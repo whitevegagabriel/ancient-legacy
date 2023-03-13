@@ -83,11 +83,18 @@ public class PlayerController : MonoBehaviour {
         
     }
 
+    private IEnumerator WaitForDeathAnimation() {
+        yield return new WaitForSeconds(2);
+        GameObject.FindGameObjectWithTag("LoseMenu").GetComponent<LoseMenu>().DisplayOnDeath();
+    }
+
+
 	void Update () {   
         isDefeated = targetable.GetHealth() <= 0 ? true : false;
 
         if (isDefeated) {
             anim.SetTrigger("defeated");
+            StartCoroutine(WaitForDeathAnimation());
             return;
         }
 
