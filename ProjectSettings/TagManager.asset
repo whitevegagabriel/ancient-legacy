@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Boss Health Display
+  - Health Display
+  - Boss
+  - Weapon
+  - Ground
+  - CheckPoint
+  - JumpRelics
+  - RunRelics
+  - LoseMenu
   layers:
   - Default
   - TransparentFX
