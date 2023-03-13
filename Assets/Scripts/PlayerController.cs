@@ -55,10 +55,6 @@ public class PlayerController : MonoBehaviour {
     public static int health = 10;
 
 
-    //Collectable relics parameters
-    public static int jumpCount = 0; //set public for testing purpose
-    public static int runCount = 0; //set public for testing purpose
-
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
