@@ -127,8 +127,6 @@ public class PlayerController : MonoBehaviour {
         
         velocity.y += gravity * Time.deltaTime;
 
-        //transform.position += moveDirection * moveY * Time.deltaTime;
-
         if (!isRunning) {
             moveY = Mathf.Clamp(moveY, -1, 0.66f);
             direction = movementState.ForwardWalk;
