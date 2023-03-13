@@ -3,4 +3,4 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerLandsEvent: UnityEvent<Vector3, float>{}
+public class PlayerLandsEvent: UnityEvent<Vector3, PlayerController.airState>{}

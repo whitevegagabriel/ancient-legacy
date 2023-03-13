@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour {
         LeftStrafe,
         RightStrafe
     }
+
+    public enum airState
+    {
+        Jump,
+        Fall
+    }
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float strafeSpeed;
@@ -321,13 +327,13 @@ public class PlayerController : MonoBehaviour {
             isJumping = false;
             anim.SetBool("jump", isJumping);
             jumpCooldown = Time.time + .2f;
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 1f);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Jump);
         }
 
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 2f);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Fall);
         }
     }
 }
