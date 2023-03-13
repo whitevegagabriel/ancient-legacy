@@ -58,17 +58,14 @@ public class PlayerController : MonoBehaviour {
 
     float lastGroundedTime;
     private Targetable targetable;
-
-    //Collectable relics parameters
-    public int jumpCount = 0; //set public for testing purpose
-    public int runCount = 0; //set public for testing purpose
+    public static int health = 10;
 
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         targetable = GetComponent<Targetable>();
-        targetable.InitHealth(10);
+        targetable.InitHealth(health, 10);
     }
 
     void Start() {
@@ -88,6 +85,7 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate() {
         
     }
+
 
 	void Update () {   
         isDefeated = targetable.GetHealth() <= 0 ? true : false;
@@ -129,13 +127,14 @@ public class PlayerController : MonoBehaviour {
         float moveY = moveInput.y;
         float moveX = moveInput.x;
         
+        float inputMagnitude = Mathf.Clamp01(moveDirection.magnitude);
         moveDirection = new Vector3(moveX, 0, moveY);
         moveDirection = transform.TransformDirection(moveDirection);
-
-        transform.position += moveDirection * moveY * Time.deltaTime;
+        
+        velocity.y += gravity * Time.deltaTime;
 
         if (!isRunning) {
-            moveY = Mathf.Clamp(moveY, -1, 0.5f);
+            moveY = Mathf.Clamp(moveY, -1, 0.66f);
             direction = movementState.ForwardWalk;
         }
         else {
@@ -164,7 +163,7 @@ public class PlayerController : MonoBehaviour {
                 case movementState.ForwardWalk:
                     anim.SetBool("walking", true);
                     WalkForward();
-                    moveY = 0.5f;
+                    moveY = 0.66f;
                     break;
 
                 case movementState.BackwardWalk:
@@ -208,16 +207,23 @@ public class PlayerController : MonoBehaviour {
             var groundMovement = groundPosition - lastGroundPosition;
             controller.Move(groundMovement);
             lastGroundPosition = groundPosition;
+        } 
+
+        if(!isGrounded) {
+            Vector3 localVelocity = moveDirection * inputMagnitude * 3f;
+            localVelocity.y = velocity.y;
+            controller.Move(localVelocity * Time.deltaTime);
         }
+    }
 
-        moveDirection *= moveSpeed;
-
-        if (canMove) {
-            controller.Move(moveDirection * Time.deltaTime);
+    void OnAnimatorMove() {
+        if (isGrounded && canMove) { 
+            Vector3 velocitySpeed = anim.deltaPosition;
+            velocitySpeed.y = velocity.y  * Time.deltaTime;
+            if (canMove) {        
+                controller.Move(velocitySpeed);
+            }   
         }
-
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
     }
 
     private void Idle() {
@@ -245,7 +251,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started && runCount == 3) {
+        if(context.started && PlayerStat.runCount == 3) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -253,7 +259,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown && jumpCount == 3) {
+        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerStat.jumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
@@ -302,12 +308,12 @@ public class PlayerController : MonoBehaviour {
         if (hit.gameObject.CompareTag("JumpRelics"))
         {
             Debug.Log("Hit Jump Relics!");
-            jumpCount++;
+            PlayerStat.jumpCount++;
         }
         if (hit.gameObject.CompareTag("RunRelics"))
         {
             Debug.Log("Hit Run Relics!");
-            runCount++;
+            PlayerStat.runCount++;
         }
     }
 
