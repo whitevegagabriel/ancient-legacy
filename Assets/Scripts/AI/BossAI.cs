@@ -46,7 +46,7 @@ namespace AI
         private void Awake()
         {
             _targetable = GetComponent<Targetable>();
-            _targetable.InitHealth(20);
+            _targetable.InitHealth(20, 20);
         }
 
         private void Start()
