@@ -54,10 +54,10 @@ public class PlayerController : MonoBehaviour {
     private Targetable targetable;
     public static int health = 10;
 
+
     //Collectable relics parameters
     public static int jumpCount = 0; //set public for testing purpose
     public static int runCount = 0; //set public for testing purpose
-
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started && runCount == 3) {
+        if(context.started && PlayerStat.runCount == 3) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -248,7 +248,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown && jumpCount == 3) {
+        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerStat.jumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
         }
@@ -295,12 +295,12 @@ public class PlayerController : MonoBehaviour {
         if (hit.gameObject.CompareTag("JumpRelics"))
         {
             Debug.Log("Hit Jump Relics!");
-            jumpCount++;
+            PlayerStat.jumpCount++;
         }
         if (hit.gameObject.CompareTag("RunRelics"))
         {
             Debug.Log("Hit Run Relics!");
-            runCount++;
+            PlayerStat.runCount++;
         }
     }
 
