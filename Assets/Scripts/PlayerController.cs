@@ -321,13 +321,13 @@ public class PlayerController : MonoBehaviour {
             isJumping = false;
             anim.SetBool("jump", isJumping);
             jumpCooldown = Time.time + .2f;
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 301f);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 1f);
         }
 
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 501f);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(transform.position, 2f);
         }
     }
 }
