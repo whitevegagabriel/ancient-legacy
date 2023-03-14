@@ -3,7 +3,14 @@ guid: b142a885125535b4ebb92b31c69ad49e
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - eventSound3DPrefab: {instanceID: 0}
+  - playerLandsAudio: {instanceID: 0}
+  - swordAttackAudio: {instanceID: 0}
+  - deathAudio: {instanceID: 0}
+  - jumpAudio: {instanceID: 0}
+  - gruntAudio: {instanceID: 0}
+  - swooshAudio: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
