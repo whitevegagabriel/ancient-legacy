@@ -3,6 +3,7 @@ using System.Collections;
 using Combat;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 namespace AI
 {
@@ -15,7 +16,6 @@ namespace AI
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private const float AttackDistance = 1.5f;
         private const float AttackAngle = 30;
-        private const float ShortRangeAttackTimer = 2;
         private const float LongRangeAttackTimer = 10;
         private const float WarmupTimer = 2;
         private GameObject _player;
@@ -23,12 +23,13 @@ namespace AI
         private NavMeshAgent _agent;
         private Animator _animator;
         private WeaponController _weaponController;
-        private float _lastShortRangeAttackTime;
         private float _lastLongRangeAttackTime;
         private float _longRangeAttackAnimationLength;
         private float _shortRangeAttackAnimationLength;
         private float _startTime;
         private Targetable _targetable;
+        private UnityAction _onAttackStart;
+        private UnityAction _onAttackEnd;
         
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
@@ -57,12 +58,20 @@ namespace AI
             _weaponController = GetComponentInChildren<WeaponController>();
             _weaponController.SetDamage(1);
             SetState(BossState.Idle);
-            _lastShortRangeAttackTime = Time.time;
             _lastLongRangeAttackTime = Time.time;
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
-            _shortRangeAttackAnimationLength = GetClipLength("Mutant Punch");
             _startTime = Time.time;
+            
+            _onAttackStart = () =>
+            {
+                _weaponController.StartAttack();
+            };
+            _onAttackEnd = () =>
+            {
+                _weaponController.StopAttack();
+            };
+            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackStart, _onAttackEnd));
         }
 
         private void Update()
@@ -138,12 +147,7 @@ namespace AI
             if (!PlayerCloseAndInFrontForAttack())
             {
                 SetState(BossState.Chase);
-                return;
             }
-
-            if (!(Time.time - _lastShortRangeAttackTime > ShortRangeAttackTimer)) return;
-
-            StartCoroutine(Attack());
         }
 
         private void HandleLongRangeAttack()
@@ -230,13 +234,6 @@ namespace AI
             }
 
             return 0;
-        }
-
-        private IEnumerator Attack() {
-            _lastShortRangeAttackTime = Time.time;
-            _weaponController.StartAttack();
-            yield return new WaitForSeconds(_shortRangeAttackAnimationLength);
-            _weaponController.StopAttack();
         }
 
         private bool PlayerCloseAndInFrontForAttack()

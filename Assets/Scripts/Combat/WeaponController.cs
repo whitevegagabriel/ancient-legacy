@@ -14,6 +14,7 @@ public class WeaponController : MonoBehaviour
     public void StartAttack() {
         isAttacking = true;
         hasHit = false;
+        Debug.Log("Has hit = " + hasHit);
     }
     
     public void StopAttack() {
@@ -28,5 +29,6 @@ public class WeaponController : MonoBehaviour
         Debug.Log("Hit " + other.name);
         target.OnHit(damage);
         hasHit = true;
+        Debug.Log("Has hit = " + hasHit);
     }
 }
