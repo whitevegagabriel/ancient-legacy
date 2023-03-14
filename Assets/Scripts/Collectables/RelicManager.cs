@@ -20,12 +20,12 @@ public class RelicManager : MonoBehaviour
             jumpRelicLocations[i] = jumpRelics[i].transform.position;
             runRelicLocations[i] = runRelics[i].transform.position;
         }
-        resetEvent.AddListener(DestroyCurrentRelics);
-        resetEvent.AddListener(CheckPlayerStat);
         resetEvent.AddListener(RespawnRelics);
     }
 
     private void RespawnRelics() {
+        DestroyCurrentRelics();
+        ResetIncompletePlayerStat();
         if (PlayerStat.jumpCount == 0) {
             foreach (Vector3 location in jumpRelicLocations) {
                 Instantiate(jumpRelicPrefab, location, Quaternion.identity);
@@ -53,7 +53,7 @@ public class RelicManager : MonoBehaviour
         }
     }
 
-    private void CheckPlayerStat() {
+    private void ResetIncompletePlayerStat() {
         if (PlayerStat.jumpCount != 3) {
             PlayerStat.jumpCount = 0;
         }
