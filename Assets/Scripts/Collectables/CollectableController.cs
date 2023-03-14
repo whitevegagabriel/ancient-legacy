@@ -11,7 +11,7 @@ public class CollectableController : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             collectSound.Play();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

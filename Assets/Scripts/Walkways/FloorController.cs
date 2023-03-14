@@ -19,8 +19,14 @@ public class FloorController : MonoBehaviour
         //can add a check first
         if (collision.gameObject.tag == "Player")
         {
-            isFalling = true;
+            StartCoroutine(MakeTileFall());
         }
+    }
+
+    IEnumerator MakeTileFall()
+    {
+        yield return new WaitForSeconds(.15f);
+        isFalling = true;
     }
 
     void Update()
@@ -28,9 +34,9 @@ public class FloorController : MonoBehaviour
         if (isFalling)
         {
             downSpeed += Time.deltaTime/20;
-            transform.parent.position = new Vector3(transform.parent.position.x,
-                transform.parent.position.y - downSpeed,
-                transform.parent.position.z);
+            transform.position = new Vector3(transform.position.x,
+                transform.position.y - downSpeed,
+                transform.position.z);
         }
 
     }

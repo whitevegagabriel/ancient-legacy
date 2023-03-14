@@ -45,6 +45,7 @@ namespace AI
             if (_targetable.GetHealth() <= 0)
             {
                 Destroy(gameObject);
+                return;
             }
             
             switch (_state)
