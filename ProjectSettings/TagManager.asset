@@ -13,6 +13,7 @@ TagManager:
   - JumpRelics
   - RunRelics
   - LoseMenu
+  - RelicsCount
   layers:
   - Default
   - TransparentFX
