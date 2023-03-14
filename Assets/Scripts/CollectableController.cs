@@ -6,7 +6,6 @@ public class CollectableController : MonoBehaviour
 {
     PlayerController playController;
     public AudioSource collectSound;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -15,5 +14,4 @@ public class CollectableController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
 }
