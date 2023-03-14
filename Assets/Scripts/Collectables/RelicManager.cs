@@ -4,52 +4,30 @@ using UnityEngine;
 
 public class RelicManager : MonoBehaviour
 {
-    public GameObject jumpRelicPrefab;
-    public GameObject runRelicPrefab;
     public GameObject[] jumpRelics;
     public GameObject[] runRelics;
-    private Vector3[] runRelicLocations;
-    private Vector3[] jumpRelicLocations;
     private ResetEvent resetEvent = ResetEvent.Instance;
-
     void Start()
     {
-        jumpRelicLocations = new Vector3[3];
-        runRelicLocations = new Vector3[3];
-        for (int i = 0; i < 3; i++) {
-            jumpRelicLocations[i] = jumpRelics[i].transform.position;
-            runRelicLocations[i] = runRelics[i].transform.position;
-        }
         resetEvent.AddListener(RespawnRelics);
     }
 
     private void RespawnRelics() {
-        DestroyCurrentRelics();
         ResetIncompletePlayerStat();
-        if (PlayerStat.jumpCount == 0) {
-            foreach (Vector3 location in jumpRelicLocations) {
-                Instantiate(jumpRelicPrefab, location, Quaternion.identity);
-
-            }
-        }
-
-        if (PlayerStat.runCount == 0) {
-            foreach (Vector3 location in runRelicLocations) {
-                Instantiate(runRelicPrefab, location, Quaternion.identity);
-            }
-        }
+        EnableIncompleteRelics();
     }
 
 
-    private void DestroyCurrentRelics() {
-        GameObject[] jumpRelics = GameObject.FindGameObjectsWithTag("JumpRelics");
-        GameObject[] runRelics = GameObject.FindGameObjectsWithTag("RunRelics");
-
-        foreach (GameObject relic in jumpRelics) {
-            Destroy(relic);
+    private void EnableIncompleteRelics() {
+        if (PlayerStat.jumpCount != 3) {
+            foreach (GameObject relic in jumpRelics) {
+                relic.SetActive(true);
+            }
         }
-        foreach (GameObject relic in runRelics) {
-            Destroy(relic);
+        if (PlayerStat.runCount != 3) {
+            foreach (GameObject relic in runRelics) {
+                relic.SetActive(true);
+            }
         }
     }
 
