@@ -205,7 +205,7 @@ public class PlayerController : MonoBehaviour {
             lastGroundPosition = groundPosition;
         } 
 
-        if(!isGrounded) {
+        if(!isGrounded && canMove) {
             Vector3 localVelocity = moveDirection * inputMagnitude * 3f;
             localVelocity.y = velocity.y;
             controller.Move(localVelocity * Time.deltaTime);
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnAnimatorMove() {
-        if (isGrounded && canMove) { 
+        if (isGrounded) { 
             Vector3 velocitySpeed = anim.deltaPosition;
             velocitySpeed.y = velocity.y  * Time.deltaTime;
             if (canMove) {        
