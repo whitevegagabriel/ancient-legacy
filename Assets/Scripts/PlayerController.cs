@@ -95,10 +95,6 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
-        if (isAttacking == false) {
-            canMove = true;
-        }
-
         isGrounded = controller.isGrounded;
 
         lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
@@ -298,6 +294,8 @@ public class PlayerController : MonoBehaviour {
         
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
+        canMove = true;
+
         weapon.StopAttack();
         isAttacking = false;
         anim.SetBool("attack", isAttacking);
@@ -335,11 +333,10 @@ public class PlayerController : MonoBehaviour {
             jumpCooldown = Time.time + .2f;
             EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Jump);
         }
-
+        
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Fall);
         }
     }
 }

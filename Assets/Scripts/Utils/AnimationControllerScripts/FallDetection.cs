@@ -8,5 +8,5 @@ public class FallDetection : StateMachineBehaviour
         if (stateInfo.normalizedTime > 1) {
             animator.SetBool("fall", true);
         }
-    }
+    }          
 }
