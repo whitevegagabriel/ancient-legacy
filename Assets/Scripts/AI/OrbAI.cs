@@ -1,5 +1,6 @@
 using System.Collections;
 using Combat;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,9 +14,11 @@ namespace AI
         private State _state;
         private NavMeshAgent _agent;
         private GameObject _player;
-        private int _currentWaypoint;
         private WeaponController _weaponController;
         private Targetable _targetable;
+        private Animator _animator;
+        private static readonly int HoveringOffset = Animator.StringToHash("HoveringOffset");
+        private static readonly int HoveringSpeed = Animator.StringToHash("HoveringSpeed");
 
         private enum State
         {
@@ -24,7 +27,7 @@ namespace AI
             Knockback,
             None,
         }
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -34,6 +37,10 @@ namespace AI
             _weaponController.SetDamage(1);
             _targetable = GetComponent<Targetable>();
             _targetable.InitHealth(2, 2);
+            _animator = GetComponent<Animator>();
+            // a random offset and speed to make the orbs look more independent
+            _animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
+            _animator.SetFloat(HoveringSpeed, Random.Range(0.8f, 1.2f));
             SetState(State.Patrol);
         }
 
@@ -47,7 +54,7 @@ namespace AI
                 Destroy(gameObject);
                 return;
             }
-            
+
             switch (_state)
             {
                 case State.Patrol:
@@ -69,7 +76,7 @@ namespace AI
                 SetState(State.Chase);
                 return;
             }
-            
+
             if (waypoints.Length == 0)
             {
                 Debug.LogError("No waypoints found");
@@ -78,11 +85,12 @@ namespace AI
 
             if (_agent.remainingDistance > 0.5f) return;
             
-            _currentWaypoint = (_currentWaypoint + 1) % waypoints.Length;
-            var waypoint = waypoints[_currentWaypoint];
+            // set random waypoint
+            var currentWaypoint = Random.Range(0, waypoints.Length);
+            var waypoint = waypoints[currentWaypoint];
             _agent.SetDestination(waypoint.transform.position);
         }
-        
+
         private void HandleChase()
         {
             if (Vector3.Distance(_agent.transform.position, _player.transform.position) > _chaseDistance)
@@ -90,10 +98,10 @@ namespace AI
                 SetState(State.Patrol);
                 return;
             }
-            
+
             _agent.SetDestination(_player.transform.position);
         }
-        
+
         private void HandleKnockback()
         {
             StartCoroutine(Knockback());
@@ -110,16 +118,12 @@ namespace AI
             GetComponent<Rigidbody>().isKinematic = true;
             SetState(State.Patrol);
         }
-        
+
         private void SetState(State state)
         {
             switch (state)
             {
                 case State.Patrol:
-                    if (_currentWaypoint >= waypoints.Length)
-                    {
-                        _currentWaypoint = waypoints.Length - 1;
-                    } 
                     break;
                 case State.Chase:
                     _weaponController.StartAttack();
@@ -127,12 +131,13 @@ namespace AI
                 case State.Knockback:
                     break;
             }
+
             _state = state;
         }
-        
+
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.CompareTag("Player"))
             {
                 SetState(State.Knockback);
             }
