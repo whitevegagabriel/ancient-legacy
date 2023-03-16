@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Combat;
 using TMPro;
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private CharacterController controller;
 
-    private Transform ground;
+    private List<Transform> groundPriority = new List<Transform>();
     private Vector3 lastGroundPosition;
 
     public bool canMove; // used to prevent the character from moving during an animation
@@ -202,7 +203,9 @@ public class PlayerController : MonoBehaviour {
             anim.SetFloat("vely", moveY);
         }
 
-        if (ground != null) {
+        if (groundPriority.Count > 0)
+        {
+            var ground = groundPriority[0];
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
             controller.Move(groundMovement);
@@ -315,14 +318,25 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Hit Run Relics!");
             PlayerStat.runCount++;
         }
+        if (hit.gameObject.CompareTag("Ground") && !groundPriority.Contains(hit.transform))
+        {
+            if (groundPriority.Count == 0)
+            {
+                lastGroundPosition = hit.transform.position;
+            }
+            groundPriority.Add(hit.transform);
+        }
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void OnTriggerExit(Collider hit)
     {
-        if (hit.collider.tag == "Ground" && ground != hit.transform)
+        if (hit.gameObject.CompareTag("Ground") && groundPriority.Contains(hit.transform))
         {
-            ground = hit.transform;
-            lastGroundPosition = ground.position;
+            groundPriority.Remove(hit.transform);
+            if (groundPriority.Count > 0)
+            {
+                lastGroundPosition = groundPriority[0].position;
+            }
         }
     }
 
