@@ -95,9 +95,12 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
-        isGrounded = controller.isGrounded;
 
-        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+        if (!isAttacking) {
+            isGrounded = controller.isGrounded;
+
+            lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+        }
 
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
@@ -247,7 +250,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started && PlayerStat.runCount == 3) {
+        if(context.started) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -255,7 +258,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerStat.jumpCount == 3) {
+        if(isGrounded && canMove && Time.time > jumpCooldown) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
@@ -275,7 +278,7 @@ public class PlayerController : MonoBehaviour {
 
     public void OnAttack(InputAction.CallbackContext context) {
         
-        if(!isAttacking && !isBlocking) {
+        if(!isAttacking && !isBlocking && isGrounded) {
             StartCoroutine(Attack());
         }
     }

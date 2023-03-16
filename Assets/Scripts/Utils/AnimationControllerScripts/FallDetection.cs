@@ -4,9 +4,23 @@ using UnityEngine;
 
 public class FallDetection : StateMachineBehaviour
 {
+
+    float delay = 0f;
+
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (stateInfo.normalizedTime > 1) {
-            animator.SetBool("fall", true);
+            if (delay == 0f) {
+                delay = Time.time + 2f;
+            }
+            else {
+                if (Time.time > delay) {   
+                    animator.SetBool("fall", true);
+                }
+            }
         }
-    }          
+    }  
+
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        delay = 0f;
+    }         
 }
