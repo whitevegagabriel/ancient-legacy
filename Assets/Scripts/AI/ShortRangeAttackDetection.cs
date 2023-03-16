@@ -8,6 +8,7 @@ namespace AI
     {
         private static List<AttackCallback> _attackCallbacks = new List<AttackCallback>();
         private int _currLoopIteration;
+        private bool _calledPartway;
         
         public static void AddAttackCallback(AttackCallback callback)
         {
@@ -23,12 +24,24 @@ namespace AI
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (Mathf.FloorToInt(stateInfo.normalizedTime) <= _currLoopIteration) return;
-  
-            _currLoopIteration++;
-            foreach (var callback in _attackCallbacks)
+            if (Mathf.FloorToInt(stateInfo.normalizedTime) > _currLoopIteration)
             {
-                callback.onAttackStart.Invoke();
+                _currLoopIteration++;
+                foreach (var callback in _attackCallbacks)
+                {
+                    callback.onAttackStart.Invoke();
+                    _calledPartway = false;
+                }
+            }
+            
+            if (stateInfo.normalizedTime >= _currLoopIteration + 0.2f && !_calledPartway)
+            {
+                _calledPartway = true;
+                foreach (var callback in _attackCallbacks)
+                {
+                    callback.onAttackPartway.Invoke();
+                    Debug.Log("Attack partwya");
+                }
             }
         }
 
@@ -45,11 +58,13 @@ namespace AI
     public struct AttackCallback
     {
         public UnityAction onAttackStart;
+        public UnityAction onAttackPartway;
         public UnityAction onAttackEnd;
     
-        public AttackCallback(UnityAction onAttackStart, UnityAction onAttackEnd)
+        public AttackCallback(UnityAction onAttackStart, UnityAction onAttackPartway, UnityAction onAttackEnd)
         {
             this.onAttackStart = onAttackStart;
+            this.onAttackPartway = onAttackPartway;
             this.onAttackEnd = onAttackEnd;
         }
     }

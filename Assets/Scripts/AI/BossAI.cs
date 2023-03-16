@@ -29,7 +29,9 @@ namespace AI
         private float _startTime;
         private Targetable _targetable;
         private UnityAction _onAttackStart;
+        private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
+        private UnityAction _onDamageGiven;
         
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
@@ -67,11 +69,12 @@ namespace AI
             {
                 _weaponController.StartAttack();
             };
+            _onAttackPartway = EventManager.TriggerEvent<AIAudioHandler.BossPunchEvent>;
             _onAttackEnd = () =>
             {
                 _weaponController.StopAttack();
             };
-            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackStart, _onAttackEnd));
+            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackStart, _onAttackPartway, _onAttackEnd));
         }
 
         private void Update()
@@ -157,17 +160,24 @@ namespace AI
                 SetState(BossState.Die);
                 return;
             }
+
+            StartCoroutine(LongRangeAttack());
+            SetState(BossState.None);
+        }
+
+        private IEnumerator LongRangeAttack()
+        {
+            yield return new WaitForSeconds(_longRangeAttackAnimationLength/2);
             
-            // wait for LongRangeAttack animation to finish, then attack
-            if (Time.time - _lastLongRangeAttackTime < LongRangeAttackTimer + _longRangeAttackAnimationLength) return;
+            EventManager.TriggerEvent<AIAudioHandler.RadialAttackEvent>();
+            
+            yield return new WaitForSeconds(_longRangeAttackAnimationLength/2);
             
             _lastLongRangeAttackTime = Time.time;
             Instantiate(radialDamagePrefab, transform.position, Quaternion.identity);
-            Debug.Log("Long range attack");
-
             SetState(Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance
-            ? BossState.ShortRangeAttack
-            : BossState.Chase);
+                ? BossState.ShortRangeAttack
+                : BossState.Chase);
         }
 
         private void HandleDie()

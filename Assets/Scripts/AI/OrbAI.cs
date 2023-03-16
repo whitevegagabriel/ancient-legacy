@@ -51,6 +51,7 @@ namespace AI
 
             if (_targetable.GetHealth() <= 0)
             {
+                EventManager.TriggerEvent<AIAudioHandler.OrbDeathEvent>();
                 Destroy(gameObject);
                 return;
             }
@@ -104,6 +105,7 @@ namespace AI
 
         private void HandleKnockback()
         {
+            EventManager.TriggerEvent<AIAudioHandler.OrbAttackEvent>();
             StartCoroutine(Knockback());
             SetState(State.None);
         }
@@ -113,8 +115,8 @@ namespace AI
             // move agent in opposite direction of player
             var playerToSelf = transform.position - _player.transform.position;
             GetComponent<Rigidbody>().isKinematic = false;
-            GetComponent<Rigidbody>().AddForce(playerToSelf.normalized * 1.5f, ForceMode.Impulse);
-            yield return new WaitForSeconds(1);
+            GetComponent<Rigidbody>().AddForce(playerToSelf.normalized * 3f, ForceMode.Impulse);
+            yield return new WaitForSeconds(1f);
             GetComponent<Rigidbody>().isKinematic = true;
             SetState(State.Patrol);
         }
@@ -137,8 +139,9 @@ namespace AI
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") && _state == State.Chase)
             {
+                Debug.Log("knockback");
                 SetState(State.Knockback);
             }
         }
