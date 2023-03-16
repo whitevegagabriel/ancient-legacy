@@ -250,7 +250,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started) {
+        if(context.started && PlayerStat.runCount == 3) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -258,7 +258,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown) {
+        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerStat.jumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
