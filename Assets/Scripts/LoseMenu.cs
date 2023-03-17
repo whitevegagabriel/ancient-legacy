@@ -14,6 +14,7 @@ public class LoseMenu : MonoBehaviour
 
     public void DisplayOnDeath() {
         Time.timeScale = 0f;
+        PlayerController.health = 10;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
