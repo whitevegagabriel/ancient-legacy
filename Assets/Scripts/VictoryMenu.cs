@@ -12,6 +12,7 @@ public class VictoryMenu : MonoBehaviour
     }
 
     public void DisplayOnCollection() {
+        PlayerController.health = 10;
         Time.timeScale = 0f;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
