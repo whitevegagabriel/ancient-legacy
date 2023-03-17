@@ -28,7 +28,6 @@ namespace AI
         private float _shortRangeAttackAnimationLength;
         private float _startTime;
         private Targetable _targetable;
-        private UnityAction _onAttackStart;
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
         private UnityAction _onDamageGiven;
@@ -65,16 +64,16 @@ namespace AI
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _startTime = Time.time;
             
-            _onAttackStart = () =>
+            _onAttackPartway = () =>
             {
                 _weaponController.StartAttack();
+                EventManager.TriggerEvent<AIAudioHandler.BossPunchEvent>();
             };
-            _onAttackPartway = EventManager.TriggerEvent<AIAudioHandler.BossPunchEvent>;
             _onAttackEnd = () =>
             {
                 _weaponController.StopAttack();
             };
-            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackStart, _onAttackPartway, _onAttackEnd));
+            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackPartway, _onAttackEnd));
         }
 
         private void Update()

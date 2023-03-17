@@ -27,11 +27,7 @@ namespace AI
             if (Mathf.FloorToInt(stateInfo.normalizedTime) > _currLoopIteration)
             {
                 _currLoopIteration++;
-                foreach (var callback in _attackCallbacks)
-                {
-                    callback.onAttackStart.Invoke();
-                    _calledPartway = false;
-                }
+                _calledPartway = false;
             }
             
             if (stateInfo.normalizedTime >= _currLoopIteration + 0.2f && !_calledPartway)
@@ -57,13 +53,11 @@ namespace AI
 
     public struct AttackCallback
     {
-        public UnityAction onAttackStart;
         public UnityAction onAttackPartway;
         public UnityAction onAttackEnd;
     
-        public AttackCallback(UnityAction onAttackStart, UnityAction onAttackPartway, UnityAction onAttackEnd)
+        public AttackCallback(UnityAction onAttackPartway, UnityAction onAttackEnd)
         {
-            this.onAttackStart = onAttackStart;
             this.onAttackPartway = onAttackPartway;
             this.onAttackEnd = onAttackEnd;
         }
