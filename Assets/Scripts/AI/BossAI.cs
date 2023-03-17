@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 using Combat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -28,10 +29,10 @@ namespace AI
         private float _shortRangeAttackAnimationLength;
         private float _startTime;
         private Targetable _targetable;
-        private UnityAction _onAttackStart;
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
         private UnityAction _onDamageGiven;
+        private bool _animatingLongRangeAttack;
         
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
@@ -65,21 +66,23 @@ namespace AI
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _startTime = Time.time;
             
-            _onAttackStart = () =>
+            _onAttackPartway = () =>
             {
                 _weaponController.StartAttack();
+                EventManager.TriggerEvent<AIAudioHandler.BossPunchEvent>();
             };
-            _onAttackPartway = EventManager.TriggerEvent<AIAudioHandler.BossPunchEvent>;
             _onAttackEnd = () =>
             {
                 _weaponController.StopAttack();
             };
-            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackStart, _onAttackPartway, _onAttackEnd));
+            ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackPartway, _onAttackEnd));
         }
 
         private void Update()
         {
             if (_agent.pathPending) return;
+            
+            _animator.SetFloat("speed", _agent.velocity.magnitude/2f);
 
             switch (_currentState)
             {
@@ -161,12 +164,13 @@ namespace AI
                 return;
             }
 
+            if (_animatingLongRangeAttack) return;
             StartCoroutine(LongRangeAttack());
-            SetState(BossState.None);
         }
 
         private IEnumerator LongRangeAttack()
         {
+            _animatingLongRangeAttack = true;
             yield return new WaitForSeconds(_longRangeAttackAnimationLength/2);
             
             EventManager.TriggerEvent<AIAudioHandler.RadialAttackEvent>();
@@ -178,13 +182,14 @@ namespace AI
             SetState(Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance
                 ? BossState.ShortRangeAttack
                 : BossState.Chase);
+            _animatingLongRangeAttack = false;
         }
 
         private void HandleDie()
         {
             Debug.Log("Boss died");
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            GetComponent<Collider>().enabled = false;
+            GetComponent<CapsuleCollider>().enabled = false;
+            GetComponent<MeshCollider>().enabled = true;
             GameObject go = Instantiate(relicPrefab, transform.position, Quaternion.identity);
             go.transform.localPosition = new Vector3(0, 0.5f, 0);
             SetState(BossState.None);
@@ -206,12 +211,15 @@ namespace AI
                     _animator.SetTrigger(OnIdle);
                     break;
                 case BossState.Chase:
+                    _animator.applyRootMotion = false;
                     _animator.SetTrigger(OnChase);
                     break;
                 case BossState.ShortRangeAttack:
+                    _animator.applyRootMotion = true;
                     _animator.SetTrigger(OnShortRangeAttack);
                     break;
                 case BossState.LongRangeAttack:
+                    _animator.applyRootMotion = true;
                     _animator.SetTrigger(OnLongRangeAttack);
                     break;
                 case BossState.Die:
