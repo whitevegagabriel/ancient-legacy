@@ -1,11 +1,11 @@
-Assets/Character/animations/* - source: https://mixamo.com
+Assets/Character/animations/* - source: https://www.mixamo.com/#/?page=1&query=sword+and+shield&type=Motion%2CMotionPack
 Assets/Character/Input System/PlayerInputActions.cs
 Assets/Character/Input System/PlayerInputActions.inputactions
 Assets/Character/Paladin/Masks/*
 Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
 Assets/Prefabs/Player.prefab
-Assets/Sounds/attack - source: https://freesound.org/
-Assets/Sounds/death - source: https://freesound.org/
+Assets/Sounds/attack - source: https://mixkit.co/free-sound-effects/sword/
+Assets/Sounds/death - source: https://freesound.org/people/HighPixel/sounds/554443/
 Assets/Sounds/grunt - source: CS6457 Milestone 3
 Assets/Sounds/jump - source: CS6457 Milestone 3
 Assets/Sounds/landing - source: CS6457 Milestone 3
