@@ -1227,10 +1227,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4391500545566560902, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
-      propertyPath: relicPrefab
-      value: 
-      objectReference: {fileID: 4481361837624573119, guid: d06c61ce5bf8d584594e0338817e91f3, type: 3}
     - target: {fileID: 5606339336856614878, guid: 38856447f7d6c594590db5e875a15c62, type: 3}
       propertyPath: hearts
       value: 
