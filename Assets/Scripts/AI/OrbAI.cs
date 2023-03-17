@@ -19,6 +19,7 @@ namespace AI
         private Animator _animator;
         private static readonly int HoveringOffset = Animator.StringToHash("HoveringOffset");
         private static readonly int HoveringSpeed = Animator.StringToHash("HoveringSpeed");
+        private float _hoveringSpeed;
 
         private enum State
         {
@@ -38,9 +39,9 @@ namespace AI
             _targetable = GetComponent<Targetable>();
             _targetable.InitHealth(2, 2);
             _animator = GetComponent<Animator>();
-            // a random offset and speed to make the orbs look more independent
+            // a random offset to make the orbs look more independent
             _animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
-            _animator.SetFloat(HoveringSpeed, Random.Range(0.8f, 1.2f));
+            _hoveringSpeed = Random.Range(0.8f, 1.2f);
             SetState(State.Patrol);
         }
 
@@ -126,8 +127,11 @@ namespace AI
             switch (state)
             {
                 case State.Patrol:
+                    _animator.SetFloat(HoveringSpeed, _hoveringSpeed);
                     break;
                 case State.Chase:
+                    _animator.SetFloat(HoveringSpeed, _hoveringSpeed * 1.4f);
+
                     _weaponController.StartAttack();
                     break;
                 case State.Knockback:
