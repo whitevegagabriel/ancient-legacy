@@ -1,0 +1,22 @@
+Assets/Character/animations/* - source: https://mixamo.com
+Assets/Character/Input System/PlayerInputActions.cs
+Assets/Character/Input System/PlayerInputActions.inputactions
+Assets/Character/Paladin/Masks/*
+Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
+Assets/Prefabs/Player.prefab
+Assets/Sounds/attack - source: https://freesound.org/
+Assets/Sounds/death - source: https://freesound.org/
+Assets/Sounds/grunt - source: CS6457 Milestone 3
+Assets/Sounds/jump - source: CS6457 Milestone 3
+Assets/Sounds/landing - source: CS6457 Milestone 3
+Assets/Scripts/Audio Events/AudioEventManager.cs - source: CS6457 Milestone 3
+Assets/Scripts/Audio Events/EventManager.cs - source: CS6457 Milestone 3
+Assets/Scripts/CursorController
+Assets/Scripts/CursorController
+Assets/Scripts/GameStarter.cs - source: CS6457 Milestone 3
+Assets/Scripts/PlayerController.cs
+Assets/Scripts/TurnController.cs
+Assets/Scripts/Utils/AnimationControllerScripts/FallDetection.cs
+Assets/FallAudioHandler.cs
+Assets/DefeatAudioHandler.cs
+Assets/DeathDetection.cs
