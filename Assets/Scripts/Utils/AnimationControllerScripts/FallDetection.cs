@@ -10,7 +10,7 @@ public class FallDetection : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (stateInfo.normalizedTime > 1) {
             if (delay == 0f) {
-                delay = Time.time + 2f;
+                delay = Time.time + 0.7f;
             }
             else {
                 if (Time.time > delay) {   
