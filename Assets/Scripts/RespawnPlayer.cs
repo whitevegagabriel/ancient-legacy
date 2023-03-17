@@ -7,7 +7,7 @@ public class RespawnPlayer : MonoBehaviour
     private Vector3 _respawnPoint;
     private ResetEvent resetEvent = ResetEvent.Instance;
     void Start() {
-        _respawnPoint = new Vector3(-17f, 0.05f, -8.6f);
+        _respawnPoint = new Vector3(20.72f, 7.1f, -8.6f);
         resetEvent.AddListener(Respawn);
     }
     void Update() {

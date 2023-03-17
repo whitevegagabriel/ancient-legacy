@@ -1,5 +1,6 @@
 using System.Collections;
 using Combat;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,9 +14,12 @@ namespace AI
         private State _state;
         private NavMeshAgent _agent;
         private GameObject _player;
-        private int _currentWaypoint;
         private WeaponController _weaponController;
         private Targetable _targetable;
+        private Animator _animator;
+        private static readonly int HoveringOffset = Animator.StringToHash("HoveringOffset");
+        private static readonly int HoveringSpeed = Animator.StringToHash("HoveringSpeed");
+        private float _hoveringSpeed;
 
         private enum State
         {
@@ -24,7 +28,7 @@ namespace AI
             Knockback,
             None,
         }
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -34,6 +38,10 @@ namespace AI
             _weaponController.SetDamage(1);
             _targetable = GetComponent<Targetable>();
             _targetable.InitHealth(2, 2);
+            _animator = GetComponent<Animator>();
+            // a random offset to make the orbs look more independent
+            _animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
+            _hoveringSpeed = Random.Range(0.8f, 1.2f);
             SetState(State.Patrol);
         }
 
@@ -44,10 +52,11 @@ namespace AI
 
             if (_targetable.GetHealth() <= 0)
             {
+                EventManager.TriggerEvent<AIAudioHandler.OrbDeathEvent>();
                 Destroy(gameObject);
                 return;
             }
-            
+
             switch (_state)
             {
                 case State.Patrol:
@@ -69,7 +78,7 @@ namespace AI
                 SetState(State.Chase);
                 return;
             }
-            
+
             if (waypoints.Length == 0)
             {
                 Debug.LogError("No waypoints found");
@@ -78,11 +87,12 @@ namespace AI
 
             if (_agent.remainingDistance > 0.5f) return;
             
-            _currentWaypoint = (_currentWaypoint + 1) % waypoints.Length;
-            var waypoint = waypoints[_currentWaypoint];
+            // set random waypoint
+            var currentWaypoint = Random.Range(0, waypoints.Length);
+            var waypoint = waypoints[currentWaypoint];
             _agent.SetDestination(waypoint.transform.position);
         }
-        
+
         private void HandleChase()
         {
             if (Vector3.Distance(_agent.transform.position, _player.transform.position) > _chaseDistance)
@@ -90,12 +100,13 @@ namespace AI
                 SetState(State.Patrol);
                 return;
             }
-            
+
             _agent.SetDestination(_player.transform.position);
         }
-        
+
         private void HandleKnockback()
         {
+            EventManager.TriggerEvent<AIAudioHandler.OrbAttackEvent>();
             StartCoroutine(Knockback());
             SetState(State.None);
         }
@@ -105,35 +116,36 @@ namespace AI
             // move agent in opposite direction of player
             var playerToSelf = transform.position - _player.transform.position;
             GetComponent<Rigidbody>().isKinematic = false;
-            GetComponent<Rigidbody>().AddForce(playerToSelf.normalized * 1.5f, ForceMode.Impulse);
-            yield return new WaitForSeconds(1);
+            GetComponent<Rigidbody>().AddForce(playerToSelf.normalized * 3f, ForceMode.Impulse);
+            yield return new WaitForSeconds(1f);
             GetComponent<Rigidbody>().isKinematic = true;
             SetState(State.Patrol);
         }
-        
+
         private void SetState(State state)
         {
             switch (state)
             {
                 case State.Patrol:
-                    if (_currentWaypoint >= waypoints.Length)
-                    {
-                        _currentWaypoint = waypoints.Length - 1;
-                    } 
+                    _animator.SetFloat(HoveringSpeed, _hoveringSpeed);
                     break;
                 case State.Chase:
+                    _animator.SetFloat(HoveringSpeed, _hoveringSpeed * 1.4f);
+
                     _weaponController.StartAttack();
                     break;
                 case State.Knockback:
                     break;
             }
+
             _state = state;
         }
-        
+
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.CompareTag("Player") && _state == State.Chase)
             {
+                Debug.Log("knockback");
                 SetState(State.Knockback);
             }
         }

@@ -1,12 +1,13 @@
 using Combat;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class WeaponController : MonoBehaviour
 {
     public bool isAttacking;
     private bool hasHit;
     private int damage;
-    
+
     public void SetDamage(int newDamage) {
         damage = newDamage;
     }
@@ -14,7 +15,6 @@ public class WeaponController : MonoBehaviour
     public void StartAttack() {
         isAttacking = true;
         hasHit = false;
-        Debug.Log("Has hit = " + hasHit);
     }
     
     public void StopAttack() {
@@ -26,9 +26,7 @@ public class WeaponController : MonoBehaviour
         var target = other.GetComponent<Targetable>();
         if (other.gameObject.layer == gameObject.layer || target == null || hasHit || !isAttacking) return;
 
-        Debug.Log("Hit " + other.name);
         target.OnHit(damage);
         hasHit = true;
-        Debug.Log("Has hit = " + hasHit);
     }
 }

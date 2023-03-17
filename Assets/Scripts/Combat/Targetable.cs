@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Combat
 {
@@ -21,6 +22,7 @@ namespace Combat
         public void OnHit(int damage)
         {
             health -= damage;
+            
             if (player != null)
             {
                 PlayerController.health -= 1;

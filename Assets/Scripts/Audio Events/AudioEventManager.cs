@@ -28,14 +28,14 @@ public class AudioEventManager : MonoBehaviour
     private UnityAction<Vector3> cylinderMoveEventListener;
 
     void Awake() {
-        playerLandsEventListener = new UnityAction<Vector3, PlayerController.airState>(playerLandsEventHandler);
-        swordAttackEventListener = new UnityAction<Vector3>(swordAttackEventHandler);
-        jumpEventListener = new UnityAction<Vector3>(jumpEventHandler);
-        deathEventListener = new UnityAction<Vector3>(deathEventHandler);
-        swooshEventListener = new UnityAction<Vector3>(swooshEventHandler);
-        platformStartEventListener = new UnityAction<Vector3>(platformStartEventHandler);
-        platformStopEventListener = new UnityAction<Vector3>(platformStopEventHandler);
-        cylinderMoveEventListener = new UnityAction<Vector3>(cylinderMoveEventHandler);
+        playerLandsEventListener = playerLandsEventHandler;
+        swordAttackEventListener = swordAttackEventHandler;
+        jumpEventListener = jumpEventHandler;
+        deathEventListener = deathEventHandler;
+        swooshEventListener = swooshEventHandler;
+        platformStartEventListener = platformStartEventHandler;
+        platformStopEventListener = platformStopEventHandler;
+        cylinderMoveEventListener = cylinderMoveEventHandler;
     }
 
     void Start() {
@@ -78,7 +78,7 @@ public class AudioEventManager : MonoBehaviour
             
             EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-            snd.audioSrc.clip = this.playerLandsAudio;
+            snd.audioSrc.clip = playerLandsAudio;
 
             snd.audioSrc.minDistance = 5f;
             snd.audioSrc.maxDistance = 100f;
@@ -90,7 +90,7 @@ public class AudioEventManager : MonoBehaviour
 
             EventSound3D snd2 = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-            snd2.audioSrc.clip = this.gruntAudio;
+            snd2.audioSrc.clip = gruntAudio;
 
             snd2.audioSrc.minDistance = 5f;
             snd2.audioSrc.maxDistance = 100f;
@@ -108,7 +108,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.jumpAudio;
+        snd.audioSrc.clip = jumpAudio;
 
         snd.audioSrc.minDistance = 5f;
         snd.audioSrc.maxDistance = 100f;
@@ -125,7 +125,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.deathAudio;
+        snd.audioSrc.clip = deathAudio;
 
         snd.audioSrc.minDistance = 5f;
         snd.audioSrc.maxDistance = 100f;
@@ -142,7 +142,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.swordAttackAudio;
+        snd.audioSrc.clip = swordAttackAudio;
 
         snd.audioSrc.minDistance = 5f;
         snd.audioSrc.maxDistance = 100f;
@@ -159,7 +159,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.swooshAudio;
+        snd.audioSrc.clip = swooshAudio;
 
         snd.audioSrc.minDistance = 1f;
         snd.audioSrc.maxDistance = 2f;
@@ -176,7 +176,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.platformStartAudio;
+        snd.audioSrc.clip = platformStartAudio;
 
         snd.audioSrc.minDistance = 1f;
         snd.audioSrc.maxDistance = 2f;
@@ -193,7 +193,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.platformStopAudio;
+        snd.audioSrc.clip = platformStopAudio;
 
         snd.audioSrc.minDistance = 1f;
         snd.audioSrc.maxDistance = 2f;
@@ -210,7 +210,7 @@ public class AudioEventManager : MonoBehaviour
 
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
-        snd.audioSrc.clip = this.cylinderMoveAudio;
+        snd.audioSrc.clip = cylinderMoveAudio;
 
         snd.audioSrc.minDistance = 1f;
         snd.audioSrc.maxDistance = 2f;

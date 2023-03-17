@@ -700,6 +700,7 @@ GameObject:
   - component: {fileID: 6706358424903803409}
   - component: {fileID: 4550344871657240799}
   - component: {fileID: 5912150205872242752}
+  - component: {fileID: 3757688031777154743}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -975,6 +976,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hearts: {fileID: 0}
+--- !u!136 &3757688031777154743
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4033335714203610924}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1 &4613010028966089585
 GameObject:
   m_ObjectHideFlags: 0
