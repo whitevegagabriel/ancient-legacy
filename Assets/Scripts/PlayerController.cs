@@ -96,13 +96,12 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
-        if (isAttacking == false) {
-            canMove = true;
+
+        if (!isAttacking) {
+            isGrounded = controller.isGrounded;
+
+            lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
         }
-
-        isGrounded = controller.isGrounded;
-
-        lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
 
         if(isGrounded && velocity.y < 0) {
             ResetJumpAndFall();
@@ -212,7 +211,7 @@ public class PlayerController : MonoBehaviour {
             lastGroundPosition = groundPosition;
         } 
 
-        if(!isGrounded) {
+        if(!isGrounded && canMove) {
             Vector3 localVelocity = moveDirection * inputMagnitude * 3f;
             localVelocity.y = velocity.y;
             controller.Move(localVelocity * Time.deltaTime);
@@ -220,7 +219,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnAnimatorMove() {
-        if (isGrounded && canMove) { 
+        if (isGrounded) { 
             Vector3 velocitySpeed = anim.deltaPosition;
             velocitySpeed.y = velocity.y  * Time.deltaTime;
             if (canMove) {        
@@ -282,7 +281,7 @@ public class PlayerController : MonoBehaviour {
 
     public void OnAttack(InputAction.CallbackContext context) {
         
-        if(!isAttacking && !isBlocking) {
+        if(!isAttacking && !isBlocking && isGrounded) {
             StartCoroutine(Attack());
         }
     }
@@ -300,6 +299,8 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
         
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+
+        canMove = true;
 
         weapon.StopAttack();
         isAttacking = false;
@@ -349,11 +350,10 @@ public class PlayerController : MonoBehaviour {
             jumpCooldown = Time.time + .2f;
             EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Jump);
         }
-
+        
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Fall);
         }
     }
 }
