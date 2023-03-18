@@ -50,3 +50,8 @@ MonoBehaviour:
   deathAudio: {fileID: 8300000, guid: fc8006f872a482a4d83de964e8e346c8, type: 3}
   jumpAudio: {fileID: 8300000, guid: ae7f3c4a4b1b192489d4304289a1ac30, type: 3}
   gruntAudio: {fileID: 8300000, guid: 067f8e5eae1ea7046a7ea35dd3689dbc, type: 3}
+  swooshAudio: {fileID: 0}
+  platformStartAudio: {fileID: 0}
+  platformStopAudio: {fileID: 0}
+  cylinderMoveAudio: {fileID: 0}
+  blockAudio: {fileID: 8300000, guid: 3ac41b268dca8a3458569a2008b8dc3c, type: 3}
