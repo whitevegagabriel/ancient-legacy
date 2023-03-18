@@ -25,8 +25,17 @@ public class WeaponController : MonoBehaviour
     {
         var target = other.GetComponent<Targetable>();
         if (other.gameObject.layer == gameObject.layer || target == null || hasHit || !isAttacking) return;
-
-        target.OnHit(damage);
+        if (other.gameObject.tag == "Player") {
+            if (!GameObject.Find("Player").GetComponent<PlayerController>().isBlocking) {
+                target.OnHit(damage);
+            }
+            else {
+                EventManager.TriggerEvent<BlockEvent, Vector3>(GameObject.Find("Player").transform.position);
+            }
+        }
+        else {
+            target.OnHit(damage);
+        }
         hasHit = true;
     }
 }

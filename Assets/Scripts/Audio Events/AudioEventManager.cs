@@ -16,6 +16,7 @@ public class AudioEventManager : MonoBehaviour
     public AudioClip platformStartAudio;
     public AudioClip platformStopAudio;
     public AudioClip cylinderMoveAudio;
+    public AudioClip blockAudio;
 
     private UnityAction<Vector3, PlayerController.airState> playerLandsEventListener;
     private UnityAction<Vector3> swordAttackEventListener;
@@ -26,6 +27,7 @@ public class AudioEventManager : MonoBehaviour
     private UnityAction<Vector3> platformStartEventListener;
     private UnityAction<Vector3> platformStopEventListener;
     private UnityAction<Vector3> cylinderMoveEventListener;
+    private UnityAction<Vector3> blockEventListener;
 
     void Awake() {
         playerLandsEventListener = playerLandsEventHandler;
@@ -36,6 +38,7 @@ public class AudioEventManager : MonoBehaviour
         platformStartEventListener = platformStartEventHandler;
         platformStopEventListener = platformStopEventHandler;
         cylinderMoveEventListener = cylinderMoveEventHandler;
+        blockEventListener = blockEventHandler;
     }
 
     void Start() {
@@ -51,6 +54,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StartListening<PlatformStartEvent, Vector3>(platformStartEventListener);
         EventManager.StartListening<PlatformStopEvent, Vector3>(platformStopEventListener);
         EventManager.StartListening<CylinderMoveEvent, Vector3>(cylinderMoveEventListener);
+        EventManager.StartListening<BlockEvent, Vector3>(blockEventListener);
 
     }
 
@@ -64,6 +68,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StopListening<PlatformStartEvent, Vector3>(platformStartEventListener);
         EventManager.StopListening<PlatformStopEvent, Vector3>(platformStopEventListener);
         EventManager.StopListening<CylinderMoveEvent, Vector3>(cylinderMoveEventListener);
+        EventManager.StopListening<BlockEvent, Vector3>(blockEventListener);
     }
 
     void playerLandsEventHandler(Vector3 worldPos, PlayerController.airState state)
@@ -217,5 +222,22 @@ public class AudioEventManager : MonoBehaviour
 
         snd.audioSrc.Play();
         snd.audioSrc.loop = true;
+    }
+
+    void blockEventHandler(Vector3 worldPos)
+    {
+        if (!eventSound3DPrefab)
+        {
+            return;
+        }
+
+        EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
+
+        snd.audioSrc.clip = blockAudio;
+
+        snd.audioSrc.minDistance = 5f;
+        snd.audioSrc.maxDistance = 100f;
+
+        snd.audioSrc.Play();
     }
 }

@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour {
     float lastGroundedTime;
     private Targetable targetable;
     public static int health = 10;
+    public GameObject playerHand;
 
 
     void Awake() {
@@ -161,33 +162,43 @@ public class PlayerController : MonoBehaviour {
             switch(direction){
 
                 case movementState.ForwardWalk:
-                    anim.SetBool("walking", true);
+                    if (!isBlocking) { 
+                        anim.SetBool("walking", true);
+                    }
                     WalkForward();
                     moveY = 0.66f;
                     break;
 
                 case movementState.BackwardWalk:
-                    anim.SetBool("walking", true);
+                    if (!isBlocking) { 
+                        anim.SetBool("walking", true);
+                    }
                     WalkBackward();
                     break;
                     
                 case movementState.ForwardRun:
-                    if (!anim.GetBool("walking")) {
-                        anim.SetBool("walking", true);
+                    if (!isBlocking) { 
+                        if (!anim.GetBool("walking")) {
+                            anim.SetBool("walking", true);
+                        }
                     }
                     Run();
                     break;
 
                 case movementState.LeftStrafe:
-                    if (!anim.GetBool("walking")) {
-                        anim.SetBool("walking", true);
+                    if (!isBlocking) { 
+                        if (!anim.GetBool("walking")) {
+                            anim.SetBool("walking", true);
+                        }
                     }
                     Strafe();
                     break;
 
                 case movementState.RightStrafe:
-                    if (!anim.GetBool("walking")) {
-                        anim.SetBool("walking", true);
+                    if (!isBlocking) { 
+                        if (!anim.GetBool("walking")) {
+                            anim.SetBool("walking", true);
+                        }
                     }
                     Strafe();
                     break;
@@ -272,6 +283,7 @@ public class PlayerController : MonoBehaviour {
         if(!isAttacking && context.started) {
             isBlocking = true;
             anim.SetBool("block", true);
+            anim.SetBool("walking", false);
         }
         else if(context.canceled) {
             isBlocking = false;
