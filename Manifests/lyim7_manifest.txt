@@ -1,6 +1,6 @@
 Assets/Collectables/Gem/Prefabs/JumpRelic.prefab
 Assets/Collectables/Gem/Prefabs/RunRelics.prefab
-Assets/Prefab/Wall.prefab
+Assets/Prefabs/Wall.prefab
 Assets/Prefabs/Stairs.prefab
 Assets/Scenes/LevelOneBossScene
 Assets/Scenes/LevelOneScene
