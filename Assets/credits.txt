@@ -1,1 +1,6 @@
-This is a credits test.
+Game made by:
+  Jonathan Bryan
+  Lawrence Yim
+  Ender Schmidt
+  Gabriel White-Vega
+  Yipeng Xu

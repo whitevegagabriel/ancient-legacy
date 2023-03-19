@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -603,7 +603,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.33471432, y: 0.64154065}
   m_AnchorMax: {x: 0.656, y: 0.9068721}
-  m_AnchoredPosition: {x: 0.22660065, y: 1.5999985}
+  m_AnchoredPosition: {x: 0.22659302, y: 1.5999908}
   m_SizeDelta: {x: 32.000004, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &488928253
@@ -1024,7 +1024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.33471432, y: 0.34361485}
   m_AnchorMax: {x: 0.656, y: 0.60800004}
-  m_AnchoredPosition: {x: 0.22660065, y: 1.9000015}
+  m_AnchoredPosition: {x: 0.22659302, y: 1.9000015}
   m_SizeDelta: {x: 32, y: 11.3022}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &928338020
@@ -1036,7 +1036,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 928338018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df8982ecaad0f8d4997f4209f067c8fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cee09ae2b6badb4c9f98fe2712ba242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &928338021
@@ -1349,7 +1349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.33471432, y: 0.057229713}
   m_AnchorMax: {x: 0.656, y: 0.31654066}
-  m_AnchoredPosition: {x: 0.22660065, y: 1.0999985}
+  m_AnchoredPosition: {x: 0.22659302, y: 1.1000061}
   m_SizeDelta: {x: 32, y: 12.3022}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1745068117
@@ -1361,9 +1361,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1745068115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21366c3f01a51774eb9a216edf061529, type: 3}
+  m_Script: {fileID: 11500000, guid: d3d4dd32300a6af45bbc2137a7c27872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
 --- !u!114 &1745068118
 MonoBehaviour:
   m_ObjectHideFlags: 0
