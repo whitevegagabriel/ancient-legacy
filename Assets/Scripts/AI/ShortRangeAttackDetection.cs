@@ -36,7 +36,6 @@ namespace AI
                 foreach (var callback in _attackCallbacks)
                 {
                     callback.onAttackPartway.Invoke();
-                    Debug.Log("Attack partwya");
                 }
             }
         }

@@ -10,8 +10,8 @@ public class RelicsCountManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        JumpCountDisplay.text = "JumpRelics: " + "0 / 3";
-        RunCountDisplay.text = "RunRelics: " + "0 / 3";
+        JumpCountDisplay.text = GetJumpRelicText(PlayerStat.jumpCount);
+        RunCountDisplay.text = GetRunRelicText(PlayerStat.runCount);
     }
 
     // Update is called once per frame
@@ -23,8 +23,9 @@ public class RelicsCountManager : MonoBehaviour
         }
         else
         {
-            JumpCountDisplay.text = "JumpRelics: " + PlayerStat.jumpCount.ToString() + " / 3";
+            JumpCountDisplay.text = GetJumpRelicText(PlayerStat.jumpCount);
         }
+        
         if (PlayerStat.runCount == 3)
         {
             RunCountDisplay.text = "Press Shift to Run";
@@ -32,7 +33,17 @@ public class RelicsCountManager : MonoBehaviour
         }
         else
         {
-            RunCountDisplay.text = "RunRelics: " + PlayerStat.runCount.ToString() + " / 3";
+            RunCountDisplay.text = GetRunRelicText(PlayerStat.runCount);
         }
+    }
+    
+    private static string GetJumpRelicText(int count)
+    {
+        return $"Jump Relics: {count} / 3";
+    }
+    
+    private static string GetRunRelicText(int count)
+    {
+        return $"Run Relics: {count} / 3";
     }
 }

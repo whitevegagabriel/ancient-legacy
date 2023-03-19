@@ -19,6 +19,15 @@ How to play:
 Technology requirements:
 
 Known issues:
+- Going up and down verticallly moving platforms will cause the player to visually vibrate
+- Standing on a rotating obstacle won't cause the player to move along the rotating surface
+- The floating pillars use capsule colliders, causing clipping at the edges
+- Animations between "left" and "right" for the player aren't very smooth, rather instantaneous
+- If killed by the fire orbs, the orbs don't stop attacking even afte the player dies
+- Sword sound effect will play when in the death menu and hitting restart
+- Pausing the game while the scene is fading in will result in an unclickable menu
+- Jumping during a sprint does not conserve initial momentum
+- Destroying an orb does not always play the orb destruction sound
 
 Manifest:
 - Ender Schmidt:

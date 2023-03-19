@@ -49,7 +49,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StartListening<PlayerLandsEvent, Vector3, PlayerController.airState>(playerLandsEventListener);
         EventManager.StartListening<AttackEvent, Vector3>(swordAttackEventListener);
         EventManager.StartListening<JumpEvent, Vector3>(jumpEventListener);
-        EventManager.StartListening<DeathEvent, Vector3>(deathEventListener);
+        EventManager.StartListening<PlayerDeathEvent, Vector3>(deathEventListener);
         EventManager.StartListening<SwooshEvent, Vector3>(swooshEventListener);
         EventManager.StartListening<PlatformStartEvent, Vector3>(platformStartEventListener);
         EventManager.StartListening<PlatformStopEvent, Vector3>(platformStopEventListener);
@@ -63,7 +63,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StopListening<PlayerLandsEvent, Vector3, PlayerController.airState>(playerLandsEventListener);
         EventManager.StopListening<AttackEvent, Vector3>(swordAttackEventListener);
         EventManager.StopListening<JumpEvent, Vector3>(jumpEventListener);
-        EventManager.StopListening<DeathEvent, Vector3>(deathEventListener);
+        EventManager.StopListening<PlayerDeathEvent, Vector3>(deathEventListener);
         EventManager.StopListening<SwooshEvent, Vector3>(swooshEventListener);
         EventManager.StopListening<PlatformStartEvent, Vector3>(platformStartEventListener);
         EventManager.StopListening<PlatformStopEvent, Vector3>(platformStopEventListener);

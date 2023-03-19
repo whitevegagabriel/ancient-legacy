@@ -20,6 +20,7 @@ namespace AI
         private const float LongRangeAttackTimer = 10;
         private const float WarmupTimer = 2;
         private GameObject _player;
+        private bool _playerHasDied;
         private BossState _currentState;
         private NavMeshAgent _agent;
         private Animator _animator;
@@ -56,6 +57,7 @@ namespace AI
         private void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
+            EventManager.StartListening<PlayerDeathEvent, Vector3>(_ => _playerHasDied = true);
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             _weaponController = GetComponentInChildren<WeaponController>();
@@ -81,7 +83,7 @@ namespace AI
         private void Update()
         {
             if (_agent.pathPending) return;
-            
+
             _animator.SetFloat("speed", _agent.velocity.magnitude/2f);
 
             switch (_currentState)
@@ -110,6 +112,8 @@ namespace AI
 
         private void HandleIdle()
         {
+            if (_playerHasDied) return;
+            
             // Boss is only idle at the start of the scene
             if (Time.time - _startTime > WarmupTimer) SetState(BossState.Chase);
         }
@@ -122,6 +126,11 @@ namespace AI
             {
                 SetState(BossState.Die);
                 return;
+            }
+            
+            if (_playerHasDied)
+            {
+                SetState(BossState.Idle);
             }
 
             if (Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
@@ -144,6 +153,11 @@ namespace AI
                 return;
             }
             
+            if (_playerHasDied)
+            {
+                SetState(BossState.Idle);
+            }
+            
             if (Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
             {
                 SetState(BossState.LongRangeAttack);
@@ -162,6 +176,11 @@ namespace AI
             {
                 SetState(BossState.Die);
                 return;
+            }
+            
+            if (_playerHasDied)
+            {
+                SetState(BossState.Idle);
             }
 
             if (_animatingLongRangeAttack) return;

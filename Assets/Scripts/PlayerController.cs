@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Update () {   
-        isDefeated = targetable.GetHealth() <= 0 ? true : false;
+        isDefeated = targetable.GetHealth() <= 0;
 
         if (isDefeated) {
             anim.SetTrigger("defeated");
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("jump", isJumping);
         }
 
-        if (!isGrounded && !isJumping && Time.time > (lastGroundedTime + 1f)) {
+        if (!isGrounded && !isJumping && Time.time > lastGroundedTime + .5f) {
             anim.SetBool("fall", true);
         }
 	}
@@ -366,6 +366,7 @@ public class PlayerController : MonoBehaviour {
         // stop falling
         if (anim.GetBool("fall")) {
             anim.SetBool("fall", false);
+            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Fall);
         }
     }
 }
