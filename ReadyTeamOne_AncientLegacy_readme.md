@@ -1,0 +1,141 @@
+Ready Team One
+- Gabriel White-Vega (gpwv3@gatech.edu)
+- Lawrence Yim (lyim7@gatech.edu)
+- Yipen Xue (yxue63@gatech.edu)
+- Jonathan Bryan (jbryan63@gatech.edu)
+- Ender Schmidt (eschmidt37@gatech.edu)
+
+Start scene:
+- Scenes/StartMenu
+
+How to play:
+- Navigate through the platforms to collect all the relics (gems) in the game
+- Move with WASD, block with Right Click, swing sword with Left Click
+- Some platforms have floating lava balls, avoid or strike them with sword
+- After collecting all relics in first section, press Spacebar to jump
+- After collecting all relics in second section, hold Shift to sprint
+- Defeat the boss at the end of the level and collect the dropped gem to beat the game
+
+Technology requirements:
+
+Known issues:
+
+Manifest:
+- Ender Schmidt:
+  - Contribution summary:
+    - Designed and implemented the main level layout and obstacles and associated scripts
+    - Created the credits scene and associated script
+  - Imports from other creators:
+    - Adding in "swoosh-1.wav" (pre-existing sound effect by lesaucisson)
+    - Adding in "Power Loss.wav" (pre-existing sound effect by LorenzoTheGreat)
+    - Adding in "rpgPowerup.wav" (pre-existing sound effect by colorsCrimsonTears)
+    - Adding in "10_Turn.wav" (pre-existing sound effect by 14GPanskaZackovaM)
+  - Files:
+    - Scripts for calling the above sounds, including PlatformStartEvent, PlatformStopEvent, SwooshEvent, and CylinderMoveEvent
+    - Edits to AudioEventManager script to add these sound effects
+    - Edit to targetable script (added in second initializing parameter for max health) and all dependent scripts to incorporate this change
+    - Edited PlayerController script to make relic collection variables and player health static, which makes values carry over between levels
+    - Edits to FloorController script
+    - All of GatherCredits script
+    - All of LoadCredits script
+    - All of LoadMenu script
+    - All of LoadBoss script
+    - All of LethalHazardEvent script (unused)
+    - Edit to VictoryMenu and LoseMenu scripts to reset player health when resetting the game
+    - Chain Swing animation
+    - All three FloatingPlatform animations
+    - Rotating Obstruction animation
+    - All FloatingPlatform animation controllers
+    - All three FloatingPlatform Prefabs
+    - Pendulum Prefab
+    - Construction of Credits Scene
+    - The objects under EntrancePortion and all prefabs of SecondWalkway in the level scene, except for enemies and relics.
+    - Shadow Pit below the level (Cube object)
+    - Edits to falling platform prefab, added in invisible trigger for platforms.
+
+- Jonathan Bryan:
+  - Contribution summary:
+    - Designed and implemented the player's full functionality
+      - Animation configs
+      - Animation and behavior controllers and state machines
+      - Scripts
+  - Files:
+    - Assets/Character/Input System/PlayerInputActions.cs
+    - Assets/Character/Input System/PlayerInputActions.inputactions
+    - Assets/Character/Paladin/Masks/*
+    - Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
+    - Assets/Prefabs/Player.prefab
+    - Assets/Scripts/CursorController
+    - Assets/Scripts/PlayerController.cs
+    - Assets/Scripts/TurnController.cs
+    - Assets/Scripts/Utils/AnimationControllerScripts/FallDetection.cs
+    - Assets/FallAudioHandler.cs
+    - Assets/DefeatAudioHandler.cs
+    - Assets/DeathDetection.cs
+
+- Gabriel White-Vega:
+  - Contributions summary:
+    - Designed and implemented the Orb and Boss AI's full functionality
+      - Animation configs
+      - Animation and behavior controllers and state machines
+      - Scripts
+    - Designed and implemented the boss scene
+  - Files:
+    - Scripts/TextureAutoResize.cs
+    - Scripts/Targetable.cs
+    - Scripts/WeaponController.cs
+    - Scripts/AI/AIAudioHandler.cs
+    - Scripts/AI/BossAI.cs
+    - Scripts/AI/OrbAI.cs
+    - Scripts/AI/RadialDamageController.cs
+    - Scripts/AI/ShortRangeAttackDetection.cs
+    - Scenes/LevelOneBossScene.unity
+    - Prefabs/Enemy Orb.prefab
+    - Prefabs/FloatingOrbSentryLocation.prefab
+    - Prefabs/LevelOneBoss.prefab
+    - Prefabs/RadialDamageEmitter.prefab
+    - AnimatorControllers/BossController.controller
+    - AnimatorControllers/OrbController.controller
+    - Animations/Orb Hover.anim
+
+- Yipeng Xue
+  - Contributions summary: 
+    - Implement the collapsing floor section of the game
+    - Implement relics collectibles
+    - Implement relics collection score box 
+    - Implement relics count data persistense
+    - Refine restart in pause menu
+    - Implement collect sound
+    - Implement scene fade in effect
+  - Files: 
+    - Scripts/Collectables/CollectableController.cs
+    - Scripts/Collectables/RelicManager.cs
+    - Scripts/Collectables/RelicsCountManager.cs
+    - Scripts/PlayerStat.cs
+    - Scripts/PlayerController.cs
+    - Prefabs/FallingPlatform.prefab
+    - Prefabs/FixedPlatform.prefab
+    - Sounds/collect.wav
+    - Prefabs/Gem
+    - Scenes/LevelOneScene.unity
+    - Animations/Fade_In.anim
+    - AnimatorControllers/Fade_In.controller\
+
+- Lawrence Yim
+  - Contributions summary:
+    - Implement respawn and reset mechanisms and refine associated data persistence
+    - Implement the win/lose and pause menus
+    - Implement the health tracking system and displays
+  - Files:
+    - Collectables/Gem/Prefabs/JumpRelic.prefab
+    - Collectables/Gem/Prefabs/RunRelics.prefab
+    - Prefabs/Wall.prefab
+    - Prefabs/Stairs.prefab
+    - Scenes/LevelOneBossScene
+    - Scenes/LevelOneScene
+    - Scripts/Collectables/RelicManager.cs
+    - Scripts/HealthUI.cs
+    - Scripts/LoseMenu.cs
+    - Scripts/PlayerHealth.cs
+    - Scripts/ResetEvent.cs
+    - Scripts/RespawnPlayer.cs
