@@ -2,3 +2,4 @@
 "Male Death Sound" by HighPixel: (https://freesound.org/people/HighPixel/sounds/554443/)
 Grunt/Jump/Landing audio from CS6457 Milestone 3: (https://github.gatech.edu/IMTC/CS4455_M1_Support)
 "Block3 - shield" by OCMaster: (https://www.voicy.network/clips/htcUnNT8bEye9l1dRhq5mg)
+"Collect gem sound" by Jimmy Vegas: (https://jvunity.weebly.com/)
