@@ -4,6 +4,6 @@ using UnityEngine;
 
 public static class PlayerStat
 {
-    public static int jumpCount { get; set; }
-    public static int runCount { get; set; }
+    public static int jumpCount { get; set; };
+    public static int runCount { get; set; };
 }

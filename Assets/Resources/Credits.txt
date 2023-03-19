@@ -300,6 +300,39 @@ Game made by:
   Lawrence Yim
   Ender Schmidt
   Gabriel White-Vega
+  Yipeng Xue
+
+"Mutant Jumping" on mixamo.com
+"Mutant Punch" on mixamo.com
+"Death" on mixamo.com
+"Basic Motions FREE" by Kevin Iglesias (https://assetstore.unity.com/packages/3d/animations/basic-motions-free-154271)
+
+Player Animations: (https://www.mixamo.com/#/?page=1&query=sword+and+shield&type=Motion%2CMotionPack)
+
+"Paladin W/Prop J Nordstrom": (https://www.mixamo.com/#/?page=1&query=paladin&type=Character)
+
+"MDP 4K Texture Pack Vol.1" by Adventure Forge (https://assetstore.unity.com/packages/2d/textures-materials/stone/mdp-4k-texture-pack-vol-1-139525)
+
+Lava Flowing Shader by Moonflower Carnivore (https://www.youtube.com/watch?v=ItXkajNdp44)
+
+
+"Rock Package" by shui861wy (https://assetstore.unity.com/packages/3d/props/exterior/rock-package-118182)
+
+"Stylized crystal gems asset pack" by Gebus (https://sketchfab.com/3d-models/stylized-crystal-gems-asset-pack-9746a0dec967498ebfe76dac9c29ef07)
+
+"medieval_door" by HASSAN (https://sketchfab.com/3d-models/medieval-door-581dc6a53d2d4cafb5f781127f137c6f)
+
+"Monster_4 low-poly” by Dorlak_1989 (https://assetstore.unity.com/packages/3d/characters/creatures/monster-4-low-poly-208684)
+
+"fire Orb" by eeskam123 (https://sketchfab.com/3d-models/fire-orb-4aed2cda94274ca7af951839aa8d751c)
+
+"Gem Collectible" by Jimmy Vegas (https://jvunity.weebly.com/)
+
+Game made by:
+  Jonathan Bryan
+  Lawrence Yim
+  Ender Schmidt
+  Gabriel White-Vega
   Yipeng Xu
 
 "Mutant Jumping" on mixamo.com
@@ -609,6 +642,34 @@ AudioEventManager & EventManager from CS6457 Milestone 3: https://github.gatech.
 "Fast Sword Whoosh": (https://mixkit.co/free-sound-effects/sword/)
 "Male Death Sound" by HighPixel: (https://freesound.org/people/HighPixel/sounds/554443/)
 Grunt/Jump/Landing audio from CS6457 Milestone 3: (https://github.gatech.edu/IMTC/CS4455_M1_Support)
+
+"10-Turn.wav" by 14GPanskaZackovaM (https://freesound.org/s/422124/)
+
+"Impact" by chriskalos (https://pixabay.com/sound-effects/impact-6291/)
+
+"Match Sizzle 02" by squareal (https://pixabay.com/sound-effects/match-sizzle-02-104778/)
+
+"Rock Smash" by NeoSpica (https://pixabay.com/sound-effects/rock-smash-6304/)
+
+"Swinging staff whoosh (strong) 08" by Nightflame (https://pixabay.com/sound-effects/swinging-staff-whoosh-strong-08-44658/)
+
+"Power Loss.wav" by LorenzoTheGreat (https://freesound.org/s/417791/)
+
+"rpgPowerup.wav" by colorsCrimsonTears (https://freesound.org/s/577965/)
+
+"swoosh-1.mp3" by lesaucisson (https://freesound.org/s/585257/) (converted to .wav)
+
+
+
+GameStarter from CS6457 Milestone 3: https://github.gatech.edu/IMTC/CS4455_M1_Support
+
+AudioEventManager & EventManager from CS6457 Milestone 3: https://github.gatech.edu/IMTC/CS4455_M1_Support
+
+"Fast Sword Whoosh": (https://mixkit.co/free-sound-effects/sword/)
+"Male Death Sound" by HighPixel: (https://freesound.org/people/HighPixel/sounds/554443/)
+Grunt/Jump/Landing audio from CS6457 Milestone 3: (https://github.gatech.edu/IMTC/CS4455_M1_Support)
+"Block3 - shield" by OCMaster: (https://www.voicy.network/clips/htcUnNT8bEye9l1dRhq5mg)
+"Collect gem sound" by Jimmy Vegas: (https://jvunity.weebly.com/)
 
 "10-Turn.wav" by 14GPanskaZackovaM (https://freesound.org/s/422124/)
 
