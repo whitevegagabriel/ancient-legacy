@@ -17,6 +17,18 @@ How to play:
 - Defeat the boss at the end of the level and collect the dropped gem to beat the game
 
 Technology requirements:
+- Game feel
+  - Notice how the player is in 3p and has mostly smooth animations and interactive sound effects
+  - The player has interesting choices, such as how to time their movements, whether to attack the orbs or run, going left or right first during the Run Relics section
+- Environment
+  - Notice how the environment is scripted to move in a compelling way, such as moving and swinging obstacles
+  - The environment acknowledges the player, such as how the AI orbs will animate faster when the player is close
+  - The moving obstacles emit sounds, improving immersion
+- AI
+  - Observe the state-machine-like behavior of the orbs, how they transition between sentry and chase mode
+  - Observe the behavior of the boss, how it transitions between various animation and behavior states, chasing, short range attack, long range attack, and dying
+  - Orbs emit sounds when doing damage, providing feedback
+  - The boss makes different sounds for different attacks, providing feedback
 
 Known issues:
 - Going up and down verticallly moving platforms will cause the player to visually vibrate
