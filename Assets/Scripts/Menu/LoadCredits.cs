@@ -18,8 +18,7 @@ public class LoadCredits : MonoBehaviour
     {
         if (text == null) return;
         
-        var credits = Resources.Load<TextAsset>("Credits");
+        var credits = Resources.Load<TextAsset>("FinalCredits");
         text.text = credits.text;
-    
     }
 }

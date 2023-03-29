@@ -20,14 +20,14 @@ namespace Utils
             string currPath = Application.dataPath;
             DirectorySearch(currPath);
 
-            var file = new StreamWriter(Application.dataPath + "/Resources/Credits.txt");
+            var file = new StreamWriter(Application.dataPath + "/Resources/FinalCredits.txt", false);
             file.Write(_textAccumulator.ToCharArray());
             file.Close();
         }
         
         void DirectorySearch(string directory)
         {
-            var creditFiles = Directory.GetFiles(directory, "*credits.txt");
+            var creditFiles = Directory.GetFiles(directory, "credits.txt");
             foreach (string credit in creditFiles)
             {
                 StreamReader reader = new StreamReader(credit);
