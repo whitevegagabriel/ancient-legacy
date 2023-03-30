@@ -44,7 +44,7 @@ namespace Combat
         }
 
         public bool IsAlmostDead() {
-            return health <= 2 && health > 0;
+            return health <= 4 && health > 0;
         }
     }
 }

@@ -214,25 +214,19 @@ namespace AI
         }
 
         private Vector3 FarthestCornerFromPlayer() {
-            Vector3 farthestVector3 = new Vector3(0, 0, 0);
+            Vector3[] corners = new Vector3[] {new Vector3(9, 0, 9), 
+                new Vector3(9, 0, -9), 
+                new Vector3(-9, 0, 9), 
+                new Vector3(-9, 0, -9)};
+            Vector3 farthestCorner = new Vector3(0, 0, 0);
             float distance = 0;
-            if ((_player.transform.localPosition - new Vector3(9, 0, 9)).magnitude > distance) {
-                distance = (_player.transform.localPosition - new Vector3(9, 0, 9)).magnitude;
-                farthestVector3 = new Vector3(9, 0, 9);
+            for (int i = 0; i < 4; i++) {
+                if ((_player.transform.localPosition - corners[i]).magnitude > distance) {
+                    distance = (_player.transform.localPosition - corners[i]).magnitude;
+                    farthestCorner = corners[i];
+                }
             }
-            if ((_player.transform.localPosition - new Vector3(9, 0, -9)).magnitude > distance) {
-                distance = (_player.transform.localPosition - new Vector3(9, 0, -9)).magnitude;
-                farthestVector3 = new Vector3(9, 0, -9);
-            }
-            if ((_player.transform.localPosition - new Vector3(-9, 0, 9)).magnitude > distance) {
-                distance = (_player.transform.localPosition - new Vector3(-9, 0, 9)).magnitude;
-                farthestVector3 = new Vector3(-9, 0, 9);
-            }
-            if ((_player.transform.localPosition - new Vector3(-9, 0, -9)).magnitude > distance) {
-                distance = (_player.transform.localPosition - new Vector3(-9, 0, -9)).magnitude;
-                farthestVector3 = new Vector3(-9, 0, -9);
-            }
-            return farthestVector3; 
-        }
+            return farthestCorner;
+       }
     }
 }
