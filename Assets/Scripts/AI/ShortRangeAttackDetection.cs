@@ -6,10 +6,12 @@ namespace AI
 {
     public class ShortRangeAttackDetection : StateMachineBehaviour
     {
+        public static float normalizedTime;
+        
         private static List<AttackCallback> _attackCallbacks = new List<AttackCallback>();
         private int _currLoopIteration;
         private bool _calledPartway;
-        
+
         public static void AddAttackCallback(AttackCallback callback)
         {
             _attackCallbacks.Add(callback);
@@ -24,6 +26,7 @@ namespace AI
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            
             if (Mathf.FloorToInt(stateInfo.normalizedTime) > _currLoopIteration)
             {
                 _currLoopIteration++;
@@ -38,6 +41,9 @@ namespace AI
                     callback.onAttackPartway.Invoke();
                 }
             }
+
+            normalizedTime = stateInfo.normalizedTime - _currLoopIteration;
+
         }
 
         // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
