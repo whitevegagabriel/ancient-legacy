@@ -60,6 +60,7 @@ namespace AI
                         .Condition(() => _targetable.GetHealth() <= 0)
                         .Do(() =>
                         {
+                            _agent.isStopped = true;
                             AnimatorTrigger(OnDie);
                             
                             GetComponent<CapsuleCollider>().enabled = false;
@@ -72,6 +73,24 @@ namespace AI
                         .RepeatForever()
                             .Do(() => TaskStatus.Continue)
                         .End()
+                    .End()
+                    // Flee from the player
+                    .Sequence()
+                        .Condition(() => _targetable.IsAlmostDead())
+                        .Do(() =>
+                        {
+                            AnimatorTrigger(OnChase);
+                            _animator.applyRootMotion = false;
+                            return TaskStatus.Success;
+                        })
+                        // Wait until previous state is done animating
+                        .RepeatUntilSuccess()
+                            .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
+                        .End()
+                        .Do(() => {
+                            _agent.SetDestination(FarthestCornerFromPlayer());
+                            return TaskStatus.Success;
+                        })
                     .End()
                     // Idle
                     .Sequence()
@@ -192,6 +211,28 @@ namespace AI
             var angle = Vector3.Angle(_player.transform.position - _agent.transform.position, _agent.transform.forward);
             var distance = Vector3.Distance(_player.transform.position, _agent.transform.position);
             return distance <= AttackDistance && angle <= AttackAngle;
+        }
+
+        private Vector3 FarthestCornerFromPlayer() {
+            Vector3 farthestVector3 = new Vector3(0, 0, 0);
+            float distance = 0;
+            if ((_player.transform.localPosition - new Vector3(9, 0, 9)).magnitude > distance) {
+                distance = (_player.transform.localPosition - new Vector3(9, 0, 9)).magnitude;
+                farthestVector3 = new Vector3(9, 0, 9);
+            }
+            if ((_player.transform.localPosition - new Vector3(9, 0, -9)).magnitude > distance) {
+                distance = (_player.transform.localPosition - new Vector3(9, 0, -9)).magnitude;
+                farthestVector3 = new Vector3(9, 0, -9);
+            }
+            if ((_player.transform.localPosition - new Vector3(-9, 0, 9)).magnitude > distance) {
+                distance = (_player.transform.localPosition - new Vector3(-9, 0, 9)).magnitude;
+                farthestVector3 = new Vector3(-9, 0, 9);
+            }
+            if ((_player.transform.localPosition - new Vector3(-9, 0, -9)).magnitude > distance) {
+                distance = (_player.transform.localPosition - new Vector3(-9, 0, -9)).magnitude;
+                farthestVector3 = new Vector3(-9, 0, -9);
+            }
+            return farthestVector3; 
         }
     }
 }
