@@ -42,5 +42,9 @@ namespace Combat
         {
             return health;
         }
+
+        public int GetMaxHealth() {
+            return _maxHealth;
+        }
     }
 }
