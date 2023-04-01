@@ -76,7 +76,7 @@ namespace AI
                     .End()
                     // Flee from the player
                     .Sequence()
-                        .Condition(() => _targetable.IsAlmostDead())
+                        .Condition(() => IsAlmostDead())
                         .Do(() =>
                         {
                             AnimatorTrigger(OnChase);
@@ -227,6 +227,10 @@ namespace AI
                 }
             }
             return farthestCorner;
+       }
+
+       private bool IsAlmostDead() {
+            return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 5);
        }
     }
 }

@@ -43,8 +43,8 @@ namespace Combat
             return health;
         }
 
-        public bool IsAlmostDead() {
-            return health <= 4 && health > 0;
+        public int GetMaxHealth() {
+            return _maxHealth;
         }
     }
 }
