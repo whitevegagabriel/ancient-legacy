@@ -19,6 +19,7 @@ namespace AI
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
         private static readonly int OnChase = Animator.StringToHash("OnChase");
+        private static readonly int OnIdle = Animator.StringToHash("OnIdle");
 
         [SerializeField] private BehaviorTree tree;
 
@@ -70,6 +71,15 @@ namespace AI
                         .RepeatForever()
                             .Do(() => TaskStatus.Continue)
                         .End()
+                    .End()
+                    // Idle
+                    .Sequence()
+                        .Condition(() => _playerHasDied)
+                        .Do(() =>
+                        {
+                            AnimatorTrigger(OnIdle);
+                            return TaskStatus.Success;
+                        })
                     .End()
                     // Knock back
                     .Sequence()
@@ -160,7 +170,7 @@ namespace AI
 
         private void ResetTriggers()
         {
-            //_animator.ResetTrigger(OnIdle);
+            _animator.ResetTrigger(OnIdle);
             _animator.ResetTrigger(OnChase);
             _animator.ResetTrigger(OnShortRangeAttack);
             //_animator.ResetTrigger(OnLongRangeAttack);
