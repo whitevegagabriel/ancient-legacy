@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Combat;
+using StateManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -264,7 +265,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnRun(InputAction.CallbackContext context) {
-        if(context.started && PlayerStat.runCount == 3) {
+        if(context.started && PlayerState.RunCount == 3) {
             isRunning = true;
         }
         else if(context.canceled) {
@@ -272,7 +273,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerStat.jumpCount == 3) {
+        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerState.JumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
@@ -324,12 +325,12 @@ public class PlayerController : MonoBehaviour {
         if (hit.gameObject.CompareTag("JumpRelics"))
         {
             Debug.Log("Hit Jump Relics!");
-            PlayerStat.jumpCount++;
+            PlayerState.JumpCount++;
         }
         if (hit.gameObject.CompareTag("RunRelics"))
         {
             Debug.Log("Hit Run Relics!");
-            PlayerStat.runCount++;
+            PlayerState.RunCount++;
         }
         if (hit.gameObject.CompareTag("Ground") && !groundPriority.Contains(hit.transform))
         {

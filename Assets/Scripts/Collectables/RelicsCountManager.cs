@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using StateManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,30 +11,30 @@ public class RelicsCountManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        JumpCountDisplay.text = GetJumpRelicText(PlayerStat.jumpCount);
-        RunCountDisplay.text = GetRunRelicText(PlayerStat.runCount);
+        JumpCountDisplay.text = GetJumpRelicText(PlayerState.JumpCount);
+        RunCountDisplay.text = GetRunRelicText(PlayerState.RunCount);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PlayerStat.jumpCount == 3)
+        if (PlayerState.JumpCount == 3)
         {
             JumpCountDisplay.text = "Press Spacebar to Jump";
         }
         else
         {
-            JumpCountDisplay.text = GetJumpRelicText(PlayerStat.jumpCount);
+            JumpCountDisplay.text = GetJumpRelicText(PlayerState.JumpCount);
         }
         
-        if (PlayerStat.runCount == 3)
+        if (PlayerState.RunCount == 3)
         {
             RunCountDisplay.text = "Press Shift to Run";
 
         }
         else
         {
-            RunCountDisplay.text = GetRunRelicText(PlayerStat.runCount);
+            RunCountDisplay.text = GetRunRelicText(PlayerState.RunCount);
         }
     }
     

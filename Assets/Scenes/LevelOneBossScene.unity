@@ -188,15 +188,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2626478242615602476, guid: d835839daf8435a4aa23579dc5939241, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.000000004246612
+      value: -0.000000008493224
       objectReference: {fileID: 0}
     - target: {fileID: 2626478242615602476, guid: d835839daf8435a4aa23579dc5939241, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.000000009862799
+      value: -0.000000019725597
       objectReference: {fileID: 0}
     - target: {fileID: 2626478242615602476, guid: d835839daf8435a4aa23579dc5939241, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.000000058629386
+      value: 0.00000011725877
       objectReference: {fileID: 0}
     - target: {fileID: 2626478242615602476, guid: d835839daf8435a4aa23579dc5939241, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1806,6 +1806,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1979003509}
     m_Modifications:
+    - target: {fileID: 1007072370044318425, guid: e29464b38920f77469c6e74d9cfc369c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3727752315256289274, guid: e29464b38920f77469c6e74d9cfc369c, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -2971,6 +2975,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1979003509}
     m_Modifications:
+    - target: {fileID: 1007072370044318425, guid: e29464b38920f77469c6e74d9cfc369c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3727752315256289274, guid: e29464b38920f77469c6e74d9cfc369c, type: 3}
       propertyPath: m_RootOrder
       value: 5

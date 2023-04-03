@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using StateManagement;
 using UnityEngine;
 
 public class RelicManager : MonoBehaviour
@@ -19,12 +20,12 @@ public class RelicManager : MonoBehaviour
 
 
     private void EnableIncompleteRelics() {
-        if (PlayerStat.jumpCount != 3) {
+        if (PlayerState.JumpCount != 3) {
             foreach (GameObject relic in jumpRelics) {
                 relic.SetActive(true);
             }
         }
-        if (PlayerStat.runCount != 3) {
+        if (PlayerState.RunCount != 3) {
             foreach (GameObject relic in runRelics) {
                 relic.SetActive(true);
             }
@@ -32,11 +33,11 @@ public class RelicManager : MonoBehaviour
     }
 
     private void ResetIncompletePlayerStat() {
-        if (PlayerStat.jumpCount != 3) {
-            PlayerStat.jumpCount = 0;
+        if (PlayerState.JumpCount != 3) {
+            PlayerState.JumpCount = 0;
         }
-        if (PlayerStat.runCount != 3) {
-            PlayerStat.runCount = 0;
+        if (PlayerState.RunCount != 3) {
+            PlayerState.RunCount = 0;
         }
     }
 }

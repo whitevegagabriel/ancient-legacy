@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Menu
+namespace SceneManagement
 {
     public class GameQuitter : MonoBehaviour
     {
