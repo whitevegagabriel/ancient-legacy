@@ -239,7 +239,8 @@ namespace AI
        }
 
        private bool IsOutOfBounds(Vector3 position) {
-            return position.x > 9 || position.x < -9 || position.z > 9 || position.z < - 9;
+            NavMeshHit hit;
+            return NavMesh.Raycast(transform.position, position, out hit, NavMesh.AllAreas);
        }
 
        private bool IsAlmostDead() {
