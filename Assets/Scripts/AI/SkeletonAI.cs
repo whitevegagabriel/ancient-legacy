@@ -20,6 +20,7 @@ namespace AI
         private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
         private static readonly int OnChase = Animator.StringToHash("OnChase");
         private static readonly int OnIdle = Animator.StringToHash("OnIdle");
+        private static readonly int OnBlock = Animator.StringToHash("OnBlock");
 
         [SerializeField] private BehaviorTree tree;
 
@@ -29,6 +30,7 @@ namespace AI
         private bool _playerHasDied;
         private NavMeshAgent _agent;
         private GameObject _player;
+        private PlayerController _playerController;
         private WeaponController _weaponController;
         private Targetable _targetable;
         private Animator _animator;
@@ -38,6 +40,7 @@ namespace AI
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
         private UnityAction _onDamageGiven;
+        public bool isBlocking = false;
 
         private void Awake()
         {
@@ -47,6 +50,7 @@ namespace AI
             _targetable = GetComponent<Targetable>();
             _targetable.InitHealth(4, 4);
             _animator = GetComponent<Animator>();
+
             // a random offset to make the orbs look more independent
             //_animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
             _hoveringSpeed = Random.Range(0.4f, 0.6f);
@@ -113,11 +117,26 @@ namespace AI
                         .Condition(() => _agent.pathPending)
                         .Do(() => TaskStatus.Success)
                     .End()
+                    // Block
+                    .Sequence()
+                        .Condition(() => Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance && !PlayerCloseAndInFrontForAttack() && _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("ShortAttack") && _playerController.isAttacking == true)
+                        .Do(() =>
+                        {
+                            isBlocking = true;
+                            _agent.isStopped = true;
+                            _agent.ResetPath();
+                            _animator.applyRootMotion = true;
+                            AnimatorTrigger(OnBlock);
+                            return TaskStatus.Success;
+                        })
+                        .WaitTime(1.1f)
+                    .End()
                     // Chase player
                     .Sequence()
                         .Condition(() => Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance && !PlayerCloseAndInFrontForAttack())
                         .Do(() =>
                         {
+                            isBlocking = false;
                             _animator.applyRootMotion = false;
                             return TaskStatus.Success;
                         })
@@ -125,7 +144,7 @@ namespace AI
                     .End()
                     // Short Range Attack
                     .Sequence()
-                        .Condition(PlayerCloseAndInFrontForAttack)
+                        .Condition(() => PlayerCloseAndInFrontForAttack() && _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
                         .Do(() =>
                         {
                             _agent.isStopped = true;
@@ -145,6 +164,7 @@ namespace AI
         void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
+            _playerController = _player.GetComponent<PlayerController>();
             _onAttackPartway = () =>
             {
                 _weaponController.StartAttack();
@@ -173,7 +193,7 @@ namespace AI
             _animator.ResetTrigger(OnIdle);
             _animator.ResetTrigger(OnChase);
             _animator.ResetTrigger(OnShortRangeAttack);
-            //_animator.ResetTrigger(OnLongRangeAttack);
+            _animator.ResetTrigger(OnBlock);
             _animator.ResetTrigger(OnDie);
         }
 
