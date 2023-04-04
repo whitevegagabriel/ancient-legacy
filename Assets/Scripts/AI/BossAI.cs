@@ -88,7 +88,7 @@ namespace AI
                             .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
                         .End()
                         .Do(() => {
-                            _agent.SetDestination(FarthestCornerFromPlayer());
+                            _agent.SetDestination(PositionToMoveToward());
                             return TaskStatus.Success;
                         })
                     .End()
@@ -213,20 +213,33 @@ namespace AI
             return distance <= AttackDistance && angle <= AttackAngle;
         }
 
-        private Vector3 FarthestCornerFromPlayer() {
-            Vector3[] corners = new Vector3[] {new Vector3(9, 0, 9), 
-                new Vector3(9, 0, -9), 
-                new Vector3(-9, 0, 9), 
-                new Vector3(-9, 0, -9)};
-            Vector3 farthestCorner = new Vector3(0, 0, 0);
-            float distance = 0;
-            for (int i = 0; i < 4; i++) {
-                if ((_player.transform.localPosition - corners[i]).magnitude > distance) {
-                    distance = (_player.transform.localPosition - corners[i]).magnitude;
-                    farthestCorner = corners[i];
+       private Vector3 PositionToMoveToward() {
+            Vector3 moveToward = new Vector3(0, 0, 0);
+            float greatestDistance = 0;
+            Vector3[] directions = new Vector3[] {
+                new Vector3(1, 0, 0),
+                new Vector3(-1, 0, 0),
+                new Vector3(0, 0, 1),
+                new Vector3(0, 0, -1),
+                new Vector3(1, 0, 1),
+                new Vector3(1, 0, -1),
+                new Vector3(-1, 0, 1),
+                new Vector3(-1, 0, -1)
+            };
+            for (int i = 0; i < 8; i++) {
+                if (IsOutOfBounds(this.transform.localPosition + directions[i])) {
+                    continue;
+                }
+                if ((_player.transform.localPosition - (this.transform.localPosition + directions[i])).magnitude > greatestDistance) {
+                    moveToward = this.transform.localPosition + directions[i];
+                    greatestDistance = (_player.transform.localPosition - (this.transform.localPosition + directions[i])).magnitude;
                 }
             }
-            return farthestCorner;
+            return moveToward;
+       }
+
+       private bool IsOutOfBounds(Vector3 position) {
+            return position.x > 9 || position.x < -9 || position.z > 9 || position.z < - 9;
        }
 
        private bool IsAlmostDead() {
