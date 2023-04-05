@@ -42,7 +42,8 @@ namespace AI
         private UnityAction _onDamageGiven;
         public bool isBlocking = false;
         private float _projectileFireTime;
-        private float projectileTimer;
+        private float projectileTimer = 5;
+        public Rigidbody projectile;
 
         private void Awake()
         {
@@ -50,7 +51,7 @@ namespace AI
             _weaponController = GetComponentInChildren<WeaponController>();
             _weaponController.SetDamage(1);
             _targetable = GetComponent<Targetable>();
-            _targetable.InitHealth(4, 4);
+            _targetable.InitHealth(2, 2);
             _animator = GetComponent<Animator>();
             _projectileFireTime = Time.time;
 
@@ -66,12 +67,17 @@ namespace AI
                         .Condition(() => Time.time - _projectileFireTime > projectileTimer)
                         .Do(() =>
                         {
+                            AnimatorTrigger(OnShortRangeAttack);
+                            Instantiate(projectile, transform.position, transform.rotation);
+                            projectile.velocity = 0.1f * (transform.position - _player.transform.position);
+                            return TaskStatus.Success;
+                        })
+                        .WaitTime(1f)
+                        .Do(() =>
+                        {
                             _projectileFireTime = Time.time;
                             return TaskStatus.Success;
                         })
-                        .RepeatForever()
-                            .Do(() => TaskStatus.Continue)
-                        .End()
                     .End()
                     // Die
                     .Sequence()
