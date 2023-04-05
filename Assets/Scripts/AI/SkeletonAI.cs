@@ -34,8 +34,6 @@ namespace AI
         private WeaponController _weaponController;
         private Targetable _targetable;
         private Animator _animator;
-        private static readonly int HoveringOffset = Animator.StringToHash("HoveringOffset");
-        private float _hoveringSpeed;
         private int _currentWaypoint;
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
@@ -50,10 +48,6 @@ namespace AI
             _targetable = GetComponent<Targetable>();
             _targetable.InitHealth(4, 4);
             _animator = GetComponent<Animator>();
-
-            // a random offset to make the orbs look more independent
-            //_animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
-            _hoveringSpeed = Random.Range(0.4f, 0.6f);
             EventManager.StartListening<PlayerDeathEvent, Vector3>(_ => _playerHasDied = true);
 
             tree = new BehaviorTreeBuilder(gameObject)
@@ -64,12 +58,9 @@ namespace AI
                         .Do(() =>
                         {
                             AnimatorTrigger(OnDie);
-
-                            //EventManager.TriggerEvent<AIAudioHandler.OrbDeathEvent>();
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             GetComponent<Rigidbody>().isKinematic = false;
-                            //Destroy(gameObject);
                             return TaskStatus.Success;
                         })
                         .RepeatForever()
@@ -140,7 +131,7 @@ namespace AI
                             _animator.applyRootMotion = false;
                             return TaskStatus.Success;
                         })
-                        .SkeletonChasePlayer(_hoveringSpeed)
+                        .SkeletonChasePlayer()
                     .End()
                     // Short Range Attack
                     .Sequence()
@@ -155,7 +146,7 @@ namespace AI
                         })
                     .End()
                     // Patrol
-                    .SkeletonPatrol(waypoints, _hoveringSpeed)
+                    .SkeletonPatrol(waypoints)
                 .End()
                 .Build();
         }
@@ -217,22 +208,16 @@ namespace AI
         private NavMeshAgent _agent;
         private GameObject _player;
         private Animator _animator;
-        //private WeaponController _weaponController;
-
-        public float hoveringSpeed;
 
         protected override void OnInit()
         {
             _agent = Owner.GetComponent<NavMeshAgent>();
             _player = GameObject.FindGameObjectWithTag("Player");
             _animator = Owner.GetComponent<Animator>();
-           // _weaponController = Owner.GetComponentInChildren<WeaponController>();
         }
 
         protected override void OnStart()
         {
-           // _animator.SetFloat(HoveringSpeed, hoveringSpeed * 1.0f);
-            //_weaponController.StartAttack();
         }
 
         protected override TaskStatus OnUpdate()
@@ -251,7 +236,6 @@ namespace AI
         private Transform _currentWaypointTransform;
 
         public GameObject[] waypoints;
-        public float hoveringSpeed;
 
         protected override void OnInit()
         {
@@ -266,7 +250,6 @@ namespace AI
 
         protected override void OnStart()
         {
-           // _animator.SetFloat(HoveringSpeed, hoveringSpeed);
 
             if (_currentWaypointTransform != null)
             {
@@ -293,15 +276,14 @@ namespace AI
 
     public static class SkeletonBehaviorTreeBuilderExtensions
     {
-        public static BehaviorTreeBuilder SkeletonChasePlayer(this BehaviorTreeBuilder builder, float hoveringSpeed)
+        public static BehaviorTreeBuilder SkeletonChasePlayer(this BehaviorTreeBuilder builder)
         {
-            return builder.AddNode(new SkeletonChasePlayerAction { hoveringSpeed = hoveringSpeed });
+            return builder.AddNode(new SkeletonChasePlayerAction {});
         }
 
-        public static BehaviorTreeBuilder SkeletonPatrol(this BehaviorTreeBuilder builder, GameObject[] waypoints,
-            float hoveringSpeed)
+        public static BehaviorTreeBuilder SkeletonPatrol(this BehaviorTreeBuilder builder, GameObject[] waypoints)
         {
-            return builder.AddNode(new SkeletonPatrolAction { waypoints = waypoints, hoveringSpeed = hoveringSpeed });
+            return builder.AddNode(new SkeletonPatrolAction { waypoints = waypoints});
         }
     }
 }

@@ -34,8 +34,6 @@ namespace AI
         private WeaponController _weaponController;
         private Targetable _targetable;
         private Animator _animator;
-        private static readonly int HoveringOffset = Animator.StringToHash("HoveringOffset");
-        private float _hoveringSpeed;
         private int _currentWaypoint;
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
@@ -54,10 +52,6 @@ namespace AI
             _targetable.InitHealth(2, 2);
             _animator = GetComponent<Animator>();
             _projectileFireTime = Time.time;
-
-            // a random offset to make the orbs look more independent
-            //_animator.SetFloat(HoveringOffset, Random.Range(0f, 1f));
-            _hoveringSpeed = Random.Range(0.4f, 0.6f);
             EventManager.StartListening<PlayerDeathEvent, Vector3>(_ => _playerHasDied = true);
 
             tree = new BehaviorTreeBuilder(gameObject)
@@ -85,12 +79,9 @@ namespace AI
                         .Do(() =>
                         {
                             AnimatorTrigger(OnDie);
-
-                            //EventManager.TriggerEvent<AIAudioHandler.OrbDeathEvent>();
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             GetComponent<Rigidbody>().isKinematic = false;
-                            //Destroy(gameObject);
                             return TaskStatus.Success;
                         })
                         .RepeatForever()

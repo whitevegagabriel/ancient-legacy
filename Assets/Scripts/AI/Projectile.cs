@@ -27,11 +27,7 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        transform.position = new Vector3(transform.position.x + (transform.position.x - position.x), transform.position.y + (transform.position.y - position.y), transform.position.z + (transform.position.z - position.z)) * speed;
+        transform.position += (transform.position - position) * speed;
         ticks += 1;
-        /*if (ticks >= maxTicks)
-        {
-            Destroy(gameObject);
-        }*/
     }
 }
