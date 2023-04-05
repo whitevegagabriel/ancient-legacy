@@ -1,6 +1,7 @@
 using Combat;
 using UnityEngine;
 using UnityEngine.Events;
+using AI;
 
 public class WeaponController : MonoBehaviour
 {
@@ -31,6 +32,17 @@ public class WeaponController : MonoBehaviour
             }
             else {
                 EventManager.TriggerEvent<BlockEvent, Vector3>(GameObject.Find("Player").transform.position);
+            }
+        }
+        else if (other.gameObject.tag == "Skeleton")
+        {
+            if (!other.gameObject.GetComponent<SkeletonAI>().isBlocking)
+            {
+                target.OnHit(damage);
+            }
+            else
+            {
+                EventManager.TriggerEvent<BlockEvent, Vector3>(other.gameObject.transform.position);
             }
         }
         else {
