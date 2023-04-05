@@ -56,6 +56,21 @@ namespace AI
 
             tree = new BehaviorTreeBuilder(gameObject)
                 .Selector()
+                    // Die
+                    .Sequence()
+                        .Condition(() => _targetable.GetHealth() <= 0)
+                        .Do(() =>
+                        {
+                            AnimatorTrigger(OnDie);
+                            GetComponent<CapsuleCollider>().enabled = false;
+                            GetComponent<MeshCollider>().enabled = true;
+                            GetComponent<Rigidbody>().isKinematic = false;
+                            return TaskStatus.Success;
+                        })
+                        .RepeatForever()
+                            .Do(() => TaskStatus.Continue)
+                        .End()
+                    .End()
                     // Throw Projectile
                     .Sequence()
                         .Condition(() => Time.time - _projectileFireTime > projectileTimer)
@@ -72,21 +87,6 @@ namespace AI
                             _projectileFireTime = Time.time;
                             return TaskStatus.Success;
                         })
-                    .End()
-                    // Die
-                    .Sequence()
-                        .Condition(() => _targetable.GetHealth() <= 0)
-                        .Do(() =>
-                        {
-                            AnimatorTrigger(OnDie);
-                            GetComponent<CapsuleCollider>().enabled = false;
-                            GetComponent<MeshCollider>().enabled = true;
-                            GetComponent<Rigidbody>().isKinematic = false;
-                            return TaskStatus.Success;
-                        })
-                        .RepeatForever()
-                            .Do(() => TaskStatus.Continue)
-                        .End()
                     .End()
                     // Do nothing if path pending
                     .Sequence()
