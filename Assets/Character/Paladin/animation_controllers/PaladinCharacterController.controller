@@ -1761,7 +1761,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.17694707
+  m_TransitionDuration: 0.08056151
   m_TransitionOffset: 0
   m_ExitTime: 0
   m_HasExitTime: 0
@@ -1777,7 +1777,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Paladin Attack
-  m_Speed: 1
+  m_Speed: 1.3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2622203332205907142}
@@ -1947,9 +1947,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.49471965
+  m_TransitionDuration: 0.17531458
   m_TransitionOffset: 0
-  m_ExitTime: 0.0000000031304979
+  m_ExitTime: 0.0000000012068121
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2088,9 +2088,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.46763134
-  m_TransitionOffset: 0.11491254
-  m_ExitTime: 0.5790353
+  m_TransitionDuration: 0.29922444
+  m_TransitionOffset: 0.23520346
+  m_ExitTime: 0.7474422
   m_HasExitTime: 0
   m_HasFixedDuration: 0
   m_InterruptionSource: 0
