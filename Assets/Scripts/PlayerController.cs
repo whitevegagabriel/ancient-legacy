@@ -335,6 +335,7 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Run Relics!");
             PlayerState.RunCount++;
+            relicsCountManager.updateRunRelicImage();
         }
         if (hit.gameObject.CompareTag("Ground") && !groundPriority.Contains(hit.transform))
         {
