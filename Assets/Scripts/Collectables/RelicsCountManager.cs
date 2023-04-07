@@ -8,11 +8,15 @@ public class RelicsCountManager : MonoBehaviour
 {
     public Text JumpCountDisplay;
     public Text RunCountDisplay;
+    public RawImage[] jumpRelicDisplay;
+    public RawImage[] runRelicDisplay;
+    private ResetEvent resetEvent = ResetEvent.Instance;
     // Start is called before the first frame update
     void Start()
     {
         JumpCountDisplay.text = GetJumpRelicText(PlayerState.JumpCount);
         RunCountDisplay.text = GetRunRelicText(PlayerState.RunCount);
+        resetEvent.AddListener(resetImages);
     }
 
     // Update is called once per frame
@@ -46,5 +50,24 @@ public class RelicsCountManager : MonoBehaviour
     private static string GetRunRelicText(int count)
     {
         return $"Run Relics: {count} / 3";
+    }
+
+    public void updateJumpRelicImage() {
+        for(int i = 0; i < PlayerState.JumpCount; i++) {
+            jumpRelicDisplay[i].color = new Color(255,255,255);
+        }
+    }
+
+    public void updateRunRelicImage() {
+        for(int i = 0; i < PlayerState.RunCount; i++) {
+            runRelicDisplay[i].color = new Color(255,255,255);
+        }
+    }
+
+    public void resetImages() {
+        for(int i = 0; i < 3; i++) {
+            jumpRelicDisplay[i].color = new Color(0,0,0);
+            runRelicDisplay[i].color = new Color(0,0,0);
+        }
     }
 }

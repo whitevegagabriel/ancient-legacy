@@ -62,13 +62,16 @@ public class PlayerController : MonoBehaviour {
     private Targetable targetable;
     public static int health = 10;
     public GameObject playerHand;
+    private RelicsCountManager relicsCountManager;
 
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         targetable = GetComponent<Targetable>();
+        relicsCountManager = GetComponent<RelicsCountManager>();
         targetable.InitHealth(health, 10);
+
     }
 
     void Start() {
@@ -326,6 +329,7 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Jump Relics!");
             PlayerState.JumpCount++;
+            relicsCountManager.updateJumpRelicImage();
         }
         if (hit.gameObject.CompareTag("RunRelics"))
         {
