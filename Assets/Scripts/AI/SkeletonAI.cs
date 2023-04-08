@@ -5,6 +5,7 @@ using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Tasks.Actions;
 using CleverCrow.Fluid.BTs.Trees;
 using Combat;
+using Events;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -61,6 +62,7 @@ namespace AI
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             GetComponent<Rigidbody>().isKinematic = false;
+                            EventManager.TriggerEvent<SkeletonDeathEvent, Vector3>(transform.position);
                             return TaskStatus.Success;
                         })
                         .RepeatForever()

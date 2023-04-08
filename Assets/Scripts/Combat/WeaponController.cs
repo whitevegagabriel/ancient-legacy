@@ -26,15 +26,15 @@ public class WeaponController : MonoBehaviour
     {
         var target = other.GetComponent<Targetable>();
         if (other.gameObject.layer == gameObject.layer || target == null || hasHit || !isAttacking) return;
-        if (other.gameObject.tag == "Player") {
-            if (!GameObject.Find("Player").GetComponent<PlayerController>().isBlocking) {
+        if (other.gameObject.CompareTag("Player")) {
+            if (!other.gameObject.GetComponent<PlayerController>().isBlocking) {
                 target.OnHit(damage);
             }
             else {
-                EventManager.TriggerEvent<BlockEvent, Vector3>(GameObject.Find("Player").transform.position);
+                EventManager.TriggerEvent<BlockEvent, Vector3>(other.transform.position);
             }
         }
-        else if (other.gameObject.tag == "Skeleton")
+        else if (other.gameObject.CompareTag("Skeleton"))
         {
             if (!other.gameObject.GetComponent<SkeletonAI>().isBlocking)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Collectables;
 using Combat;
 using StateManagement;
 using TMPro;
@@ -339,6 +340,12 @@ public class PlayerController : MonoBehaviour {
                 lastGroundPosition = hit.transform.position;
             }
             groundPriority.Add(hit.transform);
+        }
+        var collectable = hit.gameObject.GetComponent<ICollectable>();
+        if (collectable != null)
+        {
+            PlayerInventory.AddItem(collectable.Name, 1);
+            hit.gameObject.SetActive(false);
         }
     }
 
