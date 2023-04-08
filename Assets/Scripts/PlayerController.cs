@@ -345,7 +345,6 @@ public class PlayerController : MonoBehaviour {
         if (collectable != null)
         {
             PlayerInventory.AddItem(collectable.Name, 1);
-            hit.gameObject.SetActive(false);
         }
     }
 
