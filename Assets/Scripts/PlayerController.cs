@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         targetable = GetComponent<Targetable>();
-        targetable.InitHealth(health, 10);
+        targetable.InitHealth(health, 10 + PlayerInventory.ItemCount(HeartController.CollectableName));
     }
 
     void Start() {
@@ -345,6 +345,11 @@ public class PlayerController : MonoBehaviour {
         if (collectable != null)
         {
             PlayerInventory.AddItem(collectable.Name, 1);
+            if (collectable.Name == HeartController.CollectableName)
+            {
+                targetable.IncreaseMaxHealth(1);
+                targetable.ResetHealth();
+            }
         }
     }
 

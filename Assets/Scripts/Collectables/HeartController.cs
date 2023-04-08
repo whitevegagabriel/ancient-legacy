@@ -4,6 +4,7 @@ namespace Collectables
 {
     public class HeartController : MonoBehaviour, ICollectable
     {
-        public string Name => "ExtraHeart";
+        public const string CollectableName = "ExtraHeart";
+        public string Name => CollectableName;
     }
 }
