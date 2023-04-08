@@ -16,6 +16,8 @@ TagManager:
   - RelicsCount
   - VictoryMenu
   - Skeleton
+  - ProjectileUser
+  - Wall
   layers:
   - Default
   - TransparentFX

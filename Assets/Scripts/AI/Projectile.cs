@@ -8,26 +8,46 @@ public class Projectile : MonoBehaviour
     private GameObject _player;
     private WeaponController _weaponController;
     private SkeletonProjectileAI _skeletonUser;
-    private bool isTriggered = true;
-    public float speed = 0.1F;
-    private Vector3 position;
-    private float ticks;
-    private float maxTicks;
+    private int frames;
+    private bool frameCount;
+    private Renderer rend;
 
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _weaponController = GetComponent<WeaponController>();
         _weaponController.SetDamage(1);
-        ticks = 0;
-        maxTicks = (1/speed);
-        maxTicks = Mathf.Ceil(maxTicks);
-        position = _player.transform.position;
+        rend = GetComponent<Renderer>();
+        frames = 0;
+        frameCount = false;
     }
 
     void Update()
     {
-        transform.position += (transform.position - position) * speed;
-        ticks += 1;
+        if (frameCount)
+        {
+            frames = frames + 1;
+            if (frames >= 12)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag != "ProjectileUser")
+        {
+            if (other.gameObject.tag == "Player")
+            {
+                _weaponController.StartAttack();
+                rend.enabled = false;
+                frameCount = true;
+            }
+            else if (other.gameObject.tag == "Wall")
+            {
+                gameObject.SetActive(false);
+            }
+        }
     }
 }
