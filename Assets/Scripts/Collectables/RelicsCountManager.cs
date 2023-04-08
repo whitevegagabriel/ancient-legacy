@@ -14,7 +14,7 @@ public class RelicsCountManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        resetEvent.AddListener(resetImages);
+        resetEvent.AddListener(Reset);
     }
 
     // Update is called once per frame
@@ -34,13 +34,19 @@ public class RelicsCountManager : MonoBehaviour
         }
     }
 
-    public void resetImages() {
-        for(int i = 0; i < (jumpRelicDisplay.Length - PlayerState.JumpCount); i++) {
-            jumpRelicDisplay[i].color = new Color(0,0,0);
+    public void Reset() {
+        if (PlayerState.JumpCount != 3) {
+            for(int i = 0; i < PlayerState.JumpCount; i++) {
+                jumpRelicDisplay[i].color = new Color(0,0,0);
+            }
+            PlayerState.JumpCount = 0;
         }
 
-        for(int i = 0; i < (runRelicDisplay.Length - PlayerState.RunCount); i++) {
-            runRelicDisplay[i].color = new Color(0,0,0);
+        if (PlayerState.RunCount != 3) {
+            for(int i = 0; i < PlayerState.RunCount; i++) {
+                runRelicDisplay[i].color = new Color(0,0,0);
+            }
+            PlayerState.RunCount = 0;
         }
     }
 }

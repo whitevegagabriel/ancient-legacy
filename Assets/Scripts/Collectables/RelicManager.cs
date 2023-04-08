@@ -14,7 +14,6 @@ public class RelicManager : MonoBehaviour
     }
 
     private void RespawnRelics() {
-        ResetIncompletePlayerStat();
         EnableIncompleteRelics();
     }
 
@@ -29,15 +28,6 @@ public class RelicManager : MonoBehaviour
             foreach (GameObject relic in runRelics) {
                 relic.SetActive(true);
             }
-        }
-    }
-
-    private void ResetIncompletePlayerStat() {
-        if (PlayerState.JumpCount != 3) {
-            PlayerState.JumpCount = 0;
-        }
-        if (PlayerState.RunCount != 3) {
-            PlayerState.RunCount = 0;
         }
     }
 }
