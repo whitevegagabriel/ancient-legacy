@@ -38,6 +38,9 @@ namespace AI
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
         private static readonly int Speed = Animator.StringToHash("speed");
+        public GameObject skeletonPrefab;
+        public float skeletonSpawnCooldown;
+        public float nextSkeletonSpawn;
 
         private void Awake()
         {
@@ -52,6 +55,8 @@ namespace AI
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _startTime = Time.time;
+            skeletonSpawnCooldown = 8f;
+            nextSkeletonSpawn = Time.time;
 
             tree = new BehaviorTreeBuilder(gameObject)
                 .Selector()
@@ -62,7 +67,7 @@ namespace AI
                         {
                             _agent.isStopped = true;
                             AnimatorTrigger(OnDie);
-                            
+                            KillAllSkeletons();
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             var relic = Instantiate(relicPrefab, transform.position, Quaternion.identity);
@@ -79,6 +84,10 @@ namespace AI
                         .Condition(() => IsAlmostDead())
                         .Do(() =>
                         {
+                            if (Time.time >= nextSkeletonSpawn) {
+                                SpawnSkeleton();
+                                nextSkeletonSpawn = Time.time + skeletonSpawnCooldown;
+                            }
                             AnimatorTrigger(OnChase);
                             _animator.applyRootMotion = false;
                             return TaskStatus.Success;
@@ -91,6 +100,7 @@ namespace AI
                             _agent.SetDestination(PositionToMoveToward());
                             return TaskStatus.Success;
                         })
+
                     .End()
                     // Idle
                     .Sequence()
@@ -245,6 +255,20 @@ namespace AI
 
        private bool IsAlmostDead() {
             return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 5);
+       }
+
+       private void SpawnSkeleton() {
+            Vector3 spawnPosition = transform.localPosition;
+            spawnPosition.x += Random.Range(0, 1);
+            spawnPosition.z += Random.Range(0, 1);
+            Instantiate(skeletonPrefab, spawnPosition, Quaternion.identity);
+       }
+
+       private void KillAllSkeletons() {
+            GameObject[] skeletons = GameObject.FindGameObjectsWithTag("Skeleton");
+            foreach (var skeleton in skeletons) {
+                Destroy(skeleton);
+            }
        }
     }
 }
