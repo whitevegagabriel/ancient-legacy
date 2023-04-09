@@ -63,13 +63,30 @@ public class PlayerController : MonoBehaviour {
     private Targetable targetable;
     public static int health = 10;
     public GameObject playerHand;
+    private RelicsCountManager relicsCountManager;
 
+    private GameObject controls;
+    private GameObject controlsWithoutRun;
+    private GameObject controlsWithoutJumpOrRun;
 
     void Awake() {
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         targetable = GetComponent<Targetable>();
+        relicsCountManager = GetComponent<RelicsCountManager>();
         targetable.InitHealth(health, 10 + PlayerInventory.ItemCount(HeartController.CollectableName));
+        controls = GameObject.Find("Controls");
+        controlsWithoutRun = GameObject.Find("ControlsWithoutRun");
+        controlsWithoutJumpOrRun = GameObject.Find("ControlsWithoutJumpOrRun");
+        if (PlayerState.JumpCount == 3 && PlayerState.RunCount == 3) {
+            setControls(true, false, false);
+        }
+        else if (PlayerState.JumpCount == 3) {
+            setControls(false, true, false);
+        }
+        else {
+            setControls(false, false, true);
+        }
     }
 
     void Start() {
@@ -327,11 +344,19 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Jump Relics!");
             PlayerState.JumpCount++;
+            relicsCountManager.updateJumpRelicImage();
+            if (PlayerState.JumpCount == 3) {
+                setControls(false, true, false);
+            }
         }
         if (hit.gameObject.CompareTag("RunRelics"))
         {
             Debug.Log("Hit Run Relics!");
             PlayerState.RunCount++;
+            relicsCountManager.updateRunRelicImage();
+            if (PlayerState.RunCount == 3) {
+                setControls(true, false, false);
+            }
         }
         if (hit.gameObject.CompareTag("Ground") && !groundPriority.Contains(hit.transform))
         {
@@ -380,5 +405,11 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("fall", false);
             EventManager.TriggerEvent<PlayerLandsEvent, Vector3, airState>(transform.position, airState.Fall);
         }
+    }
+
+    private void setControls(bool setControls, bool setControlsWithoutRun, bool setControlsWithoutJumpAndRun) {
+        controls.SetActive(setControls);
+        controlsWithoutRun.SetActive(setControlsWithoutRun);
+        controlsWithoutJumpOrRun.SetActive(setControlsWithoutJumpAndRun);
     }
 }
