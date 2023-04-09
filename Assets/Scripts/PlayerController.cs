@@ -344,7 +344,7 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Jump Relics!");
             PlayerState.JumpCount++;
-            relicsCountManager.updateJumpRelicImage();
+            relicsCountManager.UpdateJumpRelicImage();
             if (PlayerState.JumpCount == 3) {
                 setControls(false, true, false);
             }
@@ -353,7 +353,7 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Hit Run Relics!");
             PlayerState.RunCount++;
-            relicsCountManager.updateRunRelicImage();
+            relicsCountManager.UpdateRunRelicImage();
             if (PlayerState.RunCount == 3) {
                 setControls(true, false, false);
             }
