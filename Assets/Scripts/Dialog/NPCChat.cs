@@ -16,6 +16,7 @@ public class NPCChat : MonoBehaviour
         if (distance <= 3)
         {
             introText.GetComponent<Text>().text = "Test";
+            Debug.Log("Test");
         }
     }
 
