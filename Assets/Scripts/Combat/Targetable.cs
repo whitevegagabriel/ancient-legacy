@@ -46,5 +46,20 @@ namespace Combat
         public int GetMaxHealth() {
             return _maxHealth;
         }
+        
+        public void IncreaseMaxHealth(int amount) {
+            _maxHealth += amount;
+            if (_healthDisplay != null) {
+                _healthDisplay.SetHearts(health, _maxHealth);
+            }
+        }
+        
+        public void ResetHealth() {
+            health = _maxHealth;
+            PlayerController.health = health;
+            if (_healthDisplay != null) {
+                _healthDisplay.SetHearts(health, _maxHealth);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ TagManager:
   - LoseMenu
   - RelicsCount
   - VictoryMenu
+  - Skeleton
   layers:
   - Default
   - TransparentFX
