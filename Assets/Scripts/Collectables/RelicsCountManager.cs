@@ -1,50 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using StateManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RelicsCountManager : MonoBehaviour
+namespace Collectables
 {
-    public Text JumpCountDisplay;
-    public Text RunCountDisplay;
-    // Start is called before the first frame update
-    void Start()
+    public class RelicsCountManager : MonoBehaviour
     {
-        JumpCountDisplay.text = GetJumpRelicText(PlayerState.JumpCount);
-        RunCountDisplay.text = GetRunRelicText(PlayerState.RunCount);
-    }
+        public RawImage[] jumpRelicDisplay;
+        public RawImage[] runRelicDisplay;
+        private readonly ResetEvent resetEvent = ResetEvent.Instance;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (PlayerState.JumpCount == 3)
+        private void Start()
         {
-            JumpCountDisplay.text = "Press Spacebar to Jump";
+            resetEvent.AddListener(Reset);
         }
-        else
-        {
-            JumpCountDisplay.text = GetJumpRelicText(PlayerState.JumpCount);
-        }
-        
-        if (PlayerState.RunCount == 3)
-        {
-            RunCountDisplay.text = "Press Shift to Run";
 
+        public void UpdateJumpRelicImage() {
+            for(var i = 0; i < PlayerState.JumpCount; i++) {
+                jumpRelicDisplay[i].color = new Color(255,255,255);
+            }
         }
-        else
-        {
-            RunCountDisplay.text = GetRunRelicText(PlayerState.RunCount);
+
+        public void UpdateRunRelicImage() {
+            for(var i = 0; i < PlayerState.RunCount; i++) {
+                runRelicDisplay[i].color = new Color(255,255,255);
+            }
         }
-    }
-    
-    private static string GetJumpRelicText(int count)
-    {
-        return $"Jump Relics: {count} / 3";
-    }
-    
-    private static string GetRunRelicText(int count)
-    {
-        return $"Run Relics: {count} / 3";
+
+        public void Reset() {
+            if (PlayerState.JumpCount != 3) {
+                for(var i = 0; i < PlayerState.JumpCount; i++) {
+                    jumpRelicDisplay[i].color = new Color(0,0,0);
+                }
+                PlayerState.JumpCount = 0;
+            }
+
+            if (PlayerState.RunCount != 3) {
+                for(var i = 0; i < PlayerState.RunCount; i++) {
+                    runRelicDisplay[i].color = new Color(0,0,0);
+                }
+                PlayerState.RunCount = 0;
+            }
+        }
     }
 }

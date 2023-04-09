@@ -10,10 +10,13 @@ public class PanelController : MonoBehaviour
     public string keyName;
     
     private bool _playerInRange;
+    private Animator _animator;
     private Canvas canvas;
+    private static readonly int IsOn = Animator.StringToHash("IsOn");
 
     private void Start()
     {
+        _animator = GetComponentInChildren<Animator>();
         canvas = GetComponentInChildren<Canvas>();
         canvas.enabled = false;
     }
@@ -33,6 +36,7 @@ public class PanelController : MonoBehaviour
             if (PlayerInventory.HasItem(keyName))
             {
                 ControlledMovingPlatform.isMoving = true;
+                _animator.SetBool(IsOn, true);
             } else {
                 canvas.enabled = true;
             }
@@ -40,6 +44,7 @@ public class PanelController : MonoBehaviour
         else
         {
             ControlledMovingPlatform.isMoving = false;
+            _animator.SetBool(IsOn, false);
             canvas.enabled = false;
         }
         _playerInRange = newPlayerInRange;
