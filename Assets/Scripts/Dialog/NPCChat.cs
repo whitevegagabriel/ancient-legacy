@@ -1,22 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NPCChat : MonoBehaviour
 {
-    public float distance;
-    public GameObject introText;
-    public GameObject player;
+    private bool _playerInRange;
+    private Canvas canvas;
+    private GameObject player;
+    private GameObject npc;
 
-    // Start is called before the first frame update
-    void Update()
+    private void Start()
     {
-        distance = Vector3.Distance(transform.position, player.transform.position);
-        if (distance <= 3)
+        canvas = GetComponentInChildren<Canvas>();
+        canvas.enabled = false;
+        player = GameObject.FindWithTag("Player");
+        npc = GameObject.FindWithTag("IntroNPC");
+    }
+
+    private void Update()
+    {
+        playerInRange((player.transform.position - npc.transform.position).sqrMagnitude < 3 * 3);
+       
+    }
+
+    private void playerInRange(bool playerInRange)
+    {
+        if (playerInRange)
         {
-            introText.GetComponent<Text>().text = "Test";
-            Debug.Log("Test");
+            canvas.enabled = true;
+        }
+        else
+        {
+            canvas.enabled = false;
         }
     }
 

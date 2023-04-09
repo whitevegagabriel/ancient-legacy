@@ -16,6 +16,7 @@ TagManager:
   - RelicsCount
   - VictoryMenu
   - Skeleton
+  - IntroNPC
   layers:
   - Default
   - TransparentFX
