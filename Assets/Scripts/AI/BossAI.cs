@@ -90,6 +90,7 @@ namespace AI
                             }
                             AnimatorTrigger(OnChase);
                             _animator.applyRootMotion = false;
+                            _agent.speed = 3;
                             return TaskStatus.Success;
                         })
                         // Wait until previous state is done animating
