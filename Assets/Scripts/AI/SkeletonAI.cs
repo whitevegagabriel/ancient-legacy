@@ -78,8 +78,8 @@ namespace AI
                             return TaskStatus.Success;
                         })
                     .End()
-                    // Knock back
-                    .Sequence()
+                    // Knock back - UNUSED
+                    /*.Sequence()
                         .Condition(() =>
                         {
                             return Physics.OverlapSphere(transform.position, .3f)
@@ -104,7 +104,7 @@ namespace AI
                                 return TaskStatus.Success;
                             })
                         .End()
-                    .End()
+                    .End()*/
                     // Do nothing if path pending
                     .Sequence()
                         .Condition(() => _agent.pathPending)

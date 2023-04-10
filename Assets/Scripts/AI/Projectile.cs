@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
         rend = GetComponent<Renderer>();
         frames = 0;
         frameCount = false;
+        _weaponController.StartAttack();
     }
 
     void Update()
@@ -27,7 +28,7 @@ public class Projectile : MonoBehaviour
         if (frameCount)
         {
             frames = frames + 1;
-            if (frames >= 12)
+            if (frames >= 20)
             {
                 gameObject.SetActive(false);
             }
@@ -40,7 +41,6 @@ public class Projectile : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
             {
-                _weaponController.StartAttack();
                 rend.enabled = false;
                 frameCount = true;
             }
