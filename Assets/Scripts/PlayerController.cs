@@ -87,6 +87,12 @@ public class PlayerController : MonoBehaviour {
         else {
             setControls(false, false, true);
         }
+        
+        if (!PlayerState.Initialized)
+        {
+            PlayerState.SavedHealth = health;
+            PlayerState.Initialized = true;
+        }
     }
 
     void Start() {
