@@ -98,6 +98,10 @@ namespace AI
                             .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
                         .End()
                         .Do(() => {
+                            if ((_player.transform.localPosition - transform.localPosition).magnitude > 5) {
+                                transform.LookAt(_player.transform);
+                                return TaskStatus.Success;
+                            }
                             _agent.SetDestination(PositionToMoveToward());
                             return TaskStatus.Success;
                         })
