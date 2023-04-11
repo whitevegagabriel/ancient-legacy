@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour {
             var ground = groundPriority[0];
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
-            controller.Move(groundMovement);
+            transform.position += groundMovement;
             lastGroundPosition = groundPosition;
         } 
 
