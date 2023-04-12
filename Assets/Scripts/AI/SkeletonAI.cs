@@ -126,7 +126,7 @@ namespace AI
                     .End()
                     // Chase player
                     .Sequence()
-                        .Condition(() => Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance && !PlayerCloseAndInFrontForAttack())
+                        .Condition(() => (Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance || waypoints.Length == 0) && !PlayerCloseAndInFrontForAttack())
                         .Do(() =>
                         {
                             isBlocking = false;
@@ -148,7 +148,8 @@ namespace AI
                         })
                     .End()
                     // If waypoints doesn't exist (when spawned in the boss room), chase the player
-                    .Condition(() => waypoints.Length == 0)
+                    .Sequence()
+                        .Condition(() => waypoints.Length == 0)
                         .Do(() => {
                             isBlocking = false;
                             _animator.applyRootMotion = false;
