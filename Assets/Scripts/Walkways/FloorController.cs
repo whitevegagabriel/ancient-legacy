@@ -1,49 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorController : MonoBehaviour
+namespace Walkways
 {
-    private bool isFalling = false;
-    private float downSpeed = 0f;
-    private Vector3 originalPosition;
-    private ResetEvent resetEvent = ResetEvent.Instance;
-
-    void Start() {
-        originalPosition = transform.localPosition;
-        resetEvent.AddListener(ResetTile);
-    }
-
-    void OnTriggerEnter(Collider collision)
+    public class FloorController : MonoBehaviour
     {
-        //can add a check first
-        if (collision.gameObject.tag == "Player")
-        {
-            StartCoroutine(MakeTileFall());
-        }
-    }
+        private bool isFalling;
+        private float downSpeed ;
+        private Vector3 originalPosition;
+        private readonly ResetEvent resetEvent = ResetEvent.Instance;
 
-    IEnumerator MakeTileFall()
-    {
-        yield return new WaitForSeconds(.3f);
-        isFalling = true;
-    }
-
-    void Update()
-    {   
-        if (isFalling)
-        {
-            downSpeed += Time.deltaTime/20;
-            transform.position = new Vector3(transform.position.x,
-                transform.position.y - downSpeed,
-                transform.position.z);
+        private void Start() {
+            originalPosition = transform.localPosition;
+            resetEvent.AddListener(ResetTile);
         }
 
-    }
+        private void OnTriggerEnter(Collider collision)
+        {
+            if (!collision.gameObject.CompareTag("Player") || isFalling) return;
+            
+            isFalling = true;
+        }
 
-    public void ResetTile() {
-        this.isFalling = false;
-        this.downSpeed = 0f;
-        this.transform.localPosition = originalPosition;
+        private void FixedUpdate()
+        {
+            if (!isFalling) return;
+        
+            downSpeed += Time.deltaTime/10;
+            transform.position -= new Vector3(0, downSpeed, 0);
+
+        }
+
+        private void ResetTile() {
+            isFalling = false;
+            downSpeed = 0f;
+            transform.localPosition = originalPosition;
+        }
     }
 }
