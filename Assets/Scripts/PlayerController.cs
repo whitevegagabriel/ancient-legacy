@@ -87,6 +87,12 @@ public class PlayerController : MonoBehaviour {
         else {
             setControls(false, false, true);
         }
+        
+        if (!PlayerState.Initialized)
+        {
+            PlayerState.SavedHealth = health;
+            PlayerState.Initialized = true;
+        }
     }
 
     void Start() {
@@ -237,7 +243,7 @@ public class PlayerController : MonoBehaviour {
             var ground = groundPriority[0];
             var groundPosition = ground.position;
             var groundMovement = groundPosition - lastGroundPosition;
-            controller.Move(groundMovement);
+            transform.position += groundMovement;
             lastGroundPosition = groundPosition;
         } 
 

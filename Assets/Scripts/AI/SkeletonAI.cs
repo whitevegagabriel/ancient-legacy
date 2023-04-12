@@ -147,6 +147,15 @@ namespace AI
                             return TaskStatus.Success;
                         })
                     .End()
+                    // If waypoints doesn't exist (when spawned in the boss room), chase the player
+                    .Condition(() => waypoints.Length == 0)
+                        .Do(() => {
+                            isBlocking = false;
+                            _animator.applyRootMotion = false;
+                            return TaskStatus.Success;
+                        })
+                        .SkeletonChasePlayer()
+                    .End() 
                     // Patrol
                     .SkeletonPatrol(waypoints)
                 .End()
