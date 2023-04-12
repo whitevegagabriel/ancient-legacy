@@ -17,6 +17,7 @@ TagManager:
   - VictoryMenu
   - Skeleton
   - IntroNPC
+  - IntroText
   layers:
   - Default
   - TransparentFX
