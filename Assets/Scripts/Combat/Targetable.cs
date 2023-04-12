@@ -61,5 +61,9 @@ namespace Combat
                 _healthDisplay.SetHearts(health, _maxHealth);
             }
         }
+
+        public void SetHealthToZero() {
+            health = 0;
+        }
     }
 }

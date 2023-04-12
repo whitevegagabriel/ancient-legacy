@@ -5,7 +5,8 @@ using UnityEngine;
 public class RespawnPlayer : MonoBehaviour
 {
     private Vector3 _respawnPoint;
-    private ResetEvent resetEvent = ResetEvent.Instance;
+    private readonly ResetEvent resetEvent = ResetEvent.Instance;
+    private readonly SaveEvent saveEvent = SaveEvent.Instance;
     void Start() {
         _respawnPoint = transform.position;
         resetEvent.AddListener(Respawn);
@@ -16,16 +17,19 @@ public class RespawnPlayer : MonoBehaviour
         }
     }
 
-    public void Respawn() {
-        CharacterController cc = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
+    private void Respawn() {
+        var cc = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
         cc.enabled = false;
         transform.position = _respawnPoint;
         cc.enabled = true;
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("CheckPoint")) {
-            _respawnPoint = other.transform.localPosition;
-        }
+        var checkpoint = other.GetComponent<ICheckpoint>();
+        var checkpointData = checkpoint?.GetCheckPointData();
+        if (checkpointData == null) return;
+        
+        _respawnPoint = checkpointData.respawnPoint;
+        saveEvent.Invoke();
     }
 }
