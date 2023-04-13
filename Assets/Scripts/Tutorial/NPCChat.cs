@@ -51,10 +51,11 @@ public class NPCChat : MonoBehaviour
 
     void MyAction()
     {
-        textWriter.Addwriter(messageText, "Welcome to AncientLegacy: \n" +
-            "1. Player must collect all 3 relics thoughout the first section to unlock the Jump ability. \n" +
-            "2. After unlocking Jump ability, Player shall proceed to the next section where Player must collect 3 relics again to unlock the Run ability. \n" +
-            "3. After unlocking Run ability, Player shall proceed to the boss room where Player must defeat the boss and collect the final relic to finish the game.", 0.02f);
+        if (npc.tag == "IntroNPC") {
+            textWriter.Addwriter(messageText, "Welcome to AncientLegacy: \n" +
+            "1. Wait for the moving platform. \n" +
+            "2. Walk on the platform to cross the ravine", 0.02f);
+        }
     }
 
     private void playerInRange(bool playerInRange)

@@ -26,7 +26,7 @@ public class IntroText : MonoBehaviour
         introText.gameObject.SetActive(true);
         textWriter.Addwriter(introText, "Welcome to AncientLegacy!\n" +
             "Please proceed and talk to Friendly Knight!", 0.08f);
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(7);
         introText.gameObject.SetActive(false);
     }
 }
