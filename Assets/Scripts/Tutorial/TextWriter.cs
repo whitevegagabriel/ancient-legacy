@@ -32,6 +32,11 @@ public class TextWriter : MonoBehaviour
                 uiText.text = textToWrite.Substring(0, characterIndex);
             }
 
+            if (characterIndex >= textToWrite.Length) {
+                uiText = null;
+                return;
+            }
+
         }
     }
 }

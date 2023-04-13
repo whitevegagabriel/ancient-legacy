@@ -36,7 +36,7 @@ public class NPCChat : MonoBehaviour
 
     private void Update()
     {
-        bool playerState = ((player.transform.position - npc.transform.position).sqrMagnitude < 2 * 2);
+        bool playerState = ((player.transform.position - npc.transform.position).sqrMagnitude < 3 * 3);
         playerInRange(playerState);
         if (Input.GetKeyDown("e"))
         {
