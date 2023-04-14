@@ -97,7 +97,7 @@ namespace AI
                     .Sequence()
                         .Do(() =>
                         {
-                            this.transform.LookAt(_player.transform);
+                            this.transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
                             return TaskStatus.Success;
                         })
                     .End()
