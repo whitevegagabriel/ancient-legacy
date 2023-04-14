@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] InputAction input;
 
     float lastGroundedTime;
+    Vector3 lastGroundedPosition;
     private Targetable targetable;
     public static int health = 10;
     public GameObject playerHand;
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour {
         controls = GameObject.Find("Controls");
         controlsWithoutRun = GameObject.Find("ControlsWithoutRun");
         controlsWithoutJumpOrRun = GameObject.Find("ControlsWithoutJumpOrRun");
-        if (PlayerState.JumpCount == 3) {
+        if (PlayerState.JumpCount == 3 && PlayerState.RunCount == 3) {
             setControls(true, false, false);
         }
         else if (PlayerState.JumpCount == 3) {
@@ -119,8 +120,8 @@ public class PlayerController : MonoBehaviour {
 
         if (isDefeated) {
             controller.enabled = false;
-            this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
-            controller.transform.position = this.transform.position;
+            this.transform.position = lastGroundedPosition;
+            controller.transform.position = lastGroundedPosition;
             controller.enabled = true;
             anim.SetTrigger("defeated");
             return;
@@ -131,6 +132,7 @@ public class PlayerController : MonoBehaviour {
             isGrounded = controller.isGrounded;
 
             lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+            lastGroundedPosition = isGrounded ? this.transform.position : lastGroundedPosition;
         }
 
         if(isGrounded && velocity.y < 0) {
@@ -301,7 +303,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown ) {
+        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerState.JumpCount == 3) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
