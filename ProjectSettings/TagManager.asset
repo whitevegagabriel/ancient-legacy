@@ -16,6 +16,8 @@ TagManager:
   - RelicsCount
   - VictoryMenu
   - Skeleton
+  - IntroNPC
+  - IntroText
   layers:
   - Default
   - TransparentFX
@@ -27,7 +29,7 @@ TagManager:
   - Player
   - Enemy
   - PostProcessing
-  - 
+  - NPC
   - 
   - 
   - 
