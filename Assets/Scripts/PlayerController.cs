@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
         controls = GameObject.Find("Controls");
         controlsWithoutRun = GameObject.Find("ControlsWithoutRun");
         controlsWithoutJumpOrRun = GameObject.Find("ControlsWithoutJumpOrRun");
-        if (PlayerState.JumpCount == 3 && PlayerState.RunCount == 3) {
+        if (PlayerState.JumpCount == 3) {
             setControls(true, false, false);
         }
         else if (PlayerState.JumpCount == 3) {
@@ -118,6 +118,10 @@ public class PlayerController : MonoBehaviour {
         isDefeated = targetable.GetHealth() <= 0;
 
         if (isDefeated) {
+            controller.enabled = false;
+            this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
+            controller.transform.position = this.transform.position;
+            controller.enabled = true;
             anim.SetTrigger("defeated");
             return;
         }
@@ -297,7 +301,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     public void OnJump(InputAction.CallbackContext context) {
-        if(isGrounded && canMove && Time.time > jumpCooldown && PlayerState.JumpCount == 3) {
+        if(isGrounded && canMove && Time.time > jumpCooldown ) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             isJumping = true;
             EventManager.TriggerEvent<JumpEvent, Vector3>(transform.position);
