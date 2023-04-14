@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] InputAction input;
 
     float lastGroundedTime;
+    Vector3 lastGroundedPosition;
     private Targetable targetable;
     public static int health = 10;
     public GameObject playerHand;
@@ -118,6 +119,10 @@ public class PlayerController : MonoBehaviour {
         isDefeated = targetable.GetHealth() <= 0;
 
         if (isDefeated) {
+            controller.enabled = false;
+            this.transform.position = lastGroundedPosition;
+            controller.transform.position = lastGroundedPosition;
+            controller.enabled = true;
             anim.SetTrigger("defeated");
             return;
         }
@@ -127,6 +132,7 @@ public class PlayerController : MonoBehaviour {
             isGrounded = controller.isGrounded;
 
             lastGroundedTime = isGrounded ? Time.time : lastGroundedTime;
+            lastGroundedPosition = isGrounded ? this.transform.position : lastGroundedPosition;
         }
 
         if(isGrounded && velocity.y < 0) {
