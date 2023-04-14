@@ -23,9 +23,11 @@ namespace Combat
         {
             health -= damage;
             
-            if (player != null)
+            if (player != null && PlayerController.health != 0)
             {
                 PlayerController.health -= 1;
+                Animator playerAnim = player.GetComponentInChildren<Animator>();
+                playerAnim.SetBool("hit", true);
             }
             if (_healthDisplay != null) {
                 _healthDisplay.SetHearts(health, _maxHealth);

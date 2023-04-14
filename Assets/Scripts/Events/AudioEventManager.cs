@@ -28,6 +28,7 @@ public class AudioEventManager : MonoBehaviour
     private UnityAction<Vector3> platformStopEventListener;
     private UnityAction<Vector3> cylinderMoveEventListener;
     private UnityAction<Vector3> blockEventListener;
+    private UnityAction<Vector3> hitEventListener;
 
     void Awake() {
         playerLandsEventListener = playerLandsEventHandler;
@@ -39,6 +40,7 @@ public class AudioEventManager : MonoBehaviour
         platformStopEventListener = platformStopEventHandler;
         cylinderMoveEventListener = cylinderMoveEventHandler;
         blockEventListener = blockEventHandler;
+        hitEventListener = hitEventHandler;
     }
 
     void Start() {
@@ -55,7 +57,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StartListening<PlatformStopEvent, Vector3>(platformStopEventListener);
         EventManager.StartListening<CylinderMoveEvent, Vector3>(cylinderMoveEventListener);
         EventManager.StartListening<BlockEvent, Vector3>(blockEventListener);
-
+        EventManager.StartListening<HitEvent, Vector3>(hitEventListener);
     }
 
     void OnDisable() {
@@ -69,6 +71,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StopListening<PlatformStopEvent, Vector3>(platformStopEventListener);
         EventManager.StopListening<CylinderMoveEvent, Vector3>(cylinderMoveEventListener);
         EventManager.StopListening<BlockEvent, Vector3>(blockEventListener);
+        EventManager.StartListening<HitEvent, Vector3>(hitEventListener);
     }
 
     void playerLandsEventHandler(Vector3 worldPos, PlayerController.airState state)
@@ -234,6 +237,23 @@ public class AudioEventManager : MonoBehaviour
         EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
 
         snd.audioSrc.clip = blockAudio;
+
+        snd.audioSrc.minDistance = 5f;
+        snd.audioSrc.maxDistance = 100f;
+
+        snd.audioSrc.Play();
+    }
+
+    void hitEventHandler(Vector3 worldPos)
+    {
+        if (!eventSound3DPrefab)
+        {
+            return;
+        }
+
+        EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
+
+        snd.audioSrc.clip = gruntAudio;
 
         snd.audioSrc.minDistance = 5f;
         snd.audioSrc.maxDistance = 100f;
