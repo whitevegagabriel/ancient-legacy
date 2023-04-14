@@ -18,8 +18,6 @@ TagManager:
   - Skeleton
   - ProjectileUser
   - Wall
-  - IntroNPC
-  - IntroText
   layers:
   - Default
   - TransparentFX
@@ -31,7 +29,7 @@ TagManager:
   - Player
   - Enemy
   - PostProcessing
-  - NPC
+  - 
   - 
   - 
   - 

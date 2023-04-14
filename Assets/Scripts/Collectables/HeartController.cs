@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Collectables
 {
@@ -8,16 +6,7 @@ namespace Collectables
     {
         public const string CollectableName = "ExtraHeart";
         public string Name => CollectableName;
-        private DisplayOneUpEvent _displayOneUpEvent = DisplayOneUpEvent.Instance;
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player"))
-            {
-                _displayOneUpEvent.Invoke();
-            }
-        }
-
+        
         public ICheckpoint.CheckpointData GetCheckPointData()
         {
             return new ICheckpoint.CheckpointData(transform.position);
