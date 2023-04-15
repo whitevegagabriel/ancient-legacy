@@ -18,6 +18,9 @@ TagManager:
   - Skeleton
   - IntroNPC
   - IntroText
+  - LevelOneNPC
+  - OrbNPC
+  - CollapseNPC
   layers:
   - Default
   - TransparentFX
