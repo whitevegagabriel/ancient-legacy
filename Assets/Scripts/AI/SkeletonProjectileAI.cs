@@ -42,6 +42,7 @@ namespace AI
         private float _projectileFireTime;
         private float projectileTimer = 5;
         public Rigidbody projectile;
+        public float speed;
 
         private void Awake()
         {
@@ -77,13 +78,13 @@ namespace AI
                         .Do(() =>
                         {
                             AnimatorTrigger(OnShortRangeAttack);
-                            Instantiate(projectile, transform.position, transform.rotation);
-                            projectile.velocity = 0.1f * (transform.position - _player.transform.position);
                             return TaskStatus.Success;
                         })
-                        .WaitTime(1f)
+                        .WaitTime(1.0f)
                         .Do(() =>
                         {
+                            Rigidbody newProj = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), this.transform.rotation);
+                            newProj.velocity = newProj.transform.forward*speed;
                             _projectileFireTime = Time.time;
                             return TaskStatus.Success;
                         })
@@ -92,6 +93,13 @@ namespace AI
                     .Sequence()
                         .Condition(() => _agent.pathPending)
                         .Do(() => TaskStatus.Success)
+                    .End()
+                    .Sequence()
+                        .Do(() =>
+                        {
+                            this.transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
+                            return TaskStatus.Success;
+                        })
                     .End()
                 .End()
                 .Build();
