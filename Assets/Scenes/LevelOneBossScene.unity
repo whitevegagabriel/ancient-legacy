@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3001,6 +3001,10 @@ PrefabInstance:
       propertyPath: swordAttackAudio
       value: 
       objectReference: {fileID: 8300000, guid: 1b6162e5126db2a478a7510bf80f113c, type: 3}
+    - target: {fileID: 1445307477429619357, guid: 3aa5a65ee1804644089d0fa28747d45b, type: 3}
+      propertyPath: skeletonDeathAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: b1ee0d2e40ecbd04cb4ec98a0d470e67, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3aa5a65ee1804644089d0fa28747d45b, type: 3}
 --- !u!1001 &2131332505
