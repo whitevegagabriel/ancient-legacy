@@ -14,8 +14,6 @@ namespace AI
 {
     public class SkeletonProjectileAI : MonoBehaviour
     {
-        public GameObject[] waypoints;
-
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
         private static readonly int OnChase = Animator.StringToHash("OnChase");
@@ -24,13 +22,11 @@ namespace AI
 
         [SerializeField] private BehaviorTree tree;
 
-        private const float ChaseDistance = 7f;
         private const float AttackDistance = 1.5f;
         private const float AttackAngle = 30;
         private bool _playerHasDied;
         private NavMeshAgent _agent;
         private GameObject _player;
-        private PlayerController _playerController;
         private WeaponController _weaponController;
         private Targetable _targetable;
         private Animator _animator;
@@ -38,7 +34,6 @@ namespace AI
         private UnityAction _onAttackPartway;
         private UnityAction _onAttackEnd;
         private UnityAction _onDamageGiven;
-        public bool isBlocking = false;
         private float _projectileFireTime;
         private float projectileTimer = 5;
         public Rigidbody projectile;
@@ -109,7 +104,6 @@ namespace AI
         void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
-            _playerController = _player.GetComponent<PlayerController>();
             _onAttackPartway = () =>
             {
                 _weaponController.StartAttack();

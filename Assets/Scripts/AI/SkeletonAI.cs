@@ -26,7 +26,7 @@ namespace AI
         [SerializeField] private BehaviorTree tree;
 
         private const float ChaseDistance = 7f;
-        private const float AttackDistance = 1.5f;
+        private const float AttackDistance = 2.5f;
         private const float AttackAngle = 30;
         private bool _playerHasDied;
         private NavMeshAgent _agent;
@@ -127,6 +127,7 @@ namespace AI
                     // Chase player
                     .Sequence()
                         .Condition(() => (Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance || waypoints.Length == 0) && !PlayerCloseAndInFrontForAttack())
+                        .Condition(() => NavMesh.SamplePosition(_player.transform.position, out var hit, 1f, NavMesh.AllAreas))
                         .Do(() =>
                         {
                             isBlocking = false;
