@@ -21,10 +21,7 @@ namespace AI
         private static readonly int OnBlock = Animator.StringToHash("OnBlock");
 
         [SerializeField] private BehaviorTree tree;
-
-        private const float AttackDistance = 1.5f;
-        private const float AttackAngle = 30;
-        private bool _playerHasDied;
+        
         private NavMeshAgent _agent;
         private GameObject _player;
         private WeaponController _weaponController;
@@ -49,7 +46,6 @@ namespace AI
             _targetable.InitHealth(2, 2);
             _animator = GetComponent<Animator>();
             _projectileFireTime = Time.time;
-            EventManager.StartListening<PlayerDeathEvent, Vector3>(_ => _playerHasDied = true);
 
             tree = new BehaviorTreeBuilder(gameObject)
                 .Selector()
@@ -134,18 +130,6 @@ namespace AI
             _animator.ResetTrigger(OnShortRangeAttack);
             _animator.ResetTrigger(OnBlock);
             _animator.ResetTrigger(OnDie);
-        }
-
-        private float GetClipLength(string clipName)
-        {
-            return (from clip in _animator.runtimeAnimatorController.animationClips where clip.name == clipName select clip.length).FirstOrDefault();
-        }
-
-        private bool PlayerCloseAndInFrontForAttack()
-        {
-            var angle = Vector3.Angle(_player.transform.position - _agent.transform.position, _agent.transform.forward);
-            var distance = Vector3.Distance(_player.transform.position, _agent.transform.position);
-            return distance <= AttackDistance && angle <= AttackAngle;
         }
 
         void FireProjectile()

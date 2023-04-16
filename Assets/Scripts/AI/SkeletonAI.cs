@@ -62,7 +62,7 @@ namespace AI
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             GetComponent<Rigidbody>().isKinematic = false;
-                            EventManager.TriggerEvent<SkeletonDeathEvent, Vector3>(transform.position);
+                            EventManager.TriggerEvent<SkeletonDeathEvent>();
                             return TaskStatus.Success;
                         })
                         .RepeatForever()
@@ -124,18 +124,6 @@ namespace AI
                         })
                         .WaitTime(1.1f)
                     .End()
-                    // Chase player
-                    .Sequence()
-                        .Condition(() => (Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance || waypoints.Length == 0) && !PlayerCloseAndInFrontForAttack())
-                        .Condition(() => NavMesh.SamplePosition(_player.transform.position, out var hit, 1f, NavMesh.AllAreas))
-                        .Do(() =>
-                        {
-                            isBlocking = false;
-                            _animator.applyRootMotion = false;
-                            return TaskStatus.Success;
-                        })
-                        .SkeletonChasePlayer()
-                    .End()
                     // Short Range Attack
                     .Sequence()
                         .Condition(() => PlayerCloseAndInFrontForAttack() && _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
@@ -148,7 +136,20 @@ namespace AI
                             return TaskStatus.Success;
                         })
                     .End()
-                    // If waypoints doesn't exist (when spawned in the boss room), chase the player
+                    // Chase player
+                    .Sequence()
+                .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
+                        .Condition(() => (Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance || waypoints.Length == 0) && !PlayerCloseAndInFrontForAttack())
+                        .Condition(() => NavMesh.SamplePosition(_player.transform.position, out var hit, 1f, NavMesh.AllAreas))
+                        .Do(() =>
+                        {
+                            isBlocking = false;
+                            _animator.applyRootMotion = false;
+                            return TaskStatus.Success;
+                        })
+                        .SkeletonChasePlayer()
+                    .End()
+                // If waypoints doesn't exist (when spawned in the boss room), chase the player
                     .Sequence()
                         .Condition(() => waypoints.Length == 0)
                         .Do(() => {

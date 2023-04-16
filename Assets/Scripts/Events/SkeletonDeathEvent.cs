@@ -3,5 +3,5 @@ using UnityEngine.Events;
 
 namespace Events
 {
-    public class SkeletonDeathEvent: UnityEvent<Vector3>{}
+    public class SkeletonDeathEvent: UnityEvent{}
 }
