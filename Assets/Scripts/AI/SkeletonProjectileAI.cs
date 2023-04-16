@@ -43,6 +43,7 @@ namespace AI
         private float projectileTimer = 5;
         public Rigidbody projectile;
         public float speed;
+        private bool trigger = true;
 
         private void Awake()
         {
@@ -78,14 +79,8 @@ namespace AI
                         .Do(() =>
                         {
                             AnimatorTrigger(OnShortRangeAttack);
-                            return TaskStatus.Success;
-                        })
-                        .WaitTime(1.0f)
-                        .Do(() =>
-                        {
-                            Rigidbody newProj = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), this.transform.rotation);
-                            newProj.velocity = newProj.transform.forward*speed;
                             _projectileFireTime = Time.time;
+                            trigger = true;
                             return TaskStatus.Success;
                         })
                     .End()
@@ -98,6 +93,11 @@ namespace AI
                         .Do(() =>
                         {
                             this.transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
+                            if (_animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Projectile") && trigger == true)
+                            {
+                                FireProjectile();
+                                trigger = false;
+                            }
                             return TaskStatus.Success;
                         })
                     .End()
@@ -152,6 +152,12 @@ namespace AI
             var angle = Vector3.Angle(_player.transform.position - _agent.transform.position, _agent.transform.forward);
             var distance = Vector3.Distance(_player.transform.position, _agent.transform.position);
             return distance <= AttackDistance && angle <= AttackAngle;
+        }
+
+        void FireProjectile()
+        {
+            Rigidbody newProj = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), this.transform.rotation);
+            newProj.velocity = newProj.transform.forward * speed;
         }
     }
 }
