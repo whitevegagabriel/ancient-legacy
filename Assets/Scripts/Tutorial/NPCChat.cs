@@ -12,7 +12,7 @@ public class NPCChat : MonoBehaviour
     private bool _playerInRange;
     private Canvas canvas;
     private GameObject player;
-    private GameObject npc;
+    public GameObject npc;
     public GameObject mainCamera;
     public GameObject introCamera;
 
@@ -29,7 +29,6 @@ public class NPCChat : MonoBehaviour
         canvas = GetComponentInChildren<Canvas>();
         canvas.enabled = false;
         player = GameObject.FindWithTag("Player");
-        npc = GameObject.FindWithTag("IntroNPC");
         messageText = GetComponentInChildren<TMP_Text>();
         playerInRangeEvent.AddListener(MyAction);
     }
@@ -46,15 +45,36 @@ public class NPCChat : MonoBehaviour
         if (Input.GetKeyDown("q"))
         {
             quitFlag = true;
+            if (npc.tag == "OrbNPC") {
+                npc.SetActive(false);
+            }
         }
     }
 
     void MyAction()
     {
         if (npc.tag == "IntroNPC") {
-            textWriter.Addwriter(messageText, "Welcome to AncientLegacy: \n" +
-            "1. Wait for the moving platform. \n" +
+            textWriter.Addwriter(messageText, "Welcome to AncientLegacy! \n" +
+            "1. Wait for the moving platform \n" +
             "2. Walk on the platform to cross the ravine", 0.02f);
+        }
+        if (npc.tag == "LevelOneNPC")
+        {
+            textWriter.Addwriter(messageText,
+            "1. Look around and search for relics \n" +
+            "2. Collect three Relics to enable abilities", 0.02f);
+        }
+        if (npc.tag == "OrbNPC")
+        {
+            textWriter.Addwriter(messageText,
+            "1. Watch out for enemies \n" +
+            "2. Attack them or block their attacks", 0.02f);
+        }
+        if (npc.tag == "CollapseNPC")
+        {
+            textWriter.Addwriter(messageText,
+            "1. Watch out for collapsing floors \n" +
+            "2. Don't forget to use your new ability", 0.02f);
         }
     }
 
