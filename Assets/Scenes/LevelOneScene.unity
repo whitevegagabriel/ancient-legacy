@@ -15625,7 +15625,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: OrbNPC
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5022307883473282816, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
 --- !u!4 &1406551009 stripped
 Transform:
@@ -19329,7 +19330,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: CollapseNPC
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5022307883473282816, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
 --- !u!4 &1835804325 stripped
 Transform:
@@ -21921,6 +21923,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5022307883473282816, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5022307883473282817, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 4294967295
@@ -21941,7 +21947,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: LevelOneNPC
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5022307883473282816, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 689e574585c014c00af6cb9a9ab67b96, type: 3}
 --- !u!4 &2126679933 stripped
 Transform:

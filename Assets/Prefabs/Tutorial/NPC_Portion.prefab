@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8afd6e3d959b34810b4224a0ea8f83fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npc: {fileID: 0}
   mainCamera: {fileID: 0}
   introCamera: {fileID: 5022307883473282829}
   textWriter: {fileID: 1769991629842019215}
@@ -208,7 +209,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: IntroCamera
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6988646156407097947, guid: 86427181f682e457d912bc4d3f7710b7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 86427181f682e457d912bc4d3f7710b7, type: 3}
 --- !u!1 &5022307883473282829 stripped
 GameObject:
