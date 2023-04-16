@@ -259,7 +259,7 @@ namespace AI
        }
 
        private bool IsAlmostDead() {
-            return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 5);
+            return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 3);
        }
 
        private void SpawnSkeleton() {
