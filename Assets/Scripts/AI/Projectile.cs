@@ -21,6 +21,7 @@ public class Projectile : MonoBehaviour
         frames = 0;
         frameCount = false;
         _weaponController.StartAttack();
+        EventManager.TriggerEvent<FireballThrowEvent, GameObject>(this.gameObject);
     }
 
     void Update()
@@ -46,6 +47,7 @@ public class Projectile : MonoBehaviour
             }
             else if (other.gameObject.tag == "Wall")
             {
+                EventManager.TriggerEvent<FireballWallEvent, Vector3>(transform.position);
                 gameObject.SetActive(false);
             }
         }
