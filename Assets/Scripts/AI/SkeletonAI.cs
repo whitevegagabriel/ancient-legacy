@@ -129,6 +129,7 @@ namespace AI
                         .Condition(() => PlayerCloseAndInFrontForAttack() && _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
                         .Do(() =>
                         {
+                            isBlocking = false;
                             _agent.isStopped = true;
                             _agent.ResetPath();
                             _animator.applyRootMotion = true;
@@ -151,16 +152,19 @@ namespace AI
                     .End()
                 // If waypoints doesn't exist (when spawned in the boss room), chase the player
                     .Sequence()
-                        .Condition(() => waypoints.Length == 0)
+                        .Condition(() => waypoints.Length == 0 && _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
                         .Do(() => {
                             isBlocking = false;
                             _animator.applyRootMotion = false;
                             return TaskStatus.Success;
                         })
                         .SkeletonChasePlayer()
-                    .End() 
+                    .End()
                     // Patrol
-                    .SkeletonPatrol(waypoints)
+                    .Sequence()
+                        .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
+                        .SkeletonPatrol(waypoints)
+                    .End()
                 .End()
                 .Build();
         }

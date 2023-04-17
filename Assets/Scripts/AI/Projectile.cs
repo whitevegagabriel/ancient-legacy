@@ -21,6 +21,7 @@ public class Projectile : MonoBehaviour
         frames = 0;
         frameCount = false;
         _weaponController.StartAttack();
+        EventManager.TriggerEvent<FireballThrowEvent, GameObject>(this.gameObject);
     }
 
     void Update()

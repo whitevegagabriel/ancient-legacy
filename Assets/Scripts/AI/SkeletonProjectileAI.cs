@@ -16,9 +16,6 @@ namespace AI
     {
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private static readonly int OnShortRangeAttack = Animator.StringToHash("OnShortRangeAttack");
-        private static readonly int OnChase = Animator.StringToHash("OnChase");
-        private static readonly int OnIdle = Animator.StringToHash("OnIdle");
-        private static readonly int OnBlock = Animator.StringToHash("OnBlock");
 
         [SerializeField] private BehaviorTree tree;
         
@@ -125,10 +122,7 @@ namespace AI
 
         private void ResetTriggers()
         {
-            _animator.ResetTrigger(OnIdle);
-            _animator.ResetTrigger(OnChase);
             _animator.ResetTrigger(OnShortRangeAttack);
-            _animator.ResetTrigger(OnBlock);
             _animator.ResetTrigger(OnDie);
         }
 
