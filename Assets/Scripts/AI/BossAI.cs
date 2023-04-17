@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Trees;
@@ -5,6 +6,7 @@ using Combat;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace AI
 {
@@ -19,7 +21,7 @@ namespace AI
         private static readonly int OnDie = Animator.StringToHash("OnDie");
         private const float AttackDistance = 1.5f;
         private const float AttackAngle = 30;
-        private const float LongRangeAttackTimer = 10;
+        private const float LongRangeAttackTimer = 6;
         private const float WarmupTimer = 2;
         private GameObject _player;
         private bool _playerHasDied;
@@ -81,31 +83,41 @@ namespace AI
                     .End()
                     // Flee from the player
                     .Sequence()
-                        .Condition(() => IsAlmostDead())
+                        .Condition(IsAlmostDead)
                         .Do(() =>
                         {
-                            if (Time.time >= nextSkeletonSpawn) {
-                                SpawnSkeleton();
-                                nextSkeletonSpawn = Time.time + skeletonSpawnCooldown;
-                            }
-                            AnimatorTrigger(OnChase);
-                            _animator.applyRootMotion = false;
-                            _agent.speed = 6;
+                            if (Time.time < nextSkeletonSpawn) return TaskStatus.Success;
+                            
+                            SpawnSkeleton();
+                            nextSkeletonSpawn = Time.time + skeletonSpawnCooldown;
                             return TaskStatus.Success;
                         })
-                        // Wait until previous state is done animating
-                        .RepeatUntilSuccess()
-                            .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
-                        .End()
-                        .Do(() => {
-                            if ((_player.transform.localPosition - transform.localPosition).magnitude > 5) {
+                        .Selector()
+                            .Sequence()
+                                .Condition(() => (_player.transform.localPosition - transform.localPosition).magnitude < 8)
+                                .Do(() =>
+                                {
+                                    AnimatorTrigger(OnChase);
+                                    _animator.applyRootMotion = false;
+                                    _agent.speed = 6;
+                                    return TaskStatus.Success;
+                                })
+                                // Wait until previous state is done animating
+                                .RepeatUntilSuccess()
+                                    .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
+                                .End()
+                                .Do(() =>
+                                {
+                                    _agent.SetDestination(PositionToMoveToward(2));
+                                    return TaskStatus.Success;
+                                })
+                            .End()
+                            .Do(() => {
+                                AnimatorTrigger(OnIdle);
                                 transform.LookAt(_player.transform);
                                 return TaskStatus.Success;
-                            }
-                            _agent.SetDestination(PositionToMoveToward());
-                            return TaskStatus.Success;
-                        })
-
+                             })
+                        .End()
                     .End()
                     // Idle
                     .Sequence()
@@ -172,6 +184,7 @@ namespace AI
                             _agent.ResetPath();
                             _animator.applyRootMotion = true;
                             AnimatorTrigger(OnShortRangeAttack);
+                            nextSkeletonSpawn = Time.time + skeletonSpawnCooldown;
                             return TaskStatus.Success;
                         })
                     .End()
@@ -228,34 +241,33 @@ namespace AI
             return distance <= AttackDistance && angle <= AttackAngle;
         }
 
-       private Vector3 PositionToMoveToward() {
-            Vector3 moveToward = new Vector3(0, 0, 0);
-            float greatestDistance = 0;
-            Vector3[] directions = new Vector3[] {
-                new Vector3(1, 0, 0),
-                new Vector3(-1, 0, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(0, 0, -1),
-                new Vector3(1, 0, 1),
-                new Vector3(1, 0, -1),
-                new Vector3(-1, 0, 1),
-                new Vector3(-1, 0, -1)
-            };
-            for (int i = 0; i < 8; i++) {
-                if (IsOutOfBounds(this.transform.localPosition + directions[i])) {
-                    continue;
+       private Vector3 PositionToMoveToward(float moveMagnitude) {
+           // vector from player to boss
+            var playerPosition = _player.transform.position;
+            var direction = (playerPosition - transform.position).normalized * -moveMagnitude;
+            
+            // if position is out of bounds, rotate direction vector until it is in bounds
+            var minRotation = 45;
+            
+            // figure out which rotation direction is further from the player
+            var leftDirection = Quaternion.Euler(0, -minRotation, 0) * direction;
+            var rightDirection = Quaternion.Euler(0, minRotation, 0) * direction;
+            var leftDistance = Vector3.Distance(leftDirection, playerPosition);
+            var rightDistance = Vector3.Distance(rightDirection, playerPosition);
+            minRotation = leftDistance > rightDistance ? -minRotation : minRotation;
+            
+            for (var i = 0; i < 360 / Math.Abs(minRotation); i++) {
+                if (!IsOutOfBounds(transform.position + direction)) {
+                    break;
                 }
-                if ((_player.transform.localPosition - (this.transform.localPosition + directions[i])).magnitude > greatestDistance) {
-                    moveToward = this.transform.localPosition + directions[i];
-                    greatestDistance = (_player.transform.localPosition - (this.transform.localPosition + directions[i])).magnitude;
-                }
+                direction = Quaternion.Euler(0, minRotation, 0) * direction;
             }
-            return moveToward;
+            
+            return transform.position + direction;
        }
 
        private bool IsOutOfBounds(Vector3 position) {
-            NavMeshHit hit;
-            return NavMesh.Raycast(transform.position, position, out hit, NavMesh.AllAreas);
+           return NavMesh.Raycast(transform.position, position, out _, NavMesh.AllAreas);
        }
 
        private bool IsAlmostDead() {
@@ -263,14 +275,14 @@ namespace AI
        }
 
        private void SpawnSkeleton() {
-            Vector3 spawnPosition = transform.localPosition;
+            var spawnPosition = transform.localPosition;
             spawnPosition.x += Random.Range(0, 1);
             spawnPosition.z += Random.Range(0, 1);
             Instantiate(skeletonPrefab, spawnPosition, Quaternion.identity);
        }
 
-       private void KillAllSkeletons() {
-            GameObject[] skeletons = GameObject.FindGameObjectsWithTag("Skeleton");
+       private static void KillAllSkeletons() {
+            var skeletons = GameObject.FindGameObjectsWithTag("Skeleton");
             foreach (var skeleton in skeletons) {
                 Destroy(skeleton);
             }
