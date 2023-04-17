@@ -30,6 +30,8 @@ namespace Menu
                     canvasGroup.alpha = 0f;
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
+                    
+                    UnpauseEvent.Instance.Invoke();
                 } else {
                     Time.timeScale = 0f;
                     canvasGroup.interactable = true;
@@ -38,6 +40,7 @@ namespace Menu
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
 
+                    PauseEvent.Instance.Invoke();
                 }
             } 
         }
