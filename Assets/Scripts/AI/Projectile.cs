@@ -47,6 +47,7 @@ public class Projectile : MonoBehaviour
             }
             else if (other.gameObject.tag == "Wall")
             {
+                EventManager.TriggerEvent<FireballWallEvent, Vector3>(transform.position);
                 gameObject.SetActive(false);
             }
         }

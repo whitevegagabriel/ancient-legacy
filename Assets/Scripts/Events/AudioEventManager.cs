@@ -19,6 +19,7 @@ public class AudioEventManager : MonoBehaviour
     public AudioClip blockAudio;
     public AudioClip skeletonDeathAudio;
     public AudioClip fireballThrowAudio;
+    public AudioClip fireballWallAudio;
 
     private UnityAction<Vector3, PlayerController.airState> playerLandsEventListener;
     private UnityAction<Vector3> swordAttackEventListener;
@@ -32,6 +33,7 @@ public class AudioEventManager : MonoBehaviour
     private UnityAction<Vector3> blockEventListener;
     private UnityAction<Vector3> skeletonDeathEventListener;
     private UnityAction<Vector3> hitEventListener;
+    private UnityAction<Vector3> fireballWallEventListener;
     private UnityAction<GameObject> fireballThrowEventListener;
 
     void Awake() {
@@ -47,6 +49,7 @@ public class AudioEventManager : MonoBehaviour
         skeletonDeathEventListener = skeletonDeathEventHandler;
         hitEventListener = hitEventHandler;
         fireballThrowEventListener = fireballThrowEventHandler;
+        fireballWallEventListener = fireballWallEventHandler;
     }
 
     void Start() {
@@ -66,6 +69,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StartListening<SkeletonDeathEvent1, Vector3>(skeletonDeathEventListener);
         EventManager.StartListening<HitEvent, Vector3>(hitEventListener);
         EventManager.StartListening<FireballThrowEvent, GameObject>(fireballThrowEventListener);
+        EventManager.StartListening<FireballWallEvent, Vector3>(fireballWallEventListener);
     }
 
     void OnDisable() {
@@ -81,6 +85,7 @@ public class AudioEventManager : MonoBehaviour
         EventManager.StopListening<BlockEvent, Vector3>(blockEventListener);
         EventManager.StopListening<SkeletonDeathEvent1, Vector3>(skeletonDeathEventListener);
         EventManager.StopListening<HitEvent, Vector3>(hitEventListener);
+        EventManager.StopListening<FireballWallEvent, Vector3>(fireballWallEventListener);
         EventManager.StopListening<FireballThrowEvent, GameObject>(fireballThrowEventListener);
     }
 
@@ -300,10 +305,27 @@ public class AudioEventManager : MonoBehaviour
 
         snd.audioSrc.clip = fireballThrowAudio;
 
-        snd.audioSrc.minDistance = 5f;
-        snd.audioSrc.maxDistance = 10f;
+        snd.audioSrc.minDistance = 2f;
+        snd.audioSrc.maxDistance = 50f;
 
         snd.audioSrc.Play();
         snd.audioSrc.loop = true;
+    }
+
+    void fireballWallEventHandler(Vector3 worldPos)
+    {
+        if (!eventSound3DPrefab)
+        {
+            return;
+        }
+
+        EventSound3D snd = Instantiate(eventSound3DPrefab, worldPos, Quaternion.identity, null);
+
+        snd.audioSrc.clip = fireballWallAudio;
+
+        snd.audioSrc.minDistance = 2f;
+        snd.audioSrc.maxDistance = 100f;
+
+        snd.audioSrc.Play();
     }
 }
