@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
-using System.Linq;
 using CleverCrow.Fluid.BTs.Tasks;
-using CleverCrow.Fluid.BTs.Tasks.Actions;
 using CleverCrow.Fluid.BTs.Trees;
 using Combat;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 using UnityEngine.Events;
 
 namespace AI
