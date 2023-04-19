@@ -27,8 +27,6 @@ Lava Flowing Shader by Moonflower Carnivore (https://www.youtube.com/watch?v=ItX
 
 "Monster_4 low-poly” by Dorlak_1989 (https://assetstore.unity.com/packages/3d/characters/creatures/monster-4-low-poly-208684)
 
-"Skeleton Warrior 1" by AlexN (https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/skeleton-warrior-1-222338)
-
 "medieval_door" by HASSAN (https://sketchfab.com/3d-models/medieval-door-581dc6a53d2d4cafb5f781127f137c6f)
 
 "fire Orb" by eeskam123 (https://sketchfab.com/3d-models/fire-orb-4aed2cda94274ca7af951839aa8d751c)
@@ -60,7 +58,3 @@ Grunt/Jump/Landing audio from CS6457 Milestone 3: (https://github.gatech.edu/IMT
 "rpgPowerup.wav" by colorsCrimsonTears (https://freesound.org/s/577965/)
 
 "swoosh-1.mp3" by lesaucisson (https://freesound.org/s/585257/) (converted to .wav)
-
-"Falling Bones.wav" by spookymodem (https://freesound.org/s/202091/)
-
-"10835 big fire loop.wav" by Robinhood76 (https://freesound.org/s/612277/)
