@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CleverCrow.Fluid.BTs.Tasks;
+using CleverCrow.Fluid.BTs.Tasks.Actions;
 using CleverCrow.Fluid.BTs.Trees;
 using Combat;
 using UnityEngine;
@@ -47,12 +48,12 @@ namespace AI
         private void Awake()
         {
             _targetable = GetComponent<Targetable>();
-            _targetable.InitHealth(20, 20);
+            _targetable.InitHealth(26, 26);
             EventManager.StartListening<PlayerDeathEvent, Vector3>(_ => _playerHasDied = true);
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             _weaponController = GetComponentInChildren<WeaponController>();
-            _weaponController.SetDamage(1);
+            _weaponController.SetDamage(2);
             _lastLongRangeAttackTime = Time.time;
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
@@ -60,6 +61,26 @@ namespace AI
             skeletonSpawnCooldown = 8f;
             nextSkeletonSpawn = Time.time;
 
+            var fleePlayerTree = new BehaviorTreeBuilder(gameObject)
+                .Sequence()
+                    .Do(() =>
+                    {
+                        AnimatorTrigger(OnChase);
+                        _animator.applyRootMotion = false;
+                        _agent.speed = 6;
+                        return TaskStatus.Success;
+                    })
+                    // Wait until previous state is done animating
+                    .RepeatUntilSuccess()
+                        .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
+                    .End()
+                    .Do(() =>
+                    {
+                        _agent.SetDestination(PositionToMoveToward(2));
+                        return TaskStatus.Success;
+                    })
+                .End()
+                .Build();
             tree = new BehaviorTreeBuilder(gameObject)
                 .Selector()
                     // Die
@@ -95,22 +116,7 @@ namespace AI
                         .Selector()
                             .Sequence()
                                 .Condition(() => (_player.transform.localPosition - transform.localPosition).magnitude < 8)
-                                .Do(() =>
-                                {
-                                    AnimatorTrigger(OnChase);
-                                    _animator.applyRootMotion = false;
-                                    _agent.speed = 6;
-                                    return TaskStatus.Success;
-                                })
-                                // Wait until previous state is done animating
-                                .RepeatUntilSuccess()
-                                    .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
-                                .End()
-                                .Do(() =>
-                                {
-                                    _agent.SetDestination(PositionToMoveToward(2));
-                                    return TaskStatus.Success;
-                                })
+                                .Splice(fleePlayerTree)
                             .End()
                             .Do(() => {
                                 AnimatorTrigger(OnIdle);
@@ -119,6 +125,41 @@ namespace AI
                              })
                         .End()
                     .End()
+                // Long range attack
+                .Sequence()
+                    .Condition(() => Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
+                    .RepeatUntilSuccess()
+                        .Sequence()
+                            .Splice(fleePlayerTree)
+                            .Condition(() => (_player.transform.localPosition - transform.localPosition).magnitude > 8 
+                                             || Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer + 5
+                                             || _targetable.GetHealth() <= 0)
+                        .End()
+                    .End()
+                    .Condition(() => _targetable.GetHealth() > 0)
+                    .Do(() =>
+                    {
+                        _agent.isStopped = true; 
+                        _agent.ResetPath();
+                        _animator.applyRootMotion = true;
+                        transform.LookAt(_player.transform);
+                        AnimatorTrigger(OnLongRangeAttack);
+                        return TaskStatus.Success;
+                    })
+                    .WaitTime(_longRangeAttackAnimationLength/2)
+                    .Do(() =>
+                    {
+                        EventManager.TriggerEvent<AIAudioHandler.RadialAttackEvent>();
+                        return TaskStatus.Success;
+                    })
+                    .WaitTime(_longRangeAttackAnimationLength/2)
+                    .Do(() =>
+                    {
+                        _lastLongRangeAttackTime = Time.time;
+                        Instantiate(radialDamagePrefab, transform.position, Quaternion.identity);
+                        return TaskStatus.Success;
+                    })
+                .End()
                     // Idle
                     .Sequence()
                         .Condition(() => _playerHasDied || Time.time - _startTime < WarmupTimer)
@@ -132,38 +173,15 @@ namespace AI
                             .Condition(() => !_playerHasDied && Time.time - _startTime >= WarmupTimer)
                         .End()
                     .End()
-                    // Long range attack
-                    .Sequence()
-                        .Condition(() => Time.time - _lastLongRangeAttackTime > LongRangeAttackTimer)
-                        .Do(() =>
-                        {
-                            _agent.isStopped = true; 
-                            _agent.ResetPath();
-                            _animator.applyRootMotion = true;
-                            AnimatorTrigger(OnLongRangeAttack);
-                            return TaskStatus.Success;
-                        })
-                        .WaitTime(_longRangeAttackAnimationLength/2)
-                        .Do(() =>
-                        {
-                            EventManager.TriggerEvent<AIAudioHandler.RadialAttackEvent>();
-                            return TaskStatus.Success;
-                        })
-                        .WaitTime(_longRangeAttackAnimationLength/2)
-                        .Do(() =>
-                        {
-                            _lastLongRangeAttackTime = Time.time;
-                            Instantiate(radialDamagePrefab, transform.position, Quaternion.identity);
-                            return TaskStatus.Success;
-                        })
-                    .End()
                     // Chase
                     .Sequence()
                         .Condition(() => !_agent.pathPending && !PlayerCloseAndInFrontForAttack())
                         .Do(() =>
                         {
+                            _agent.isStopped = true;
+                            _agent.speed = 0;
+                            _agent.ResetPath();
                             AnimatorTrigger(OnChase);
-                            _animator.applyRootMotion = false;
                             return TaskStatus.Success;
                         })
                         // Wait until previous state is done animating
@@ -171,6 +189,9 @@ namespace AI
                             .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Chase"))
                         .End()
                         .Do(() => {
+                            _animator.applyRootMotion = false;
+                            _agent.speed = 2;
+                            Debug.Log("current state is chase");
                             _agent.SetDestination(_player.transform.position);
                             return TaskStatus.Success;
                         })
@@ -181,6 +202,7 @@ namespace AI
                         .Do(() =>
                         {
                             _agent.isStopped = true;
+                            _agent.speed = 0;
                             _agent.ResetPath();
                             _animator.applyRootMotion = true;
                             AnimatorTrigger(OnShortRangeAttack);
