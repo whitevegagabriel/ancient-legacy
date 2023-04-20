@@ -26,7 +26,7 @@ namespace Walkways
         {
             if (!isFalling) return;
         
-            downSpeed += Time.deltaTime/10;
+            downSpeed += Time.deltaTime/12;
             transform.position -= new Vector3(0, downSpeed, 0);
 
         }

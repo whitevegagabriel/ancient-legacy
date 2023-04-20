@@ -58,4 +58,3 @@ Grunt/Jump/Landing audio from CS6457 Milestone 3: (https://github.gatech.edu/IMT
 "rpgPowerup.wav" by colorsCrimsonTears (https://freesound.org/s/577965/)
 
 "swoosh-1.mp3" by lesaucisson (https://freesound.org/s/585257/) (converted to .wav)
-
