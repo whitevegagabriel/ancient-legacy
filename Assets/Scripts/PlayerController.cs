@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour {
     public bool isAttacking;
     public bool isJumping;
     public bool isBlocking;
+    public bool blockingTriggerHeld;
     public bool isRunning;
 
     public bool isDefeated;
@@ -116,6 +117,18 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Update () {   
+        isBlocking = blockingTriggerHeld && !isAttacking;
+        
+        if(isBlocking)
+        {
+            anim.SetBool("block", true);
+            anim.SetBool("walking", false);
+        }
+        else
+        {
+            anim.SetBool("block", false);
+        }
+        
         isDefeated = targetable.GetHealth() <= 0;
 
         if (isDefeated) {
@@ -311,13 +324,15 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnBlock(InputAction.CallbackContext context) {
-        if(!isAttacking && context.started) {
-            isBlocking = true;
+        if(context.started)
+        {
+            blockingTriggerHeld = true;
             anim.SetBool("block", true);
             anim.SetBool("walking", false);
         }
-        else if(context.canceled) {
-            isBlocking = false;
+        else if(context.canceled)
+        {
+            blockingTriggerHeld = false;
             anim.SetBool("block", false);
         }
     }
@@ -341,7 +356,7 @@ public class PlayerController : MonoBehaviour {
         anim.SetBool("attack", isAttacking);
         anim.SetFloat("speed", 0, 0.1f, Time.deltaTime);
         
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length - .2f);
 
         canMove = true;
 
