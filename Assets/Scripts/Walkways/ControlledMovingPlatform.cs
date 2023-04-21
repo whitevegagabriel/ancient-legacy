@@ -59,7 +59,10 @@ namespace Walkways
         
         private void Unpause()
         {
-            platform.GetComponent<AudioSource>().mute = isMoving;
+            if (isMoving)
+            {
+                platform.GetComponent<AudioSource>().mute = false;
+            }
         }
     }
 }

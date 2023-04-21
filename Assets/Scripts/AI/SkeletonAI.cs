@@ -139,7 +139,7 @@ namespace AI
                     .End()
                     // Chase player
                     .Sequence()
-                .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
+                    .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash != Animator.StringToHash("Block"))
                         .Condition(() => (Vector3.Distance(_agent.transform.position, _player.transform.position) < ChaseDistance || waypoints.Length == 0) && !PlayerCloseAndInFrontForAttack())
                         .Condition(() => NavMesh.SamplePosition(_player.transform.position, out var hit, 1f, NavMesh.AllAreas))
                         .Do(() =>
