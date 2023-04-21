@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Tasks.Actions;
 using CleverCrow.Fluid.BTs.Trees;
 using Combat;
+using Events;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace AI
@@ -37,11 +40,14 @@ namespace AI
         private UnityAction _onAttackEnd;
         private UnityAction _onDamageGiven;
         private bool _animatingLongRangeAttack;
+        private int _currentlyLiveSkeletons;
+        private readonly List<GameObject> _skeletons = new List<GameObject>();
         
         public GameObject radialDamagePrefab;
         public GameObject relicPrefab;
         private static readonly int Speed = Animator.StringToHash("speed");
-        public GameObject skeletonPrefab;
+        public GameObject projectileSkeletonPrefab;
+        public GameObject meleeSkeletonPrefab;
         public float skeletonSpawnCooldown;
         public float nextSkeletonSpawn;
 
@@ -58,8 +64,9 @@ namespace AI
             // TODO: This is a hack, use an event-based system instead to know when the animation is done
             _longRangeAttackAnimationLength = GetClipLength("Mutant Jump") - 1;
             _startTime = Time.time;
-            skeletonSpawnCooldown = 8f;
             nextSkeletonSpawn = Time.time;
+            skeletonSpawnCooldown = 16f;
+            EventManager.StartListening<SkeletonDeathEvent>(OnSkeletonDeath);
 
             var fleePlayerTree = new BehaviorTreeBuilder(gameObject)
                 .Sequence()
@@ -107,8 +114,8 @@ namespace AI
                         .Condition(IsAlmostDead)
                         .Do(() =>
                         {
-                            if (Time.time < nextSkeletonSpawn) return TaskStatus.Success;
-                            
+                            if (Time.time < nextSkeletonSpawn || _currentlyLiveSkeletons >= 6) return TaskStatus.Success;
+                            SpawnSkeleton();
                             SpawnSkeleton();
                             nextSkeletonSpawn = Time.time + skeletonSpawnCooldown;
                             return TaskStatus.Success;
@@ -191,7 +198,6 @@ namespace AI
                         .Do(() => {
                             _animator.applyRootMotion = false;
                             _agent.speed = 2;
-                            Debug.Log("current state is chase");
                             _agent.SetDestination(_player.transform.position);
                             return TaskStatus.Success;
                         })
@@ -212,6 +218,11 @@ namespace AI
                     .End()
                 .End()
                 .Build();
+        }
+
+        private void OnSkeletonDeath()
+        {
+            _currentlyLiveSkeletons--;
         }
 
         private void Start()
@@ -293,19 +304,24 @@ namespace AI
        }
 
        private bool IsAlmostDead() {
-            return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 3);
+           return _targetable.GetHealth() <= (_targetable.GetMaxHealth() / 3);
        }
 
-       private void SpawnSkeleton() {
-            var spawnPosition = transform.localPosition;
-            spawnPosition.x += Random.Range(0, 1);
-            spawnPosition.z += Random.Range(0, 1);
-            Instantiate(skeletonPrefab, spawnPosition, Quaternion.identity);
+       private void SpawnSkeleton()
+       {
+           var prefabs = new List<GameObject> { projectileSkeletonPrefab, meleeSkeletonPrefab };
+           var spawnPosition = transform.localPosition;
+           spawnPosition.x += Random.Range(0, 1);
+           spawnPosition.z += Random.Range(0, 1);
+           var skeleton = Instantiate(
+               prefabs[_skeletons.Count % prefabs.Count], spawnPosition, Quaternion.identity);
+           _skeletons.Add(skeleton);
+           _currentlyLiveSkeletons++;
        }
 
-       private static void KillAllSkeletons() {
-            var skeletons = GameObject.FindGameObjectsWithTag("Skeleton");
-            foreach (var skeleton in skeletons) {
+
+       private void KillAllSkeletons() {
+            foreach (var skeleton in _skeletons) {
                 Destroy(skeleton);
             }
        }

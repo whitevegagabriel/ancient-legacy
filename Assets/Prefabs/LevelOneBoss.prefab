@@ -55,6 +55,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radialDamagePrefab: {fileID: 522289110924900590, guid: 405ddf94113003d46923098027167a68, type: 3}
   relicPrefab: {fileID: 4481361837624573119, guid: d06c61ce5bf8d584594e0338817e91f3, type: 3}
+  projectileSkeletonPrefab: {fileID: 5126227323646211612, guid: f2798036d6ca2ad46a1e26bffbf7daff, type: 3}
+  meleeSkeletonPrefab: {fileID: 5321839698780396865, guid: f103f78eada8da242b7ba78e82261369, type: 3}
+  skeletonSpawnCooldown: 0
+  nextSkeletonSpawn: 0
 --- !u!195 &5148869355171242543
 NavMeshAgent:
   m_ObjectHideFlags: 0
