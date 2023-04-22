@@ -20,23 +20,27 @@ public class TextWriter : MonoBehaviour
         characterIndex = 0;
     }
 
+    public void Reset()
+    {
+        uiText = null;
+        textToWrite = null;
+        characterIndex = 0;
+        timePerCharacter = 0f;
+        timer = 0f;
+    }
+
     private void Update()
     {
-        if (uiText != null)
+        if (uiText == null) return;
+        timer -= Time.deltaTime;
+        if (timer <= 0f)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0f)
-            {
-                timer += timePerCharacter;
-                characterIndex++;
-                uiText.text = textToWrite.Substring(0, characterIndex);
-            }
-
-            if (characterIndex >= textToWrite.Length) {
-                uiText = null;
-                return;
-            }
-
+            timer += timePerCharacter;
+            characterIndex++;
+            uiText.text = textToWrite.Substring(0, characterIndex);
+        }
+        if (characterIndex >= textToWrite.Length) {
+            uiText = null;
         }
     }
 }

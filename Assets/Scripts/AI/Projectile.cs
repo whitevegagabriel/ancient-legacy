@@ -1,54 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using AI;
 
-public class Projectile : MonoBehaviour
+namespace AI
 {
-    private GameObject _player;
-    private WeaponController _weaponController;
-    private SkeletonProjectileAI _skeletonUser;
-    private int frames;
-    private bool frameCount;
-    private Renderer rend;
-
-    void Start()
+    public class Projectile : MonoBehaviour
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
-        _weaponController = GetComponent<WeaponController>();
-        _weaponController.SetDamage(1);
-        rend = GetComponent<Renderer>();
-        frames = 0;
-        frameCount = false;
-        _weaponController.StartAttack();
-        EventManager.TriggerEvent<FireballThrowEvent, GameObject>(this.gameObject);
-    }
+        private WeaponController _weaponController;
+        private SkeletonProjectileAI _skeletonUser;
+        private int frames;
+        private bool frameCount;
+        private Renderer rend;
 
-    void Update()
-    {
-        if (frameCount)
+        private void Start()
         {
-            frames = frames + 1;
+            _weaponController = GetComponent<WeaponController>();
+            _weaponController.SetDamage(1);
+            rend = GetComponent<Renderer>();
+            frames = 0;
+            frameCount = false;
+            _weaponController.StartAttack();
+            EventManager.TriggerEvent<FireballThrowEvent, GameObject>(gameObject);
+        }
+
+        private void Update()
+        {
+            if (!frameCount) return;
+            frames += 1;
             if (frames >= 20)
             {
                 gameObject.SetActive(false);
             }
         }
-    }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag != "ProjectileUser")
+        public void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Player")
+            switch (other.gameObject.tag)
             {
-                rend.enabled = false;
-                frameCount = true;
-            }
-            else if (other.gameObject.tag == "Wall")
-            {
-                EventManager.TriggerEvent<FireballWallEvent, Vector3>(transform.position);
-                gameObject.SetActive(false);
+                case "ProjectileUser":
+                    return;
+                case "Player":
+                    rend.enabled = false;
+                    frameCount = true;
+                    break;
+                default:
+                    EventManager.TriggerEvent<FireballWallEvent, Vector3>(transform.position);
+                    gameObject.SetActive(false);
+                    break;
             }
         }
     }

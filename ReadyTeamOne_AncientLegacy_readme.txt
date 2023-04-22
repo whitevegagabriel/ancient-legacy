@@ -11,29 +11,35 @@ Start scene:
 How to play:
 - Navigate through the platforms to collect all the relics (gems) in the game
 - Move with WASD, block with Right Click, swing sword with Left Click
-- Some platforms have floating lava balls, avoid or strike them with sword
+- Some platforms have enemies, avoid or strike them with sword
 - After collecting all relics in first section, press Spacebar to jump
+- There is a hidden room in the first section, kill the skeletons to acquire the key
 - After collecting all relics in second section, hold Shift to sprint
+- There is an extra health that you can collect if you collect the key, which lets you move a platform
 - Defeat the boss at the end of the level and collect the dropped gem to beat the game
 
 Technology requirements:
 - Game feel
   - Notice how the player is in 3p and has mostly smooth animations and interactive sound effects
-  - The player has interesting choices, such as how to time their movements, whether to attack the orbs or run, going left or right first during the Run Relics section
+  - The player has interesting choices:
+    - How to time their movements
+    - Choosing whether to collect a key from the skeletons and unlock the first locked door
+    - Choosing whether to collect the second key and control the moving platform to collect the extra heart
+    - Going left or right first during the Run Relics section
+    - Whether to chase the boss down or defeat the spawned minions first, when the boss is in fleeing mode
 - Environment
   - Notice how the environment is scripted to move in a compelling way, such as moving and swinging obstacles
-  - The environment acknowledges the player, such as how the AI orbs will animate faster when the player is close
+  - The environment acknowledges the player, such as how moving toward the locked room or lever displays a message, and when unlocked, moves in response
   - The moving obstacles emit sounds, improving immersion
 - AI
-  - Observe the state-machine-like behavior of the orbs, how they transition between sentry and chase mode
-  - Observe the behavior of the boss, how it transitions between various animation and behavior states, chasing, short range attack, long range attack, and dying
-  - Orbs emit sounds when doing damage, providing feedback
+  - Observe the state transitions for skeletons between blocking and attacking
+  - Observe the behavior of the boss, how it transitions between various animation and behavior states, chasing, short range attack, long range attack, and when in low health, it changes mode to fleeing and spawning minions
+  - When running away, notice the boss's path, changing in real time in response, never getting stuck in a corner
+  - Lava Orbs emit sounds when doing damage, providing feedback
   - The boss makes different sounds for different attacks, providing feedback
 
 Known issues:
-- Going up and down verticallly moving platforms will cause the player to visually vibrate
 - Standing on a rotating obstacle won't cause the player to move along the rotating surface
-- The floating pillars use capsule colliders, causing clipping at the edges
 - Animations between "left" and "right" for the player aren't very smooth, rather instantaneous
 - If killed by the fire orbs, the orbs don't stop attacking even afte the player dies
 - Sword sound effect will play when in the death menu and hitting restart
@@ -96,21 +102,44 @@ Manifest:
 
 - Gabriel White-Vega:
   - Contributions summary:
-    - Designed and implemented the Orb and Boss AI's full functionality
-      - Animation configs
-      - Animation and behavior controllers and state machines
-      - Scripts
-    - Designed and implemented the boss scene
+    - Alpha:
+      - Designed and implemented the Orb and Boss AI's functionality
+        - Animation configs
+        - Animation and behavior controllers and state machines
+        - Scripts
+      - Designed and implemented the boss scene
+    - Post-Alpha:
+      - Rewrote AI behavior to use Behavior Trees
+      - "Extra Health" relics and mechanisms
+      - Extra locked room and the mechanisms for unlocking it
+      - Movable platform for reaching the second extra health relic
+      - Each relic being made into a checkpoint, and appropriate saving operations
+      - Inventory system for tracking extra health and keys
   - Files:
     - Scripts/TextureAutoResize.cs
-    - Scripts/Targetable.cs
-    - Scripts/WeaponController.cs
+    - Scripts/Combat/Targetable.cs
+    - Scripts/Combat/WeaponController.cs
     - Scripts/AI/AIAudioHandler.cs
     - Scripts/AI/BossAI.cs
-    - Scripts/AI/OrbAI.cs
+    - Scripts/AI/OrbAI.csp
+    - Scripts/AI/SkeletonProjectileAI.cs
     - Scripts/AI/RadialDamageController.cs
     - Scripts/AI/ShortRangeAttackDetection.cs
+    - Scripts/Collectables/HeartController.cs
+    - Scripts/Collectables/KeyController.cs
+    - Scripts/Collectables/RelicManager.cs
+    - Scripts/ScenesManagement/SceneLoader.cs
+    - Scripts/SceneManagement/SceneName.cs
+    - Scripts/SceneManagement/TutorialStarter.cs
+    - Scripts/StateManagement/PlayerInventory.cs
+    - Scripts/Walkways/ControlledMovingPlatform.cs
+    - Scripts/PanelController.cs
+    - Scripts/OneUpTimer.cs
+    - Scripts/LockedDoorController.cs
+    - Scripts/ICheckpoint.cs
     - Scenes/LevelOneBossScene.unity
+    - Scenes/LevelOneScene.unity
+    - Scenes/TutorialScene.unity
     - Prefabs/Enemy Orb.prefab
     - Prefabs/FloatingOrbSentryLocation.prefab
     - Prefabs/LevelOneBoss.prefab

@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1057963630350461459}
-  m_LocalRotation: {x: 0.18102697, y: -0.000000052154064, z: -6.9849193e-10, w: 0.9834781}
+  m_LocalRotation: {x: 0.17894076, y: -0, z: -0, w: 0.98385984}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.2833055, z: -1.8406564}
+  m_FollowOffset: {x: 0, y: 0.30405784, z: -1.8650402}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -152,7 +152,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -180
+    Value: 180
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.2833055, z: -1.8406564}
+  m_FollowOffset: {x: 0, y: 0.30405784, z: -1.8650402}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -278,7 +278,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -180
+    Value: 180
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -604,7 +604,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2746610817118509716}
-  m_LocalRotation: {x: 0.16310805, y: -0.000000059604645, z: -0.0000000020954758, w: 0.98660827}
+  m_LocalRotation: {x: 0.16101526, y: -0, z: -0, w: 0.986952}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -712,7 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.2833055, z: -1.8406564}
+  m_FollowOffset: {x: 0, y: 0.30405784, z: -1.8650402}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -732,7 +732,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -180
+    Value: 180
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -900,6 +900,7 @@ MonoBehaviour:
   isAttacking: 0
   isJumping: 0
   isBlocking: 0
+  blockingTriggerHeld: 0
   isRunning: 0
   isDefeated: 0
   playerControls:
@@ -1147,7 +1148,7 @@ GameObject:
   - component: {fileID: 4598466616938183692}
   m_Layer: 7
   m_Name: Shield
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1273,8 +1274,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6060885118535201262}
-  m_LocalRotation: {x: -0.013784963, y: -0.8272176, z: 0.020313997, w: -0.5613453}
-  m_LocalPosition: {x: -2.3170738, y: 1.7768397, z: 0.92108303}
+  m_LocalRotation: {x: -0.069002986, y: 0.70373195, z: 0.069002986, w: 0.70373195}
+  m_LocalPosition: {x: -1.8650401, y: 1.2240582, z: -0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7621644817823790079}
@@ -1453,7 +1454,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6587134762326663843}
-  m_LocalRotation: {x: -0.023863554, y: -0.000000070780516, z: -0.000000015133992, w: 0.99971527}
+  m_LocalRotation: {x: -0.025983736, y: -0, z: -0, w: 0.9996624}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1528,8 +1529,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6938103332897940382}
-  m_LocalRotation: {x: -0.10065436, y: 0.035464484, z: 0.003590181, w: 0.9942827}
-  m_LocalPosition: {x: -0.1311395, y: 1.2033055, z: -1.8359787}
+  m_LocalRotation: {x: -0.06996348, y: 0.70363706, z: 0.06996348, w: 0.70363706}
+  m_LocalPosition: {x: -1.8650401, y: 1.2240582, z: -0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2626478242615602476}
@@ -1574,7 +1575,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 0.06851897
+    Value: 0.07285764
     m_SpeedMode: 0
     m_MaxSpeed: 7
     m_AccelTime: 0.2
@@ -1598,7 +1599,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -180
+    Value: 180
     m_SpeedMode: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
@@ -1760,6 +1761,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paladin_J_Nordstrom_Shield
       objectReference: {fileID: 0}
+    - target: {fileID: -7764487651825262745, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: -7219772299731422950, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -16.640007
@@ -1871,6 +1876,10 @@ PrefabInstance:
     - target: {fileID: -3685692520585564748, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_Name
       value: Paladin_J_Nordstrom_Helmet
+      objectReference: {fileID: 0}
+    - target: {fileID: -3685692520585564748, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: -3480699329000672020, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2000,6 +2009,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paladin_J_Nordstrom
       objectReference: {fileID: 0}
+    - target: {fileID: -1283408554089789195, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: -1070350730909333850, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 61.28048
@@ -2068,6 +2081,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 1051571768989249988, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_Name
       value: Paladin_J_Nordstrom_Sword
@@ -2075,6 +2092,14 @@ PrefabInstance:
     - target: {fileID: 1051571768989249988, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1051571768989249988, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082271958561512970, guid: c66719f4269f83645a9879060e3c3329, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 1092408308860062549, guid: c66719f4269f83645a9879060e3c3329, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

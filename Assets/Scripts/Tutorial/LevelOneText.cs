@@ -1,32 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class LevelOneText : MonoBehaviour
+namespace Tutorial
 {
-    public TMP_Text introText;
-
-    [SerializeField] private TextWriter textWriter;
-
-    private void Awake()
+    public class LevelOneText : MonoBehaviour
     {
-        introText.gameObject.SetActive(false);
-    }
+        public TMP_Text introText;
 
-    private void Start()
-    {
-        StartCoroutine(setIntroText());
-    }
+        [SerializeField] private TextWriter textWriter;
+
+        private void Awake()
+        {
+            introText.gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            StartCoroutine(SetIntroText());
+        }
 
 
-    IEnumerator setIntroText()
-    {
-        yield return new WaitForSeconds(1);
-        introText.gameObject.SetActive(true);
-        textWriter.Addwriter(introText, "During the game!\n" +
-            "You can always talk to Friendly Knight for some hints", 0.08f);
-        yield return new WaitForSeconds(8);
-        introText.gameObject.SetActive(false);
+        private IEnumerator SetIntroText()
+        {
+            yield return new WaitForSeconds(1);
+            introText.gameObject.SetActive(true);
+            textWriter.Addwriter(introText, "During the game,\n" +
+                                            "talk to Friendly Knight for some hints!", 0.05f);
+            yield return new WaitForSeconds(4);
+            introText.gameObject.SetActive(false);
+        }
     }
 }

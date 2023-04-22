@@ -1,6 +1,7 @@
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Trees;
 using Combat;
+using Events;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -14,7 +15,6 @@ namespace AI
 
         [SerializeField] private BehaviorTree tree;
         
-        private NavMeshAgent _agent;
         private GameObject _player;
         private WeaponController _weaponController;
         private Targetable _targetable;
@@ -27,11 +27,9 @@ namespace AI
         private float projectileTimer = 5;
         public Rigidbody projectile;
         public float speed;
-        private bool trigger = true;
 
         private void Awake()
         {
-            _agent = GetComponent<NavMeshAgent>();
             _weaponController = GetComponentInChildren<WeaponController>();
             _weaponController.SetDamage(1);
             _targetable = GetComponent<Targetable>();
@@ -50,37 +48,35 @@ namespace AI
                             GetComponent<CapsuleCollider>().enabled = false;
                             GetComponent<MeshCollider>().enabled = true;
                             GetComponent<Rigidbody>().isKinematic = false;
+                            EventManager.TriggerEvent<SkeletonDeathEvent>();
                             return TaskStatus.Success;
                         })
                         .RepeatForever()
                             .Do(() => TaskStatus.Continue)
                         .End()
                     .End()
-                    // Throw Projectile
                     .Sequence()
+                        // Look at player
+                        .Do(() =>
+                        {
+                            transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
+                            return TaskStatus.Success;
+                        })
+                        // Throw Projectile
                         .Condition(() => Time.time - _projectileFireTime > projectileTimer)
+                        .Condition(PlayerInLineOfSight)
                         .Do(() =>
                         {
                             AnimatorTrigger(OnShortRangeAttack);
                             _projectileFireTime = Time.time;
-                            trigger = true;
                             return TaskStatus.Success;
                         })
-                    .End()
-                    // Do nothing if path pending
-                    .Sequence()
-                        .Condition(() => _agent.pathPending)
-                        .Do(() => TaskStatus.Success)
-                    .End()
-                    .Sequence()
+                        .RepeatUntilSuccess()
+                            .Condition(() => _animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Projectile"))
+                        .End()
                         .Do(() =>
                         {
-                            this.transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
-                            if (_animator.GetCurrentAnimatorStateInfo(0).tagHash == Animator.StringToHash("Projectile") && trigger == true)
-                            {
-                                FireProjectile();
-                                trigger = false;
-                            }
+                            FireProjectileAtPlayer();
                             return TaskStatus.Success;
                         })
                     .End()
@@ -89,7 +85,7 @@ namespace AI
         }
 
         // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
             _onAttackPartway = () =>
@@ -104,7 +100,7 @@ namespace AI
             ShortRangeAttackDetection.AddAttackCallback(new AttackCallback(_onAttackPartway, _onAttackEnd));
         }
 
-        void Update()
+        private void Update()
         {
             tree.Tick();
         }
@@ -121,10 +117,21 @@ namespace AI
             _animator.ResetTrigger(OnDie);
         }
 
-        void FireProjectile()
+        private bool PlayerInLineOfSight()
         {
-            Rigidbody newProj = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), this.transform.rotation);
-            newProj.velocity = newProj.transform.forward * speed;
+            var aiToPlayerVector = _player.transform.position - transform.position;
+            var ret = Physics.Raycast(transform.position + Vector3.up, aiToPlayerVector, out var hit,
+                aiToPlayerVector.magnitude + 0.5f) && hit.transform.gameObject.CompareTag("Player");
+            Debug.DrawLine(transform.position + Vector3.up, hit.transform.position, Color.red, 2);
+            return ret;
+        }
+        
+        private void FireProjectileAtPlayer()
+        {
+            var aiToPlayerVector = _player.transform.position - transform.position;
+
+            var newProj = Instantiate(projectile, transform.position + Vector3.up, Quaternion.identity);
+            newProj.velocity = aiToPlayerVector.normalized * speed;
         }
     }
 }

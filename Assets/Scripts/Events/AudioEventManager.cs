@@ -305,8 +305,10 @@ public class AudioEventManager : MonoBehaviour
 
         snd.audioSrc.clip = fireballThrowAudio;
 
+        snd.audioSrc.dopplerLevel = 1;
         snd.audioSrc.minDistance = 2f;
         snd.audioSrc.maxDistance = 50f;
+        snd.audioSrc.rolloffMode = AudioRolloffMode.Logarithmic;
 
         snd.audioSrc.Play();
         snd.audioSrc.loop = true;
