@@ -86,12 +86,15 @@ Manifest:
       - Animation configs
       - Animation and behavior controllers and state machines
       - Scripts
+      - Added the cinemachine package for player camera control
+    - Modified play area to prevent player from jumping on obstacles
   - Files:
     - Assets/Character/Input System/PlayerInputActions.cs
     - Assets/Character/Input System/PlayerInputActions.inputactions
     - Assets/Character/Paladin/Masks/*
     - Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
     - Assets/Prefabs/Player.prefab
+    - Assets/Scenes/LevelOneBossScene.unity
     - Assets/Scripts/CursorController
     - Assets/Scripts/PlayerController.cs
     - Assets/Scripts/TurnController.cs
