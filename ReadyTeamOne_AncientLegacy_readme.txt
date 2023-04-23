@@ -50,35 +50,76 @@ Known issues:
 Manifest:
 - Ender Schmidt:
   - Contribution summary:
-    - Designed and implemented the main level layout and obstacles and associated scripts
-    - Created the credits scene and associated script
+    - Designed and implemented the main level layout, main level enemy locations and obstacles, plus associated scripts and sounds.
+      - Created majority of object assets in LevelOneScene except for paths leading to extra hearts and falling platforms after the last sprint relic.
+      - Created rotating cylinder, floating platform and swinging pendulum obstacles.
+      - Determined relic location.
+    - Ensured player health and relic counts carried over between scenes.
+    - Main designer of skeleton enemies and projectile, including scripts, sounds and animator controllers.
+    - Created the credits scene and associated scripts.
+    - Created scripts to load scenes.
   - Imports from other creators:
-    - Adding in "swoosh-1.wav" (pre-existing sound effect by lesaucisson)
-    - Adding in "Power Loss.wav" (pre-existing sound effect by LorenzoTheGreat)
-    - Adding in "rpgPowerup.wav" (pre-existing sound effect by colorsCrimsonTears)
-    - Adding in "10_Turn.wav" (pre-existing sound effect by 14GPanskaZackovaM)
+    - Adding in "swoosh-1.wav" in Sounds/swoosh (pre-existing sound effect by lesaucisson)
+    - Adding in "Power Loss.wav" in Sounds/Power Loss (Platform Stop) (pre-existing sound effect by LorenzoTheGreat)
+    - Adding in "rpgPowerup.wav" in Sounds/rpgPowerup (Platform Start) (pre-existing sound effect by colorsCrimsonTears)
+    - Adding in "10_Turn.wav" in Sounds/10_Turn (cylinderturn) (pre-existing sound effect by 14GPanskaZackovaM)
+    - Adding in "Falling Bones.wav" in Sounds/falling-bones (pre-existing sound effect by spookymodem)
+    - Adding in "10835 big fire loop.wav" in Sounds/fireball (pre-existing sound effect by Robinhood76)
+    - Adding in SkeletonWarrior in Models/SkeletonWarrior (pre-existing prefab by AlexN)
   - Files:
-    - Scripts for calling the above sounds, including PlatformStartEvent, PlatformStopEvent, SwooshEvent, and CylinderMoveEvent
-    - Edits to AudioEventManager script to add these sound effects
-    - Edit to targetable script (added in second initializing parameter for max health) and all dependent scripts to incorporate this change
-    - Edited PlayerController script to make relic collection variables and player health static, which makes values carry over between levels
-    - Edits to FloorController script
-    - All of GatherCredits script
-    - All of LoadCredits script
-    - All of LoadMenu script
-    - All of LoadBoss script
-    - All of LethalHazardEvent script (unused)
-    - Edit to VictoryMenu and LoseMenu scripts to reset player health when resetting the game
-    - Chain Swing animation
-    - All three FloatingPlatform animations
-    - Rotating Obstruction animation
-    - All FloatingPlatform animation controllers
-    - All three FloatingPlatform Prefabs
-    - Pendulum Prefab
-    - Construction of Credits Scene
-    - The objects under EntrancePortion and all prefabs of SecondWalkway in the level scene, except for enemies and relics.
-    - Shadow Pit below the level (Cube object)
-    - Edits to falling platform prefab, added in invisible trigger for platforms.
+    - Animations/ChainSwing.anim
+    - Animations/FloatingPlatform.anim
+    - Animations/FloatingPlatformHeight.anim
+    - Animations/FloatingPlatformHeightTwo.anim
+    - Animations/RotatingObstruction.anim
+    - AnimatorControllers/Cube.controller
+    - AnimatorControllers/FloatingPlatform.controller
+    - AnimatorControllers/FloatingPlatformHeight.controller
+    - AnimatorControllers/ParentChain.controller
+    - AnimatorControllers/RotatingObstruction.controller
+    - AnimatorControllers/SkeletonWarrior.controller
+    - AnimatorControllers/SkeletonWarriorProjectile.controller
+    - Materials/Shadow.mat
+    - Prefabs/FallingPlatform.prefab
+    - Prefabs/FloatingParent.prefab
+    - Prefabs/FloatingPlatformHeight.prefab
+    - Prefabs/FloatingPlatformHeightFast.prefab
+    - Prefabs/Pendulum.prefab
+    - Prefabs/Player.prefab
+    - Prefabs/Projectile.prefab
+    - Prefabs/SkeletonWarrior.prefab
+    - Prefabs/SkeletonWarriorNoWeapon.prefab
+    - Scenes/CharacterDevelopment.unity
+    - Scenes/CreditsMenu.unity
+    - Scenes/LevelOneScene.unity
+    - Scenes/StartMenu.unity
+    - Scripts/AI/Projectile.cs
+    - Scripts/AI/SkeletonAI.cs
+    - Scripts/AI/SkeletonProjectileAI.cs
+    - Scripts/Combat/Targetable.cs
+    - Scripts/Combat/WeaponController.cs
+    - Scripts/Editor/GatherCredits.cs
+    - Scripts/Events/AudioEventManager.cs
+    - Scripts/Events/CylinderMoveEvent.cs
+    - Scripts/Events/FireballThrowEvent.cs
+    - Scripts/Events/FireballWallEvent.cs
+    - Scripts/Events/PlatformStartEvent.cs
+    - Scripts/Events/PlatformStopEvent.cs
+    - Scripts/Events/SkeletonDeathEvent1.cs
+    - Scripts/Events/SwooshEvent.cs
+    - Scripts/Menu/LoadMenu.cs
+    - Scripts/Menu/LoseMenu.cs
+    - Scripts/Menu/VictoryMenu.cs
+    - Scripts/SceneManager/LoadBoss.cs
+    - Scripts/SceneManager/LoadCredits.cs
+    - Scripts/Walkways/FloorController.cs
+    - Scripts/FireballDissipateEvent.cs
+    - Scripts/LethalHazardEvent.cs (unused)
+    - Scripts/PlayerController.cs
+    - Scripts/SkeletonDeathAudioHandler.cs
+    - Scripts/SkeletonSwordTrigger.cs
+    - FloatingPlatform.controller
+    - GatherCredits.cs
 
 - Jonathan Bryan:
   - Contribution summary:
@@ -86,16 +127,12 @@ Manifest:
       - Animation configs
       - Animation and behavior controllers and state machines
       - Scripts
-      - Added the cinemachine package for player camera control
-      - Adjusted player actions to make combat more seamless
-    - Modified play area to prevent player from jumping on obstacles
   - Files:
     - Assets/Character/Input System/PlayerInputActions.cs
     - Assets/Character/Input System/PlayerInputActions.inputactions
     - Assets/Character/Paladin/Masks/*
     - Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
     - Assets/Prefabs/Player.prefab
-    - Assets/Scenes/LevelOneBossScene.unity
     - Assets/Scripts/CursorController
     - Assets/Scripts/PlayerController.cs
     - Assets/Scripts/TurnController.cs
@@ -161,13 +198,7 @@ Manifest:
     - Refine restart in pause menu
     - Implement collect sound
     - Implement scene fade in effect
-    - Implement four tutorial NPCs for tutorial scene and levelone scene
-    - Implement NPC tutorial conversation and cameras
   - Files: 
-    - Scripts/Tutorial/IntroText.cs
-    - Scripts/Tutorial/LevelOneText.cs
-    - Scripts/Tutorial/NPCChat.cs
-    - Scripts/Tutorial/TextWriter.cs
     - Scripts/Collectables/CollectableController.cs
     - Scripts/Collectables/RelicManager.cs
     - Scripts/Collectables/RelicsCountManager.cs
@@ -179,7 +210,7 @@ Manifest:
     - Prefabs/Gem
     - Scenes/LevelOneScene.unity
     - Animations/Fade_In.anim
-    - AnimatorControllers/Fade_In.controller
+    - AnimatorControllers/Fade_In.controller\
 
 - Lawrence Yim
   - Contributions summary:
