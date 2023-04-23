@@ -46,6 +46,7 @@ Known issues:
 - Pausing the game while the scene is fading in will result in an unclickable menu
 - Jumping during a sprint does not conserve initial momentum
 - Destroying an orb does not always play the orb destruction sound
+- The "Health Increased by One" text when collecting extra health can be too small on high-resolution screens
 
 Manifest:
 - Ender Schmidt:
