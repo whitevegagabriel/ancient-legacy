@@ -87,6 +87,7 @@ Manifest:
       - Animation and behavior controllers and state machines
       - Scripts
       - Added the cinemachine package for player camera control
+      - Adjusted player actions to make combat more seamless
     - Modified play area to prevent player from jumping on obstacles
   - Files:
     - Assets/Character/Input System/PlayerInputActions.cs
