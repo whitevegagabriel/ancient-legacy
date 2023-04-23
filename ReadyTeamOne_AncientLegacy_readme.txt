@@ -157,7 +157,13 @@ Manifest:
     - Refine restart in pause menu
     - Implement collect sound
     - Implement scene fade in effect
+    - Implement four tutorial NPCs for tutorial scene and levelone scene
+    - Implement NPC tutorial conversation and cameras
   - Files: 
+    - Scripts/Tutorial/IntroText.cs
+    - Scripts/Tutorial/LevelOneText.cs
+    - Scripts/Tutorial/NPCChat.cs
+    - Scripts/Tutorial/TextWriter.cs
     - Scripts/Collectables/CollectableController.cs
     - Scripts/Collectables/RelicManager.cs
     - Scripts/Collectables/RelicsCountManager.cs
@@ -169,7 +175,7 @@ Manifest:
     - Prefabs/Gem
     - Scenes/LevelOneScene.unity
     - Animations/Fade_In.anim
-    - AnimatorControllers/Fade_In.controller\
+    - AnimatorControllers/Fade_In.controller
 
 - Lawrence Yim
   - Contributions summary:
