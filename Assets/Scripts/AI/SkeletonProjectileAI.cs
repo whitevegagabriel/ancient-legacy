@@ -121,7 +121,8 @@ namespace AI
         {
             var aiToPlayerVector = _player.transform.position - transform.position;
             var ret = Physics.Raycast(transform.position + Vector3.up, aiToPlayerVector, out var hit,
-                aiToPlayerVector.magnitude + 0.5f) && hit.transform.gameObject.CompareTag("Player");
+                aiToPlayerVector.magnitude + 0.5f) && 
+                      (hit.transform.gameObject.CompareTag("Player") || hit.transform.gameObject.CompareTag("PlayerShield"));
             Debug.DrawLine(transform.position + Vector3.up, hit.transform.position, Color.red, 2);
             return ret;
         }
