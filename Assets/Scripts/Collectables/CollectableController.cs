@@ -12,7 +12,11 @@ namespace Collectables
             if (collectAudioClip != null)
             {
                 var audioSource = other.gameObject.GetComponentInChildren<AudioSource>();
-                audioSource.PlayOneShot(collectAudioClip);
+                if (audioSource != null)
+                {
+                    audioSource.PlayOneShot(collectAudioClip);
+
+                }
             }
             gameObject.SetActive(false);
         }

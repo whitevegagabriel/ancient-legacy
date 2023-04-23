@@ -23,6 +23,7 @@ TagManager:
   - LevelOneNPC
   - OrbNPC
   - CollapseNPC
+  - PlayerShield
   layers:
   - Default
   - TransparentFX
