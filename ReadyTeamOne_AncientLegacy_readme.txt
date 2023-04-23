@@ -215,9 +215,11 @@ Manifest:
 
 - Lawrence Yim
   - Contributions summary:
-    - Implement respawn and reset mechanisms and refine associated data persistence
-    - Implement the win/lose and pause menus
-    - Implement the health tracking system and displays
+    - Implemented respawn and reset mechanisms and refine associated data persistence
+    - Implemented the win/lose and pause menus
+    - Implemented the health tracking system and displays
+    - Implemented the initial fleeing algorithm for the boss
+    - Implemented the initial spawning mechanism of skeletons during the boss fight
   - Files:
     - Collectables/Gem/Prefabs/JumpRelic.prefab
     - Collectables/Gem/Prefabs/RunRelics.prefab
@@ -225,6 +227,7 @@ Manifest:
     - Prefabs/Stairs.prefab
     - Scenes/LevelOneBossScene
     - Scenes/LevelOneScene
+    - Scripts/AI/BossAI.cs    
     - Scripts/Collectables/RelicManager.cs
     - Scripts/HealthUI.cs
     - Scripts/LoseMenu.cs
