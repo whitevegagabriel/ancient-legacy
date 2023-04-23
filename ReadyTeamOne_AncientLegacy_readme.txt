@@ -128,12 +128,16 @@ Manifest:
       - Animation configs
       - Animation and behavior controllers and state machines
       - Scripts
+      - Added the cinemachine package for player camera control
+      - Adjusted player actions to make combat more seamless
+    - Modified play area to prevent player from jumping on obstacles
   - Files:
     - Assets/Character/Input System/PlayerInputActions.cs
     - Assets/Character/Input System/PlayerInputActions.inputactions
     - Assets/Character/Paladin/Masks/*
     - Assets/Character/Paladin/animation_controllers_PaladinCharacterController.controller
     - Assets/Prefabs/Player.prefab
+    - Assets/Scenes/LevelOneBossScene.unity
     - Assets/Scripts/CursorController
     - Assets/Scripts/PlayerController.cs
     - Assets/Scripts/TurnController.cs
@@ -199,7 +203,13 @@ Manifest:
     - Refine restart in pause menu
     - Implement collect sound
     - Implement scene fade in effect
+    - Implement four tutorial NPCs for tutorial scene and levelone scene
+    - Implement NPC tutorial conversation and cameras
   - Files: 
+    - Scripts/Tutorial/IntroText.cs
+    - Scripts/Tutorial/LevelOneText.cs
+    - Scripts/Tutorial/NPCChat.cs
+    - Scripts/Tutorial/TextWriter.cs
     - Scripts/Collectables/CollectableController.cs
     - Scripts/Collectables/RelicManager.cs
     - Scripts/Collectables/RelicsCountManager.cs
@@ -211,7 +221,7 @@ Manifest:
     - Prefabs/Gem
     - Scenes/LevelOneScene.unity
     - Animations/Fade_In.anim
-    - AnimatorControllers/Fade_In.controller\
+    - AnimatorControllers/Fade_In.controller
 
 - Lawrence Yim
   - Contributions summary:
