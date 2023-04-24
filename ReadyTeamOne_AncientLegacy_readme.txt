@@ -131,6 +131,9 @@ Manifest:
       - Added the cinemachine package for player camera control
       - Adjusted player actions to make combat more seamless
     - Modified play area to prevent player from jumping on obstacles
+    - Added new UI elements 
+      - Added new relic collection UI to show which relics have been collected
+      - Added new controls UI to make it more clear what keys are mapped to each action
   - Files:
     - Assets/Character/Input System/PlayerInputActions.cs
     - Assets/Character/Input System/PlayerInputActions.inputactions
